@@ -15,10 +15,41 @@
 ![CAPTURADATOS](./figs/cajacapturadatos.png)
 *Figura 2.Módulo de captura de datos*
 
-Funcionamiento de la cámara
+Se van a describir las entradas y salidas del bloque de la Figura 2.
 
-![CAPTURADATOS](./figs/cajacapturadatos2.PNG)
+* Href: Está sincronizado con PCLK ( Pixel  Clock Output)[1,pág 4] de tal manera que el t<sub>PHL</sub> (tiempo de propagación de alto a bajo) coincide con el instante justo antes de cambiar de su estado low tal como se muestra en la Figura 3. Además, pasados un definido número de tPCLK ( Pixel Clock Output)[1, pág 4] el cambio de su estado High ocurre en otro  tPHL del PCLK. Row data hace referencia datos de una fila según el formato elegido.
 
+![RGB444](./figs/RGB444.png)
+*Figura 3. Sincronización de PCLK, HREF, D[7:0] y distribución de pixeles.*
+
+* Datos [7:0]: En la Figura 3 se muestra que cuando HREF está en HIGH se generan los datos de una fila de la matriz según el tamaño predefinido para la imagen. En el caso del formato RGB 444, cada pixel tiene 2 bytes donde cada uno está compuesto por un vector de D[7:0] y se generan por cada negedge del PCLK. Los cuatro bits menos significativos del primer byte pertenecen al color rojo, en el segundo byte los cuatro bits más significativos son del color verde y los restantes del color azul. Finalmente, se infiere de la Figura 4 que los datos D[i] ingresan de manera paralela y por tanto se deben declarar siete entradas.
+
+![RGB444](./figs/Diagrama_de_pines.png)
+
+*Figura 4. Diagrama de pines en la vista superior [1, pág 1].*
+
+* Vsync: Vsync (Vertical sync output)[1, pág 4] cuando está en LOW permite capturar los datos hasta que todas las filas que conforman las fotos son llenadas y cada vez que pasa de estado LOW a HIGH se comienza a tomar una nueva foto como se observa en la Figura 5. En nuestro caso elegimos un formato 160x120, ya que dentro de las funcionalidades de la cámara, se permite hacer un escalamiento del formato CIF hasta 40x30 [1,pág 1].  
+
+![RGB444](./figs/VGA_frame_timing.png)
+*Figura 5. VGA(640x480) Frame Timing [1, pág 7].*
+
+Con el tamaño de Imagen de QQVGA (160x120, 160 columnas y 120 filas) HREF se comporta como se indica en la Figura 6. Entonces, por cada cuatro periodos de HREF VGA se genera un  periodo de HREF QQVGA, lo que produce una reducción en la cuarta parte del número de filas como se ilustra en la Figura 5, pasando así de 480 a 120 columnas. De la misma manera, si HREF solo está activo uno de cada cuatro periodos se reduce el número de columnas de 640 a 160 como se indica en la Figura 3, dando así el resultado esperado que es el formato 160x120.      
+
+![RGB444](./figs/VGA_to_QQVGA.png)
+*Figura 6. QQVGA frame timing [1, pág 7].*
+
+
+Analizando los tiempos que se presentan en la Figura Figura 5 se tiene:
+  - tp=2*t<sub>PCLK</sub>(pixel clock output period) [1, pág 7]
+  - t<sub>LINE</sub>  => 640 tp + 144 tp= 784 tp= 1 568 t<sub>PCLK</sub>
+  - 480xt<sub>LINE</sub> = 62720 +12544= 752 640 t<sub>PCLK</sub>
+  - 510xt<sub>LINE</sub> (Periodo de la VSYNC) =>  (3+17+480+10)xt<sub>LINE</sub>= 799 680 t<sub>PCLK</sub>  
+
+* Addr: Dirección donde se va a guardar el pixel de AW (Address Width ) bits.
+
+* datos: El pixel extraído de la cámara de DW (Data Width) bits.
+
+* Write:  Habilita la escritura en el Buffer.
 
 
 ***RECUEDE: Es necesario documentar el módulo diseñado con los respectivos diagramas funcionales y estructurales y registrar la información en README.md***
@@ -98,3 +129,9 @@ Al culminar los hitos anteriores deben:
 4. ¿Qué falta implementar para tener el control de la toma de fotos ?
 
 ***RECUEDE: Es necesario documentar la implementación y registrar la información en README.md, lo puede hacer con ayuda de imágenes o videos***
+
+
+
+Referencias
+
+[1] Recuperado de http://web.mit.edu/6.111/www/f2016/tools/OV7670_2006.pdf
