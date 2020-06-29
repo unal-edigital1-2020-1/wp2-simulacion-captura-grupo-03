@@ -48,8 +48,8 @@ module test_cam(
    );
 
 // TAMANNO DE ADQUISICION DE LA CAMARA 
-parameter CAM_SCREEN_X = 320; 		// 160 * 2. (Se cambian?).
-parameter CAM_SCREEN_Y = 240;    	// 120 * 2.
+parameter CAM_SCREEN_X = 160; 		// 640 / 4. Elegido por preferencia, menos memoria usada.
+parameter CAM_SCREEN_Y = 120;    	// 320 / 4.
 
 localparam AW = 15; // LOG2(CAM_SCREEN_X*CAM_SCREEN_Y).
 localparam DW = 12;	// Datos.
@@ -87,7 +87,8 @@ por lo tanto, los bits menos significactivos deben ser cero
 **************************************************************************** */
 /*
 
-Todos los datos a manejar estan en formato RGB 444.
+Todos los datos a manejar estan en formato RGB 444. Cuando se haga el driver
+se hara este pedazo.
 
 assign VGA_R = {data_RGB332[7:5],1'b0};
 assign VGA_G = {data_RGB332[4:2],1'b0};
@@ -123,10 +124,10 @@ captura_datos_downsampler
 //captura_de_datos_downsampler 
 captura_datos_downsampler #(AW,DW) captura (  // Captura?? Otro nombre??.
 	// Entradas.
-	.PCLK(CAM_PCLK),
-	.HREF(CAM_HREF),
-	.VSYNC(CAM_VSYNC),
-	.D0(CAM_D0),
+	.PCLK(CAM_PCLK),		// Reloj de la FPGA.
+	.HREF(CAM_HREF),		// Horizontal Ref.
+	.VSYNC(CAM_VSYNC),		// Vertical Sync.
+	.D0(CAM_D0),			// Bits dados por la camara. (D0 - D7).
 	.D1(CAM_D1),
 	.D2(CAM_D2),
 	.D3(CAM_D3),
@@ -135,9 +136,9 @@ captura_datos_downsampler #(AW,DW) captura (  // Captura?? Otro nombre??.
 	.D6(CAM_D6),
 	.D7(CAM_D7),
 	// Salidas.
-	.DP_RAM_data_in(DP_RAM_data_in),
-	.DP_RAM_addr_in(DP_RAM_addr_in),
-	.DP_RAM_regW(DP_RAM_regW)
+	.DP_RAM_data_in(DP_RAM_data_in), // Datos capturados. 
+	.DP_RAM_addr_in(DP_RAM_addr_in), // Direccion datos capturados.
+	.DP_RAM_regW(DP_RAM_regW)        //	Enable.
 	);
 
 /* ****************************************************************************
@@ -148,14 +149,14 @@ se recomiendia dejar DW a 8, con el fin de optimizar recursos  y hacer RGB 332
 buffer_ram_dp #(AW,DW)
 	DP_RAM(
 		// Entradas.  
-	.clk_w(CAM_PCLK),				// Estaba clk.
-	.addr_in(DP_RAM_addr_in), 
-	.data_in(DP_RAM_data_in),
-	.regwrite(DP_RAM_regW), 
-		// Salidas.
-	.clk_r(clk25M), 
-	.addr_out(DP_RAM_addr_out),
-	.data_out(data_mem),
+	.clk_w(CAM_PCLK),				// Reloj 100Mhz FPGA.
+	.addr_in(DP_RAM_addr_in), 		// Dirección entrada dada por el capturador.
+	.data_in(DP_RAM_data_in),		// Datos que entran de la cámara.
+	.regwrite(DP_RAM_regW), 		// Enable.
+	.clk_r(clk25M), 				// Reloj VGA.
+	.addr_out(DP_RAM_addr_out),		// Direccion salida dada por VGA.
+		// Salida.
+	.data_out(data_mem),			// Datos enviados a la VGA.
 	// .reset(rst) (Sin usar).
 );
 	

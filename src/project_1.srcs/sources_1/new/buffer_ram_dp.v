@@ -28,14 +28,14 @@ module buffer_ram_dp#(
 	parameter DW = 12, // cantidad de Bits de los datos 
 	parameter   imageFILE= "src/image.men")
 	(  
-	input  clk_w, 
-	input  [AW-1: 0] addr_in, 
-	input  [DW-1: 0] data_in,
-	input  regwrite, 
+	input  clk_w,     		  // Reloj 100Mhz FPGA.
+	input  [AW-1: 0] addr_in, // Dirección entrada dada por el capturador.
+	input  [DW-1: 0] data_in, // Datos que entran de la cámara.
+	input  regwrite,		  // Enable
 	
-	input  clk_r, 
-	input [AW-1: 0] addr_out,
-	output reg [DW-1: 0] data_out,
+	input  clk_r, 				    // Reloj 25MHz VGA.
+	input [AW-1: 0] addr_out, 		// Dirección de salida dada por VGA.
+	output reg [DW-1: 0] data_out,	// Datos enviados a la VGA.	
 	input reset
 	);
 
@@ -54,7 +54,7 @@ end
 
 //	 Lectura  de la memoria port 2 
 always @(posedge clk_r) begin
-// Se leen los datos de la ram ubicados en addr_out y se guardan en data out.  		
+// Se leen los datos de las direcciones addr_out y se sacan en data_out  		
 		data_out <= ram[addr_out]; 
 end
 
