@@ -20,13 +20,12 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module captura_datos_doadsgfasdgwnsaasdfmpler (PCLK, HREF, VSYNC, D0, D1, D2, D3, D4, D5, D6, D7, DP_RAM_regW, DP_RAM_addr_in, DP_RAM_data_in);
-  
+module captura_datos_downsampler (PCLK, HREF, VSYNC, D0, D1, D2, D3, D4, D5, D6, D7, DP_RAM_regW, DP_RAM_addr_in, DP_RAM_data_in);
   localparam AW=15;
   localparam DW=12;
   
+  // Sennales de entrada dadas por la camara.
   input PCLK, HREF, VSYNC, D0, D1, D2, D3, D4, D5, D6, D7;
-  input [7:0] D;
   
   output wire DP_RAM_regW;
   output wire [AW-1:0] DP_RAM_addr_in;
