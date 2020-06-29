@@ -121,7 +121,7 @@ clk_100MHZ_to_25M_24M clk25_24(
 captura_datos_downsampler
 **************************************************************************** */
 //captura_de_datos_downsampler 
-//	Capture_Downsampler(
+captura_datos_downsampler #(AW,DW) captura (  // Captura?? Otro nombre??.
 	// Entradas.
 	.PCLK(CAM_PCLK),
 	.HREF(CAM_HREF),
@@ -146,21 +146,23 @@ Se debe configurar AW  segn los calculos realizados en el Wp01
 se recomiendia dejar DW a 8, con el fin de optimizar recursos  y hacer RGB 332
 **************************************************************************** */
 buffer_ram_dp #(AW,DW)
-	DP_RAM(  
-	.clk_w(clk), 
+	DP_RAM(
+		// Entradas.  
+	.clk_w(CAM_PCLK),				// Estaba clk.
 	.addr_in(DP_RAM_addr_in), 
 	.data_in(DP_RAM_data_in),
 	.regwrite(DP_RAM_regW), 
+		// Salidas.
 	.clk_r(clk25M), 
 	.addr_out(DP_RAM_addr_out),
 	.data_out(data_mem),
-	.reset(rst)
+	// .reset(rst) (Sin usar).
 );
 	
 /* ****************************************************************************
 VGA_Driver640x480
 **************************************************************************** */
-VGA_Driver640x480 VGA640x480
+VGA_Driver640x480 VGA640x480 // Necesitamos otro driver.
 (
 	.rst(rst),
 	.clk(clk25M), 				// 25MHz  para 60 hz de 640x480

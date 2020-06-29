@@ -20,19 +20,29 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module captura_datos_downsampler (PCLK, HREF, VSYNC, D0, D1, D2, D3, D4, D5, D6, D7, DP_RAM_regW, DP_RAM_addr_in, DP_RAM_data_in);
-  localparam AW=15;
-  localparam DW=12;
-  
+module captura_datos_downsampler #(
+	parameter AW = 15, // Cantidad de bits  de la direccin 
+	parameter DW = 12,) // cantidad de Bits de los datos 
+	(  
   // Sennales de entrada dadas por la camara.
-  input PCLK, HREF, VSYNC, D0, D1, D2, D3, D4, D5, D6, D7;
+  input PCLK, 
+  input HREF, 
+  input VSYNC, 
+  input D0,
+  input D1,
+  input D2,
+  input D3,
+  input D4,
+  input D5,
+  input D6,
+  input D7,
   
-  output wire DP_RAM_regW;
-  output wire [AW-1:0] DP_RAM_addr_in;
-  output reg [DW-1:0] DP_RAM_data_in;
+  output wire DP_RAM_regW,                // Enable.
+  output wire [AW-1:0] DP_RAM_addr_in,    // Direccion entrada. (Donde se escribe).
+  output reg [DW-1:0] DP_RAM_data_in);    // Dato entrada.
   
-  reg [1:0] cont = 1`b0;
-  reg [7:0] color;
+  reg [1:0] cont = 1`b0;  // Contador inicializado en 0.
+  reg [7:0] color;        // Variable para guardar datos proporcionados por la camara.
   
   initial
     begin
