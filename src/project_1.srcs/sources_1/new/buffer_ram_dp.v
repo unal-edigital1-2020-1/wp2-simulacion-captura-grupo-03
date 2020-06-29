@@ -16,6 +16,13 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
+// # Definir y sobreescribir parámetros [1, pág 211]
+// Se usa para anchos de bits parametrizables
+// Uso: <name_module> #(a,b,...) <nombre de instanciación> (a.(),b.(),...);
+// Al instanciar sin #(a,b,...) se colocan los valores inicialmente definidos.
+// AW se calcula como log_2(#pixeles)
+// DW bits por cada pixel.
+
 module buffer_ram_dp#( 
 	parameter AW = 15, // Cantidad de bits  de la direccin 
 	parameter DW = 12, // cantidad de Bits de los datos 
@@ -32,7 +39,7 @@ module buffer_ram_dp#(
 	input reset
 	);
 
-// Calcular el nmero de posiciones totales de memoria 
+// Calcular el numero de posiciones totales de memoria 
 localparam NPOS = 2 ** AW; // Memoria
 
  reg [DW-1: 0] ram [0: NPOS-1]; 
@@ -41,16 +48,19 @@ localparam NPOS = 2 ** AW; // Memoria
 //	 escritura  de la memoria port 1 
 always @(posedge clk_w) begin 
        if (regwrite == 1) 
+// Escribe los datos de entrada en la dirección que addr_in se lo indique.
              ram[addr_in] <= data_in;
 end
 
 //	 Lectura  de la memoria port 2 
-always @(posedge clk_r) begin 
+always @(posedge clk_r) begin
+// Se leen los datos de la ram ubicados en addr_out y se guardan en data out.  		
 		data_out <= ram[addr_out]; 
 end
 
 
 initial begin
+// Lee en hexadecimal (readmemb lee en binario) dentro de ram [1, pág 217].
 	$readmemh(imageFILE, ram);
 end
 
@@ -63,3 +73,8 @@ end
 */
 
 endmodule
+
+
+// Refencias
+// [1] S. Harris and D. Harry, Digital Design and Computer Architecture.p 211-212,217, 258.
+// [2] recuperado de: https://file.org/extension/man#:~:text=Files%20that%20contain%20the%20.,in%20a%20plain%20text%20format.
