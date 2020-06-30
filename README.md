@@ -1,17 +1,6 @@
 ## ELECTRÓNICA DIGITAL 1 2020 -2 UNIVERSIDAD NACIONAL DE COLOMBIA
 ## TRABAJO 02- diseño y prueba del HDL para la cámara OV7670
 
-## Integrantes
-
-Esteban Ladino Fajardo
-
-Johan Leonardo Castellanos
-
-Nikolai Alexander Caceres
-
-Andrés Felipe Beltrán 
-
-
 
 ## Introducción
 El sistema de captura de datos de la cámara debe adquirir la información de los pixeles y almacenarlos en el buffer de memoria, analizado en el trabajo anterior.
@@ -111,13 +100,6 @@ la imagen muestra que se adquirió una foto de color rojo.
 
 ***RECUEDE: Es necesario documentar la simulación y registrar la información en README.md, lo puede hacer con ayuda de imágenes o videos***
 
-![DIAGRAMA](./figs/clockw1.PNG)
-
-![DIAGRAMA](./figs/clockw2.PNG)
-
-![DIAGRAMA](./figs/clockw3.PNG)
-
-![DIAGRAMA](./figs/clockw4.PNG)
 
 
 ### Implementación
