@@ -76,7 +76,7 @@ reg  [AW-1: 0] DP_RAM_addr_out;
 	
 // Conexion VGA Driver
 wire [DW-1:0]data_mem;	   // Salida de dp_ram al driver VGA
-wire [DW-1:0]data_RGB332;  // salida del driver VGA al puerto
+wire [DW-1:0]data_RGB444;  // salida del driver VGA al puerto
 wire [9:0]VGA_posX;		   // Determinar la pos de memoria que viene del VGA
 wire [8:0]VGA_posY;		   // Determinar la pos de memoria que viene del VGA
 
@@ -90,10 +90,12 @@ por lo tanto, los bits menos significactivos deben ser cero
 Todos los datos a manejar estan en formato RGB 444. Cuando se haga el driver
 se hara este pedazo.
 
-assign VGA_R = {data_RGB332[7:5],1'b0};
-assign VGA_G = {data_RGB332[4:2],1'b0};
-assign VGA_B = {data_RGB332[1:0],2'b00};
 */
+
+assign VGA_R = data_RGB444[11:7];
+assign VGA_G = data_RGB444[7:4];
+assign VGA_B = data_RGB444[3:0];
+
 
 /* ****************************************************************************
 Asignacion de las seales de control xclk pwdn y reset de la camara 
@@ -163,14 +165,14 @@ buffer_ram_dp #(AW,DW)
 /* ****************************************************************************
 VGA_Driver640x480
 **************************************************************************** */
-VGA_Driver640x480 VGA640x480 // Necesitamos otro driver.
+VGA_Driver160x120 VGA640x480 // Necesitamos otro driver.
 (
 	.rst(rst),
 	.clk(clk25M), 				// 25MHz  para 60 hz de 640x480
-	.pixelIn(data_mem), 		// entrada del valor de color  pixel RGB 332 
-	.pixelOut(data_RGB332), // salida del valor pixel a la VGA 
-	.Hsync_n(VGA_Hsync_n),	// sennal de sincronizacion en horizontal negada
-	.Vsync_n(VGA_Vsync_n),	// sennal de sincronizacion en vertical negada 
+	.pixelIn(data_mem), 		// entrada del valor de color  pixel RGB 444 
+	.pixelOut(data_RGB444),		// salida del valor pixel a la VGA 
+	.Hsync_n(VGA_Hsync_n),		// sennal de sincronizacion en horizontal negada
+	.Vsync_n(VGA_Vsync_n),		// sennal de sincronizacion en vertical negada 
 	.posX(VGA_posX), 			// posicion en horizontal del pixel siguiente
 	.posY(VGA_posY) 			// posicinn en vertical  del pixel siguiente
 
