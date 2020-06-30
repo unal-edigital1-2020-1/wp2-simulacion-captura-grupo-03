@@ -4,8 +4,11 @@
 ## Integrantes
 
 Esteban Ladino Fajardo
+
 Johan Leonardo Castellanos
+
 Nikolai Alexander Caceres
+
 Andrés Felipe Beltrán 
 
 
