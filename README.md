@@ -111,10 +111,13 @@ la imagen muestra que se adquirió una foto de color rojo.
 
 ***RECUEDE: Es necesario documentar la simulación y registrar la información en README.md, lo puede hacer con ayuda de imágenes o videos***
 
-![DIAGRAMA](./figs/clockw1.png)
-![DIAGRAMA](./figs/clockw2.png)
-![DIAGRAMA](./figs/clockw3.png)
-![DIAGRAMA](./figs/clockw4.png)
+![DIAGRAMA](./figs/clockw1.PNG)
+
+![DIAGRAMA](./figs/clockw2.PNG)
+
+![DIAGRAMA](./figs/clockw3.PNG)
+
+![DIAGRAMA](./figs/clockw4.PNG)
 
 
 ### Implementación
