@@ -15,7 +15,7 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module VGA_Driver160x120 (# DW = 12)(
+module VGA_Driver160x120 #(DW = 12)(
 	input rst,
 	input clk, 				// 25MHz  para 60 hz de 640x480
 	input  [DW - 1 : 0] pixelIn, 	// entrada del valor de color  pixel 
