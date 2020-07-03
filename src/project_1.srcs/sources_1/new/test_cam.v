@@ -148,8 +148,7 @@ buffer_ram_dp buffer memoria dual port y reloj de lectura y escritura separados
 Se debe configurar AW  segn los calculos realizados en el Wp01
 se recomiendia dejar DW a 8, con el fin de optimizar recursos  y hacer RGB 332
 **************************************************************************** */
-buffer_ram_dp #(AW,DW)
-	DP_RAM(
+buffer_ram_dp DP_RAM(
 		// Entradas.  
 	.clk_w(CAM_PCLK),				// Reloj 100Mhz FPGA.
 	.addr_in(DP_RAM_addr_in), 		// Dirección entrada dada por el capturador.
@@ -158,7 +157,7 @@ buffer_ram_dp #(AW,DW)
 	.clk_r(clk25M), 				// Reloj VGA.
 	.addr_out(DP_RAM_addr_out),		// Direccion salida dada por VGA.
 		// Salida.
-	.data_out(data_mem),			// Datos enviados a la VGA.
+	.data_out(data_mem)			// Datos enviados a la VGA.
 	// .reset(rst) (Sin usar).
 );
 	
