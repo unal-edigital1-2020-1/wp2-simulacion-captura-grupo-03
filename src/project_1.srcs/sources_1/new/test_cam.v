@@ -18,9 +18,10 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
+// captura_datos_downsampler= cam_read
 module test_cam(
     input wire clk,           // Board clock: 100 MHz Nexys4DDR.
-    input wire rst,		   	  // Reset button.
+    input wire rst,		   	  // Reset button. Externo 
 
 	// VGA input/output  
     output wire VGA_Hsync_n,  // Horizontal sync output.
@@ -31,28 +32,33 @@ module test_cam(
 	
 	//CAMARA input/output
 	
-	output wire CAM_xclk,		// System  clock input.
+	output wire CAM_xclk,		// System  clock input de la cámara.
 	output wire CAM_pwdn,		// Power down mode. 
 	output wire CAM_reset,		// Clear all registers of cam.
-	input CAM_PCLK,				// Sennal PCLK de la camara. (wire?).
-	input CAM_HREF,				// Sennal HREF de la camara. (wire?).
-	input CAM_VSYNC,			// Sennal VSYNC de la camara. (wire?).
-	input CAM_D0,					// Bit 0 de los datos del pixel
-	input CAM_D1,					// Bit 1 de los datos del pixel
-	input CAM_D2,					// Bit 2 de los datos del pixel
-	input CAM_D3,					// Bit 3 de los datos del pixel
-	input CAM_D4,					// Bit 4 de los datos del pixel
-	input CAM_D5,					// Bit 5 de los datos del pixel
-	input CAM_D6,					// Bit 6 de los datos del pixel
-	input CAM_D7 					// Bit 7 de los datos del pixel
+	input wire CAM_pclk,				// Sennal PCLK de la camara. (wire?).
+	input wire CAM_href,				// Sennal HREF de la camara. (wire?).
+	input wire CAM_vsync,
+	input wire CAM_px_data			// Sennal VSYNC de la camara. (wire?).
+//	input CAM_D0,					// Bit 0 de los datos del pixel
+//	input CAM_D1,					// Bit 1 de los datos del pixel
+//	input CAM_D2,					// Bit 2 de los datos del pixel
+//	input CAM_D3,					// Bit 3 de los datos del pixel
+//	input CAM_D4,					// Bit 4 de los datos del pixel
+//	input CAM_D5,					// Bit 5 de los datos del pixel
+//	input CAM_D6,					// Bit 6 de los datos del pixel
+//	input CAM_D7 					// Bit 7 de los datos del pixel
    );
 
-// TAMANNO DE ADQUISICION DE LA CAMARA 
-parameter CAM_SCREEN_X = 160; 		// 640 / 4. Elegido por preferencia, menos memoria usada.
-parameter CAM_SCREEN_Y = 120;    	// 320 / 4.
+// TAMANNO DE ADQUISICION DE LA CAMARA
+// Tamaño de la imagne wcxwr  
+localparam wc=160; 
+localparam wr=120;
+ 
+parameter CAM_SCREEN_X = wc; 		// 640 / 4. Elegido por preferencia, menos memoria usada.
+parameter CAM_SCREEN_Y = wr;    	// 480 / 4.
 
-localparam AW = 15; // LOG2(CAM_SCREEN_X*CAM_SCREEN_Y).
-localparam DW = 12;	// Datos.
+localparam AW = 15; // Techo de LOG2(CAM_SCREEN_X*CAM_SCREEN_Y).
+localparam DW = 12;	// Ancho de los Datos.
 
 /* // El color es RGB 332
 localparam RED_VGA =   8'b11100000;
@@ -62,15 +68,16 @@ Creo que esto no va.
 */
 
 // Clk 
-wire clk100M;
+wire clk100M;       // Reloj de un puerto de la Nexys 4 DDR
 wire clk25M;		// Para guardar el dato del reloj de la Pantalla.
-wire clk24M;		// Para guardar el dato del reloj de la cÃ¡mara.
+wire clk24M;		// Para guardar el dato del reloj de la camara.
 
 // Conexion dual por ram
 
 wire [AW-1: 0] DP_RAM_addr_in;		// Direccion entrada.
 wire [DW-1: 0] DP_RAM_data_in;		// Dato entrada.
 wire DP_RAM_regW;					// Enable escritura.
+
 
 reg  [AW-1: 0] DP_RAM_addr_out;  
 	
@@ -124,7 +131,8 @@ clk_100MHZ_to_25M_24M clk25_24(
 captura_datos_downsampler
 **************************************************************************** */
 //captura_de_datos_downsampler 
-captura_datos_downsampler #(AW,DW) captura (  // Captura?? Otro nombre??.
+
+ captura #(AW,DW)(  // Captura?? Otro nombre??.
 	// Entradas.
 	.PCLK(CAM_PCLK),		// Reloj de la FPGA.
 	.HREF(CAM_HREF),		// Horizontal Ref.
