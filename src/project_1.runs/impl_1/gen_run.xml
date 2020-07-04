@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenRun Id="impl_1" LaunchPart="xc7a100tcsg324-1" LaunchTime="1593625874">
-  <File Type="PA-TCL" Name="test_cam.tcl"/>
   <File Type="BITSTR-BMM" Name="test_cam_bd.bmm"/>
-  <File Type="REPORTS-TCL" Name="test_cam_reports.tcl"/>
+  <File Type="PA-TCL" Name="test_cam.tcl"/>
   <File Type="OPT-DCP" Name="test_cam_opt.dcp"/>
+  <File Type="REPORTS-TCL" Name="test_cam_reports.tcl"/>
   <File Type="OPT-HWDEF" Name="test_cam.hwdef"/>
   <File Type="PWROPT-DCP" Name="test_cam_pwropt.dcp"/>
   <File Type="PLACE-DCP" Name="test_cam_placed.dcp"/>
@@ -24,6 +24,7 @@
   <File Type="BITSTR-NKY" Name="test_cam.nky"/>
   <File Type="PDI-FILE" Name="test_cam.pdi"/>
   <File Type="RCFI_FILE" Name="test_cam.rcfi"/>
+  <File Type="WBT-USG" Name="usage_statistics_webtalk.html"/>
   <File Type="CFI_FILE" Name="test_cam.cfi"/>
   <File Type="RNPI_FILE" Name="test_cam.rnpi"/>
   <File Type="NPI_FILE" Name="test_cam.npi"/>
@@ -33,7 +34,6 @@
   <File Type="BG-BGN" Name="test_cam.bgn"/>
   <File Type="BG-DRC" Name="test_cam.drc"/>
   <File Type="RDI-RDI" Name="test_cam.vdi"/>
-  <File Type="WBT-USG" Name="usage_statistics_webtalk.html"/>
   <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1">
     <Filter Type="Srcs"/>
     <File Path="$PSRCDIR/sources_1/new/VGA_driver.v">

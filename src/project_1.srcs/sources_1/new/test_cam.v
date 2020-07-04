@@ -19,10 +19,16 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 // captura_datos_downsampler= cam_read
-module test_cam(
+module test_cam #
+(
+
+)
+(
     input wire clk,           // Board clock: 100 MHz Nexys4DDR.
     input wire rst,		   	  // Reset button. Externo 
 
+// Entradas del m�dulo buffer_ram_dp
+    
 	// VGA input/output  
     output wire VGA_Hsync_n,  // Horizontal sync output.
     output wire VGA_Vsync_n,  // Vertical sync output.
@@ -37,8 +43,8 @@ module test_cam(
 	output wire CAM_reset,		// Clear all registers of cam.
 	input wire CAM_pclk,				// Sennal PCLK de la camara. (wire?).
 	input wire CAM_href,				// Sennal HREF de la camara. (wire?).
-	input wire CAM_vsync,
-	input wire CAM_px_data			// Sennal VSYNC de la camara. (wire?).
+	input wire CAM_vsync,              // Sennal VSYNC de la camara. (wire?).
+	input wire CAM_px_data			
 //	input CAM_D0,					// Bit 0 de los datos del pixel
 //	input CAM_D1,					// Bit 1 de los datos del pixel
 //	input CAM_D2,					// Bit 2 de los datos del pixel
@@ -82,10 +88,10 @@ wire DP_RAM_regW;					// Enable escritura.
 reg  [AW-1: 0] DP_RAM_addr_out;  
 	
 // Conexion VGA Driver
-wire [DW-1:0]data_mem;	   // Salida de dp_ram al driver VGA
-wire [DW-1:0]data_RGB444;  // salida del driver VGA al puerto
-wire [9:0]VGA_posX;		   // Determinar la pos de memoria que viene del VGA
-wire [8:0]VGA_posY;		   // Determinar la pos de memoria que viene del VGA
+wire [DW-1:0] data_mem;	   // Salida de dp_ram al driver VGA
+wire [DW-1:0] data_RGB444;  // salida del driver VGA al puerto
+wire [9:0] VGA_posX;		   // Determinar la pos de memoria que viene del VGA
+wire [8:0] VGA_posY;		   // Determinar la pos de memoria que viene del VGA
 
 
 /* ****************************************************************************
@@ -120,7 +126,8 @@ assign CAM_reset = 0;			// Reset cámara.
   utilizado para la camara , a partir de una frecuencia de 32 Mhz
 **************************************************************************** */
 assign clk100M =clk;			// Se guarda el reloj FPGA en variable. (No se esta usando).
-clk_100MHZ_to_25M_24M clk25_24(
+
+clk24_25_nexys4 clk25_24(
   .CLK_IN1(clk),				//Reloj de la FPGA.
   .CLK_OUT1(clk25M),			//Reloj de la VGA.
   .CLK_OUT2(clk24M),			//Reloj de la cámara.
@@ -131,9 +138,8 @@ clk_100MHZ_to_25M_24M clk25_24(
 captura_datos_downsampler
 **************************************************************************** */
 //captura_de_datos_downsampler 
-
- captura #(AW,DW)(  // Captura?? Otro nombre??.
-	// Entradas.
+/*
+ captura #(AW,DW)(  // Captura?? Otro nombre??.	// Entradas.
 	.PCLK(CAM_PCLK),		// Reloj de la FPGA.
 	.HREF(CAM_HREF),		// Horizontal Ref.
 	.VSYNC(CAM_VSYNC),		// Vertical Sync.
@@ -150,6 +156,7 @@ captura_datos_downsampler
 	.DP_RAM_addr_in(DP_RAM_addr_in), // Direccion datos capturados.
 	.DP_RAM_regW(DP_RAM_regW)        //	Enable.
 	);
+*/
 
 /* ****************************************************************************
 buffer_ram_dp buffer memoria dual port y reloj de lectura y escritura separados
@@ -158,15 +165,15 @@ se recomiendia dejar DW a 8, con el fin de optimizar recursos  y hacer RGB 332
 **************************************************************************** */
 buffer_ram_dp DP_RAM(
 		// Entradas.  
-	.clk_w(CAM_PCLK),				// Reloj 100Mhz FPGA.
+	.clk_w(CAM_pclk),				//Frecuencia de toma de datos de cada pixel.
 	.addr_in(DP_RAM_addr_in), 		// Dirección entrada dada por el capturador.
 	.data_in(DP_RAM_data_in),		// Datos que entran de la cámara.
 	.regwrite(DP_RAM_regW), 		// Enable.
 	.clk_r(clk25M), 				// Reloj VGA.
 	.addr_out(DP_RAM_addr_out),		// Direccion salida dada por VGA.
 		// Salida.
-	.data_out(data_mem)			// Datos enviados a la VGA.
-	// .reset(rst) (Sin usar).
+	.data_out(data_mem),			// Datos enviados a la VGA.
+	.reset(rst)                     //(Sin usar)
 );
 	
 /* ****************************************************************************

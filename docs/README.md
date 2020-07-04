@@ -93,6 +93,70 @@ Instanciar el módulo diseñado en el hito 1 y 2 en el módulo `test_cam.v`.
  Implementar el proyecto completo y documentar los resultados. Recuerde adicionar el nombre de las señales y módulos en la Figura 1 y registre el cambio en el archivo README.md
 
 
+##### Módulo `clk24_25_nexys4.v` 
+
+* Se cambió el módulo `clk_32MHZ_to_25M_24M.v` por `clk24_25_nexys4.v`.
+* Se instanción en el módulo `test_cam.v` como se muestra a continuación:
+
+```verilog
+clk24_25_nexys4 clk25_24(
+  .CLK_IN1(clk),				//Reloj de la FPGA.
+  .CLK_OUT1(clk25M),			//Reloj de la VGA.
+  .CLK_OUT2(clk24M),			//Reloj de la cámara.
+  .RESET(rst)					//Reset.
+ );
+```
+
+##### Asignación de las señales de control 
+
+Las señales de control son:
+* CAM_xclk: Frecuencia de la cámara
+* CAM_pwdn: Power down mode.
+* CAM_reset: Retorno a un punto conocido por la cámara.
+
+![control](./figs/control.png)
+
+En el módulo TOP `test_cam.v` se instancea como:
+
+```verilog
+111 assign CAM_xclk = clk24M;	
+112 assign CAM_pwdn = 0;			 
+113 assign CAM_reset = 0;			
+```
+
+##### Módulo `test_cam.v`
+* Se inabilitó en módulo captura de datos
+```verilog
+/*
+ captura #(AW,DW)(  // Captura?? Otro nombre??.	// Entradas.
+	.PCLK(CAM_PCLK),		// Reloj de la FPGA.
+	.HREF(CAM_HREF),		// Horizontal Ref.
+	.VSYNC(CAM_VSYNC),		// Vertical Sync.
+	.D0(CAM_D0),			// Bits dados por la camara. (D0 - D7).
+	.D1(CAM_D1),
+	.D2(CAM_D2),
+	.D3(CAM_D3),
+	.D4(CAM_D4),
+	.D5(CAM_D5),
+	.D6(CAM_D6),
+	.D7(CAM_D7),
+	// Salidas.
+	.DP_RAM_data_in(DP_RAM_data_in), // Datos capturados. 
+	.DP_RAM_addr_in(DP_RAM_addr_in), // Direccion datos capturados.
+	.DP_RAM_regW(DP_RAM_regW)        //	Enable.
+	);
+*/
+```
+
+Observaciones: Quitar los siguientes wires y colocarlos como entradas 
+
+* wire [AW-1: 0] DP_RAM_addr_in 
+
+* wire [DW-1: 0] DP_RAM_data_in 
+
+* wire DP_RAM_regW
+
+
 ### Simulación
 
 Como se ha explicado en la reuniòn es un entorno de simulación completo de la càmara y la pantalla VGA.

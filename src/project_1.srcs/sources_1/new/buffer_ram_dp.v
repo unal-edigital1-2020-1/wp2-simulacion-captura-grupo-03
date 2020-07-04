@@ -28,7 +28,7 @@ module buffer_ram_dp#(
 	parameter DW = 12, // cantidad de Bits de los datos 
 	parameter   imageFILE= "src/image.men")
 	(  
-	input  clk_w,     		  // Reloj 100Mhz FPGA.
+	input  clk_w,     		  // Frecuencia de toma de datos de cada pixel.
 	input  [AW-1: 0] addr_in, // Dirección entrada dada por el capturador.
 	input  [DW-1: 0] data_in, // Datos que entran de la cámara.
 	input  regwrite,		  // Enable
