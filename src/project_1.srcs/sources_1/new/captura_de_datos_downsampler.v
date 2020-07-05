@@ -110,7 +110,7 @@ endmodule
 //		input rst,
 //		input vsync,
 //		input href,
-//		input [DW-1:0] px_data,
+//		input [7:0] px_data,
 //
 //		output [AW-1:0] mem_px_addr,
 //		output [DW-1:0]  mem_px_data,
