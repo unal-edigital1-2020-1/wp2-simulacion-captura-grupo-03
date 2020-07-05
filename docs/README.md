@@ -95,7 +95,26 @@ Instanciar el módulo diseñado en el hito 1 y 2 en el módulo `test_cam.v`.
 
 ##### Módulo `clk24_25_nexys4.v` 
 
-* Se cambió el módulo `clk_32MHZ_to_25M_24M.v` por `clk24_25_nexys4.v`.
+
+* Se cambió el módulo `clk_32MHZ_to_25M_24M.v` por `clk24_25_nexys4.v`, su la caja negra queda comlo:
+
+![clk24_25_nexys4](./figs/clk24_25_nexys4.png)
+
+En verilog se programa de la siguiente manera:
+
+```verilog 
+module clk24_25_nexys4
+ (// Clock in ports
+  input         CLK_IN1, // 100MHz
+  // Clock out ports
+  output        CLK_OUT1, // 25MHz
+  output        CLK_OUT2, // 24MHz
+  // Status and control signals
+  input         RESET,
+  output        LOCKED
+ );
+```
+
 * Se instanción en el módulo `test_cam.v` como se muestra a continuación:
 
 ```verilog
@@ -107,6 +126,7 @@ clk24_25_nexys4 clk25_24(
  );
 ```
 
+Nótese que la salida *LOCKED* no fue instanceada.
 ##### Asignación de las señales de control 
 
 Las señales de control son:
