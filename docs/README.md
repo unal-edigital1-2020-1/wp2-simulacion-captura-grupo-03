@@ -95,6 +95,13 @@ Instanciar el módulo diseñado en el hito 1 y 2 en el módulo `test_cam.v`.
 
 ##### Módulo `clk24_25_nexys4.v` 
 
+Se genero el modulo clk24_25_nexys4.v con ayuda de la ip clock wizard v6 disponible para vivado teniendo en cuenta los paramatros del proyecto, como apoyo se consulto la documentación del fabricante del Clock Wizard v6 [2]
+![DIAGRAMA](./figs/clockw1.PNG)
+![DIAGRAMA](./figs/clockw2.PNG)
+Se asigna el valor del reloj primario de acuerdo a la FPGA que trabajaremos, en este caso 100 MHz. 
+![DIAGRAMA](./figs/clockw3.PNG)
+Luego se asignan los valores del reloj para cada unade las salidas 24 MHz y 25 MHz.
+![DIAGRAMA](./figs/clockw4.PNG)
 
 * Se cambió el módulo `clk_32MHZ_to_25M_24M.v` por `clk24_25_nexys4.v`, su la caja negra queda comlo:
 
@@ -231,3 +238,4 @@ Al culminar los hitos anteriores deben:
 Referencias
 
 [1] Recuperado de http://web.mit.edu/6.111/www/f2016/tools/OV7670_2006.pdf
+[2] Recuperado de https://www.xilinx.com/support/documentation/ip_documentation/clk_wiz/v6_0/pg065-clk-wiz.pdf
