@@ -96,7 +96,7 @@ Instanciar el módulo diseñado en el hito 1 y 2 en el módulo `test_cam.v`.
 ##### Módulo `clk24_25_nexys4.v` 
 
 
-* Se cambió el módulo `clk_32MHZ_to_25M_24M.v` por `clk24_25_nexys4.v`, su la caja negra queda comlo:
+* Se cambió el módulo `clk_32MHZ_to_25M_24M.v` por `clk24_25_nexys4.v`, su la caja negra queda como:
 
 ![clk24_25_nexys4](./figs/clk24_25_nexys4.png)
 
