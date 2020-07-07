@@ -32,6 +32,7 @@ module test_cam_TB;
 	reg CAM_href;
 	reg [7:0] CAM_px_data;
 
+
 	// Outputs
 	wire VGA_Hsync_n;
 	wire VGA_Vsync_n;
@@ -41,7 +42,14 @@ module test_cam_TB;
 	wire CAM_xclk;
 	wire CAM_pwdn;
 	wire CAM_reset;
+    
+    // Seï¿½ales de prueba ******************************
+    
+    wire [11:0] data_mem;
 
+    // Seï¿½ales de prueba ******************************
+// Absolute Address of the file
+localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/test_vga.txt";
 	// Instantiate the Unit Under Test (UUT)
 	test_cam uut (
 		.clk(clk), 
@@ -51,6 +59,12 @@ module test_cam_TB;
 		.VGA_R(VGA_R), 
 		.VGA_G(VGA_G), 
 		.VGA_B(VGA_B), 
+		
+		// seï¿½ales de prueba *******************************************
+		.data_mem(data_mem),
+		
+		//Prueba *******************************************
+		
 		.CAM_xclk(CAM_xclk), 
 		.CAM_pwdn(CAM_pwdn), 
 		.CAM_reset(CAM_reset), 
@@ -67,11 +81,11 @@ module test_cam_TB;
 		pclk = 0;
 		CAM_vsync = 1;
 		CAM_href = 0;
-		CAM_px_data = 8'b11100000;
+		CAM_px_data = 8'b11110000;
    	// Wait 100 ns for global reset to finish
 		#20;
 		rst = 0;
-		#1000000 img_generate=1;
+		#1_000 img_generate=1;
 	end
 
 	always #0.5 clk  = ~clk;
@@ -87,11 +101,11 @@ module test_cam_TB;
 	parameter BLACK_TAM_ROW=4;
 	
 	/*************************************************************************
-			INICIO DE SIMULACION DE SEÑALES DE LA CAMARA 	
+			INICIO DE SIMULACION DE SEï¿½ALES DE LA CAMARA 	
 	**************************************************************************/
-	/*simulación de contador de pixeles para  general Href y vsync*/
+	/*simulaciï¿½n de contador de pixeles para  general Href y vsync*/
 	initial forever  begin
-	//	CAM_px_data=~CAM_px_data;
+	    //CAM_px_data=~CAM_px_data;
 		@(posedge pclk) begin
 		if (img_generate==1) begin
 			line_cnt=line_cnt+1;
@@ -106,39 +120,39 @@ module test_cam_TB;
 		end
 	end
 
-	/*simulación de la señal vsync generada por la camara*/	
+	/*simulaciï¿½n de la seï¿½al vsync generada por la camara*/	
 	initial forever  begin
 		@(posedge pclk) begin 
-		if (img_generate==1) begin
-			if (row_cnt==0)begin
-				CAM_vsync  = 1;
-			end 
-			if (row_cnt==BLACK_TAM_ROW/2)begin
-				CAM_vsync  = 0;
-			end
-		end
+            if (img_generate==1) begin
+                    if (row_cnt==0)begin
+                        CAM_vsync  = 1;
+                    end 
+                if (row_cnt==BLACK_TAM_ROW/2)begin
+                    CAM_vsync  = 0;
+                end
+            end
 		end
 	end
 	
-	/*simulación de la señal href generada por la camara*/	
+	/*simulaciï¿½n de la seï¿½al href generada por la camara*/	
 	initial forever  begin
 		@(negedge pclk) begin 
-		if (img_generate==1) begin
-		if (row_cnt>BLACK_TAM_ROW-1)begin
-			if (line_cnt==0)begin
-				CAM_href  = 1; 
-			end
-		end
-			if (line_cnt==TAM_LINE)begin
-				CAM_href  = 0;
-			end
-		end
+            if (img_generate==1) begin
+                if (row_cnt>BLACK_TAM_ROW-1)begin
+                    if (line_cnt==0)begin
+                        CAM_href  = 1; 
+                    end
+                end
+                if (line_cnt==TAM_LINE)begin
+                    CAM_href  = 0;
+                end
+            end
 		end
 	end
 
 
 	/*************************************************************************
-			FIN SIMULACIÒN DE SEÑALES DE LA CAMARA 	
+			FIN SIMULACIï¿½N DE SEï¿½ALES DE LA CAMARA 	
 	**************************************************************************/
 	
 	/*************************************************************************
@@ -147,8 +161,9 @@ module test_cam_TB;
 
 	/* log para cargar de archivo*/
 	integer f;
+	
 	initial begin
-      f = $fopen("test_vga.txt","w");
+      f = $fopen(d,"w");
    end
 	
 	reg clk_w =0;
@@ -157,7 +172,7 @@ module test_cam_TB;
 	/* ecsritura de log para cargar se cargados en https://ericeastwood.com/lab/vga-simulator/*/
 	initial forever begin
 	@(posedge clk_w)
-		$fwrite(f,"%0t ps: %b %b %b %b %b\n",$time,VGA_Hsync_n, VGA_Vsync_n, VGA_R[3:1],VGA_G[3:1],VGA_B[3:2]);
+		$fwrite(f,"%0t ps: %b %b %b %b %b\n",$time,VGA_Hsync_n, VGA_Vsync_n, VGA_R[3:0],VGA_G[3:0],VGA_B[3:0]);
 	end
 	
 endmodule

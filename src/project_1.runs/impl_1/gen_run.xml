@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenRun Id="impl_1" LaunchPart="xc7a100tcsg324-1" LaunchTime="1593625874">
-  <File Type="BITSTR-BMM" Name="test_cam_bd.bmm"/>
   <File Type="PA-TCL" Name="test_cam.tcl"/>
-  <File Type="OPT-DCP" Name="test_cam_opt.dcp"/>
+  <File Type="BITSTR-BMM" Name="test_cam_bd.bmm"/>
   <File Type="REPORTS-TCL" Name="test_cam_reports.tcl"/>
+  <File Type="OPT-DCP" Name="test_cam_opt.dcp"/>
   <File Type="OPT-HWDEF" Name="test_cam.hwdef"/>
   <File Type="PWROPT-DCP" Name="test_cam_pwropt.dcp"/>
   <File Type="PLACE-DCP" Name="test_cam_placed.dcp"/>
@@ -24,8 +24,8 @@
   <File Type="BITSTR-NKY" Name="test_cam.nky"/>
   <File Type="PDI-FILE" Name="test_cam.pdi"/>
   <File Type="RCFI_FILE" Name="test_cam.rcfi"/>
-  <File Type="WBT-USG" Name="usage_statistics_webtalk.html"/>
   <File Type="CFI_FILE" Name="test_cam.cfi"/>
+  <File Type="WBT-USG" Name="usage_statistics_webtalk.html"/>
   <File Type="RNPI_FILE" Name="test_cam.rnpi"/>
   <File Type="NPI_FILE" Name="test_cam.npi"/>
   <File Type="RBD_FILE" Name="test_cam.rbd"/>
