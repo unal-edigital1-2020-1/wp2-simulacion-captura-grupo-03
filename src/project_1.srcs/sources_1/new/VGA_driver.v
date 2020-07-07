@@ -17,7 +17,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 module VGA_Driver160x120 #(DW = 12)(
 	input rst,
-	input clk, 				// 25MHz  para 60 hz de 640x480
+	input clk, 				// La entrada del reloj es de 25 MHz de acuerdo con la esquema planteado del proyecto 
 	input  [DW - 1 : 0] pixelIn, 	// entrada del valor de color  pixel 
 	
 	output  [DW - 1 : 0] pixelOut, // salida del valor pixel a la VGA 
