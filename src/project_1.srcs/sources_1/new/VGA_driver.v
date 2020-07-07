@@ -27,7 +27,7 @@ module VGA_Driver160x120 #(DW = 12)(
 	output  [7:0] posY 		// posicion en vertical  del pixel siguiente, se pueden dejar asi
 );
 
-localparam SCREEN_X = 160; 	// tama�o de la pantalla visible en horizontal 
+localparam SCREEN_X = 160; 	// tamano de la pantalla visible en horizontal 
 localparam FRONT_PORCH_X =16;	//24
 localparam SYNC_PULSE_X = 96;	//144
 localparam BACK_PORCH_X = 48;   //72

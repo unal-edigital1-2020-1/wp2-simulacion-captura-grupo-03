@@ -1,4 +1,5 @@
-`timescale 10ns / 1ns
+`timescale 10ns / 10ns	
+// Se puede cambiar por `timescale 1ns / 1ps. 
 //////////////////////////////////////////////////////////////////////////////////
 // 
 // Create Date:    13:34:31 10/22/2019 
@@ -24,37 +25,36 @@
 // DW bits por cada pixel.
 
 module buffer_ram_dp#( 
-	parameter AW = 15, // Cantidad de bits  de la direccin 
-	parameter DW = 12, // cantidad de Bits de los datos 
-	parameter   imageFILE= "D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.srcs/sources_1/new/imagen.men")
+	parameter AW = 15,		 // Cantidad de bits  de la direccion. 
+	parameter DW = 12,		 // Cantidad de Bits de los datos.
+	parameter imageFILE = "D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.srcs/sources_1/new/imagen.men")
 	(  
-	input  clk_w,     		  // Frecuencia de toma de datos de cada pixel.
-	input  [AW-1: 0] addr_in, // Dirección entrada dada por el capturador.
-	input  [DW-1: 0] data_in, // Datos que entran de la cámara.
-	input  regwrite,		  // Enable
+	input clk_w,     		 // Frecuencia de toma de datos de cada pixel.
+	input [AW-1: 0] addr_in, // Dirección entrada dada por el capturador.
+	input [DW-1: 0] data_in, // Datos que entran de la cámara.
+	input regwrite,		  	 // Enable.
 	
-	input  clk_r, 				    // Reloj 25MHz VGA.
+	input clk_r, 				    // Reloj 25MHz VGA.
 	input [AW-1: 0] addr_out, 		// Dirección de salida dada por VGA.
 	output reg [DW-1: 0] data_out,	// Datos enviados a la VGA.	
-	input reset
+	//input reset					// De momento no se esta usando.
 	);
 
-// Calcular el numero de posiciones totales de memoria 
-localparam NPOS = 2 ** AW; // Memoria
+// Calcular el numero de posiciones totales de memoria. 
+localparam NPOS = 2 ** AW; 			// Memoria.
 
  reg [DW-1: 0] ram [0: NPOS-1]; 
 
-
-//	 escritura  de la memoria port 1 
+// Escritura  de la memoria port 1. 
 always @(posedge clk_w) begin 
        if (regwrite == 1) 
 // Escribe los datos de entrada en la dirección que addr_in se lo indique.
              ram[addr_in] <= data_in;
 end
 
-//	 Lectura  de la memoria port 2 
+// Lectura  de la memoria port 2.
 always @(posedge clk_r) begin
-// Se leen los datos de las direcciones addr_out y se sacan en data_out  		
+// Se leen los datos de las direcciones addr_out y se sacan en data_out.  		
 		data_out <= ram[addr_out]; 
 end
 
@@ -62,8 +62,10 @@ end
 initial begin
 // Lee en hexadecimal (readmemb lee en binario) dentro de ram [1, pág 217].
 	$readmemh(imageFILE, ram);
-	ram[15'b1111_1111_1111_111]=12'b0000_0000_0000;	// Ultima posicion en memoria, igual a 0
+// Ultima posicion en memoria, igual a 0.
+	ram[15'b1111_1111_1111_111] = 12'b0000_0000_0000;
 end
+endmodule
 
 /*
 always @(posedge clk_w) begin 
@@ -73,7 +75,7 @@ always @(posedge clk_w) begin
 end
 */
 
-endmodule
+
 
 
 // Refencias

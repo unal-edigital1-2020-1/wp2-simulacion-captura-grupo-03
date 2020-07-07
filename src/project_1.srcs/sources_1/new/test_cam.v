@@ -1,4 +1,4 @@
-`timescale 10ns / 1ns
+`timescale 10ns / 1ns		// Se puede cambiar por `timescale 1ns / 1ps.
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -40,10 +40,10 @@ module test_cam
 	output wire CAM_xclk,		// System  clock input de la c�mara.
 	output wire CAM_pwdn,		// Power down mode. 
 	output wire CAM_reset,		// Clear all registers of cam.
-	input wire CAM_pclk,				// Sennal PCLK de la camara. (wire?).
-	input wire CAM_href,				// Sennal HREF de la camara. (wire?).
-	input wire CAM_vsync,              // Sennal VSYNC de la camara. (wire?).
-	input wire CAM_px_data
+	input wire CAM_pclk,		// Sennal PCLK de la camara. (wire?).
+	input wire CAM_href,		// Sennal HREF de la camara. (wire?).
+	input wire CAM_vsync,		// Sennal VSYNC de la camara. (wire?).
+	input wire CAM_px_data		// Me parece que falta declarar [7:0] CAM_px_data.
 	
 				
 //	input CAM_D0,					// Bit 0 de los datos del pixel
@@ -57,7 +57,7 @@ module test_cam
    );
 
 // TAMANNO DE ADQUISICION DE LA CAMARA
-// Tama�o de la imagne wcxwr  
+// Tamano de la imagne wcxwr  
 localparam wc=160; 
 localparam wr=120;
  
@@ -94,8 +94,8 @@ reg  [AW-1: 0] DP_RAM_addr_out;
 // Conexion VGA Driver
 wire [DW-1:0] data_mem;	   // Salida de dp_ram al driver VGA
 wire [DW-1:0] data_RGB444;  // salida del driver VGA al puerto
-wire [9:0] VGA_posX;		   // Determinar la pos de memoria que viene del VGA
-wire [8:0] VGA_posY;		   // Determinar la pos de memoria que viene del VGA
+wire [8:0] VGA_posX;		   // Determinar la pos de memoria que viene del VGA
+wire [7:0] VGA_posY;		   // Determinar la pos de memoria que viene del VGA
 
 
 /* ****************************************************************************
@@ -129,7 +129,7 @@ assign CAM_reset = 0;			// Reset cámara.
   el bloque genera un reloj de 25Mhz usado para el VGA  y un relo de 24 MHz
   utilizado para la camara , a partir de una frecuencia de 32 Mhz
 **************************************************************************** */
-assign clk100M =clk;			// Se guarda el reloj FPGA en variable. (No se esta usando).
+// assign clk100M =clk;			// Se guarda el reloj FPGA en variable. (No se esta usando).
 
 clk24_25_nexys4 clk25_24(
   .CLK_IN1(clk),				//Reloj de la FPGA.
@@ -165,7 +165,7 @@ buffer_ram_dp buffer memoria dual port y reloj de lectura y escritura separados
 Se debe configurar AW  segn los calculos realizados en el Wp01
 se recomiendia dejar DW a 8, con el fin de optimizar recursos  y hacer RGB 332
 **************************************************************************** */
-buffer_ram_dp DP_RAM(
+buffer_ram_dp #(AW,DW) DP_RAM(
 		// Entradas.  
 	.clk_w(CAM_pclk),				//Frecuencia de toma de datos de cada pixel.
 	.addr_in(DP_RAM_addr_in), 		// Dirección entrada dada por el capturador.
