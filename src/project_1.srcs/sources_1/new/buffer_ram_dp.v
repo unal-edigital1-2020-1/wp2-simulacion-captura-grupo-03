@@ -62,6 +62,7 @@ end
 initial begin
 // Lee en hexadecimal (readmemb lee en binario) dentro de ram [1, pág 217].
 	$readmemh(imageFILE, ram);
+	ram[15'b1111_1111_1111_111]=12'b0000_0000_0000;	// Ultima posicion en memoria, igual a 0
 end
 
 /*

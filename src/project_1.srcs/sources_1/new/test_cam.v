@@ -109,7 +109,7 @@ se hara este pedazo.
 
 */
 
-assign VGA_R = data_RGB444[11:7];
+assign VGA_R = data_RGB444[11:7]; 
 assign VGA_G = data_RGB444[7:4];
 assign VGA_B = data_RGB444[3:0];
 
