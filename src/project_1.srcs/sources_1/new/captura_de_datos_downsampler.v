@@ -54,9 +54,9 @@ module captura_datos_downsampler #(
           	  color [1] = D1;
           	  color [2] = D2;
           	  color [3] = D3;
-         	  color [4] = D4;
-        	  color [5] = D5;
-        	  color [6] = D6;
+         	    color [4] = D4;
+        	    color [5] = D5;
+        	    color [6] = D6;
               color [7] = D7;
               if(cont == 0)
                 begin

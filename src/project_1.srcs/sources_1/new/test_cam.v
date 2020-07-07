@@ -27,7 +27,7 @@ module test_cam #
     input wire clk,           // Board clock: 100 MHz Nexys4DDR.
     input wire rst,		   	  // Reset button. Externo 
 
-// Entradas del mÛdulo buffer_ram_dp
+// Entradas del mÔøΩdulo buffer_ram_dp
     
 	// VGA input/output  
     output wire VGA_Hsync_n,  // Horizontal sync output.
@@ -37,8 +37,9 @@ module test_cam #
     output wire [3:0] VGA_B,  // 4-bit VGA blue output.
 	
 	//CAMARA input/output
+	//comentario
 	
-	output wire CAM_xclk,		// System  clock input de la c·mara.
+	output wire CAM_xclk,		// System  clock input de la cÔøΩmara.
 	output wire CAM_pwdn,		// Power down mode. 
 	output wire CAM_reset,		// Clear all registers of cam.
 	input wire CAM_pclk,				// Sennal PCLK de la camara. (wire?).
@@ -56,23 +57,21 @@ module test_cam #
    );
 
 // TAMANNO DE ADQUISICION DE LA CAMARA
-// TamaÒo de la imagne wcxwr  
+// TamaÔøΩo de la imagne wcxwr  
 localparam wc=160; 
 localparam wr=120;
  
-parameter CAM_SCREEN_X = wc; 		// 640 / 4. Elegido por preferencia, menos memoria usada.
-parameter CAM_SCREEN_Y = wr;    	// 480 / 4.
+parameter CAM_SCREEN_X = wc; 		// 160 de acuerdo al formato seleccionado
+parameter CAM_SCREEN_Y = wr;    	// 120 de acuerdo con el formato seleccionado
 
 localparam AW = 15; // Techo de LOG2(CAM_SCREEN_X*CAM_SCREEN_Y).
-localparam DW = 12;	// Ancho de los Datos.
+localparam DW = 12;	// Ancho de los Datos de acuerdo al formato RGB444.
 
-/* // El color es RGB 332
-localparam RED_VGA =   8'b11100000;
-localparam GREEN_VGA = 8'b00011100;
-localparam BLUE_VGA =  8'b00000011;
-Creo que esto no va.
-*/
-
+ // El color es RGB RGB444
+//localparam RED_VGA =   [3:0] VGA_R;
+//localparam GREEN_VGA = [3:0] VGA_G;
+//localparam BLUE_VGA =  [3:0] VGA_B;
+// 
 // Clk 
 wire clk100M;       // Reloj de un puerto de la Nexys 4 DDR
 wire clk25M;		// Para guardar el dato del reloj de la Pantalla.
@@ -94,16 +93,10 @@ wire [9:0] VGA_posX;		   // Determinar la pos de memoria que viene del VGA
 wire [8:0] VGA_posY;		   // Determinar la pos de memoria que viene del VGA
 
 
-/* ****************************************************************************
-La pantalla VGA es RGB 444, pero el almacenamiento en memoria se hace 332
-por lo tanto, los bits menos significactivos deben ser cero
-**************************************************************************** */
-/*
-
+/*****************************************************************************
 Todos los datos a manejar estan en formato RGB 444. Cuando se haga el driver
 se hara este pedazo.
-
-*/
+******************************************************************************/
 
 assign VGA_R = data_RGB444[11:7];
 assign VGA_G = data_RGB444[7:4];
@@ -119,11 +112,7 @@ assign CAM_pwdn = 0;			// Power down mode.
 assign CAM_reset = 0;			// Reset c√°mara.
 
 /* ****************************************************************************
-  Este bloque se debe modificar segun sea le caso. El ejemplo esta dado para
-  fpga Spartan6 lx9 a 32MHz.
-  usar "tools -> Core Generator ..."  y general el ip con Clocking Wizard
-  el bloque genera un reloj de 25Mhz usado para el VGA  y un relo de 24 MHz
-  utilizado para la camara , a partir de una frecuencia de 32 Mhz
+  Este bloque se instancio de acuerdo al reloj de la Nexys 4 100Mhz
 **************************************************************************** */
 assign clk100M =clk;			// Se guarda el reloj FPGA en variable. (No se esta usando).
 
@@ -137,9 +126,7 @@ clk24_25_nexys4 clk25_24(
 /* ****************************************************************************
 captura_datos_downsampler
 **************************************************************************** */
-//captura_de_datos_downsampler 
-/*
- captura #(AW,DW)(  // Captura?? Otro nombre??.	// Entradas.
+captura_de_datos_downsampler  #(AW,DW)(  // Captura?? Otro nombre??.	// Entradas.
 	.PCLK(CAM_PCLK),		// Reloj de la FPGA.
 	.HREF(CAM_HREF),		// Horizontal Ref.
 	.VSYNC(CAM_VSYNC),		// Vertical Sync.
@@ -156,7 +143,7 @@ captura_datos_downsampler
 	.DP_RAM_addr_in(DP_RAM_addr_in), // Direccion datos capturados.
 	.DP_RAM_regW(DP_RAM_regW)        //	Enable.
 	);
-*/
+
 
 /* ****************************************************************************
 buffer_ram_dp buffer memoria dual port y reloj de lectura y escritura separados
@@ -168,7 +155,7 @@ buffer_ram_dp DP_RAM(
 	.clk_w(CAM_pclk),				//Frecuencia de toma de datos de cada pixel.
 	.addr_in(DP_RAM_addr_in), 		// Direcci√≥n entrada dada por el capturador.
 	.data_in(DP_RAM_data_in),		// Datos que entran de la c√°mara.
-	.regwrite(DP_RAM_regW), 		// Enable.
+	.regwrite(DP_RAM_regW), 		// Control de escritura de los datos.
 	.clk_r(clk25M), 				// Reloj VGA.
 	.addr_out(DP_RAM_addr_out),		// Direccion salida dada por VGA.
 		// Salida.
@@ -177,10 +164,9 @@ buffer_ram_dp DP_RAM(
 );
 	
 /* ****************************************************************************
-VGA_Driver640x480
+VGA_Driver160x120
 **************************************************************************** */
-VGA_Driver160x120 VGA640x480 // Necesitamos otro driver.
-(
+VGA_Driver160x120(
 	.rst(rst),
 	.clk(clk25M), 				// 25MHz  para 60 hz de 640x480
 	.pixelIn(data_mem), 		// entrada del valor de color  pixel RGB 444 
