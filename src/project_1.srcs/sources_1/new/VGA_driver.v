@@ -1,5 +1,3 @@
-
-`timescale 10ns / 1ns
 //////////////////////////////////////////////////////////////////////////////////
 // 
 // Create Date:    13:34:31 10/22/2019 
@@ -19,26 +17,24 @@
 //////////////////////////////////////////////////////////////////////////////////
 module VGA_Driver160x120 #(DW = 12)(
 	input rst,
-	input clk, 				        //La entrada del reloj es de 25 MHz de acuerdo con la esquema planteado del proyecto 
+	input clk, 						// 25MHz  para 60 hz de 640x480
 	input  [DW - 1 : 0] pixelIn, 	// entrada del valor de color  pixel 
 	
-
 	output  [DW - 1 : 0] pixelOut, // salida del valor pixel a la VGA 
-
-	output  Hsync_n,		// se�al de sincronizaci�n en horizontal negada
-	output  Vsync_n,		// se�al de sincronizaci�n en vertical negada 
-	output  [8:0] posX, 	// posicion en horizontal del pixel siguiente. LOG2(160) 
-	output  [7:0] posY 		// posicion en vertical  del pixel siguiente. LOG2(120)
+	output  Hsync_n,		// señal de sincronización en horizontal negada
+	output  Vsync_n,		// señal de sincronización en vertical negada 
+	output  [8:0] posX, 	// posicion en horizontal del pixel siguiente, cambiarlos, tamanño contadores
+	output  [7:0] posY 		// posicion en vertical  del pixel siguiente, se pueden dejar asi
 );
 
-localparam SCREEN_X = 160; 	// tama?o de la pantalla visible en horizontal 
-localparam FRONT_PORCH_X =16;  
-localparam SYNC_PULSE_X = 96;
-localparam BACK_PORCH_X = 48;
+localparam SCREEN_X = 160; 	// tamano de la pantalla visible en horizontal 
+localparam FRONT_PORCH_X =16;	//24
+localparam SYNC_PULSE_X = 96;	//144
+localparam BACK_PORCH_X = 48;   //72
 localparam TOTAL_SCREEN_X = SCREEN_X+FRONT_PORCH_X+SYNC_PULSE_X+BACK_PORCH_X; 	// total pixel pantalla en horizontal 
 
 
-localparam SCREEN_Y = 120; 	// tama?o de la pantalla visible en Vertical 
+localparam SCREEN_Y = 120; 	// tama�o de la pantalla visible en Vertical 
 localparam FRONT_PORCH_Y =10;  
 localparam SYNC_PULSE_Y = 2;
 localparam BACK_PORCH_Y = 33;
@@ -51,7 +47,7 @@ reg  [8:0] countY;
 assign posX    = countX;
 assign posY    = countY;
 
-assign pixelOut = (countX<SCREEN_X) ? (pixelIn ) : (12'b000000000000) ;
+assign pixelOut = (countX<SCREEN_X) ? (pixelIn ) : (12'b0000_0000_0000) ;
 
 assign Hsync_n = ~((countX>=SCREEN_X+FRONT_PORCH_X) && (countX<SCREEN_X+SYNC_PULSE_X+FRONT_PORCH_X)); 
 assign Vsync_n = ~((countY>=SCREEN_Y+FRONT_PORCH_Y) && (countY<SCREEN_Y+FRONT_PORCH_Y+SYNC_PULSE_Y));
