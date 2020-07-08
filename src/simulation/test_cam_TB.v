@@ -43,11 +43,11 @@ module test_cam_TB;
 	wire CAM_pwdn;
 	wire CAM_reset;
     
-    // Se�ales de prueba ******************************
+    // Senales de prueba ******************************
     
     wire [11:0] data_mem;
 
-    // Se�ales de prueba ******************************
+    // Senales de prueba ******************************
 // Absolute Address of the file
 localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/test_vga.txt";
 	// Instantiate the Unit Under Test (UUT)
@@ -85,7 +85,8 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
    	// Wait 100 ns for global reset to finish
 		#20;
 		rst = 0;
-		#1_000 img_generate=1;
+		#1000000;         // #1_000
+		img_generate=1; // Estaban pegados
 	end
 
 	always #0.5 clk  = ~clk;

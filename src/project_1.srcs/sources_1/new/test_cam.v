@@ -143,7 +143,7 @@ captura_datos_downsampler
 **************************************************************************** */
 //captura_de_datos_downsampler 
 
-cam_read2_0 #(AW,DW) cam_read 
+cam_read #(AW,DW) cam_read 
 (  // Captura?? Otro nombre??.	// Entradas.
         //entradas
 		.CAM_px_data(CAM_px_data),
