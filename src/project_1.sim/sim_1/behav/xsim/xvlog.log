@@ -2,8 +2,8 @@ INFO: [VRFC 10-2263] Analyzing Verilog file "D:/UNAL/semester6/digitali/proyecto
 INFO: [VRFC 10-311] analyzing module VGA_Driver160x120
 INFO: [VRFC 10-2263] Analyzing Verilog file "D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.srcs/sources_1/new/buffer_ram_dp.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module buffer_ram_dp
-INFO: [VRFC 10-2263] Analyzing Verilog file "D:/UNAL/semester6/digitali/GitHub/digitalI/cam_read/src/cam_read2_0.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module cam_read2_0
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/UNAL/semester6/digitali/GitHub/digitalI/cam_read/src/cam_read.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cam_read
 INFO: [VRFC 10-2263] Analyzing Verilog file "D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.srcs/sources_1/new/PLL/clk24_25_nexys4.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module clk24_25_nexys4
 INFO: [VRFC 10-2458] undeclared symbol clkin1, assumed default net type wire [D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.srcs/sources_1/new/PLL/clk24_25_nexys4.v:83]

@@ -44,10 +44,9 @@ module test_cam_TB;
 	wire CAM_reset;
     
     // Se�ales de prueba ******************************
-    
     wire [11:0] data_mem;
-
     // Se�ales de prueba ******************************
+    
 // Absolute Address of the file
 localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/test_vga.txt";
 	// Instantiate the Unit Under Test (UUT)

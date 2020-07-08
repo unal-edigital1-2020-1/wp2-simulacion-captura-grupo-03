@@ -143,7 +143,7 @@ captura_datos_downsampler
 **************************************************************************** */
 //captura_de_datos_downsampler 
 
-cam_read2_0 #(AW,DW) cam_read 
+cam_read #(AW,DW) cam_read 
 (  // Captura?? Otro nombre??.	// Entradas.
         //entradas
 		.CAM_px_data(CAM_px_data),
@@ -186,7 +186,8 @@ VGA_Driver160x120 VGA640x480 // Necesitamos otro driver.
 	.rst(rst),
 	.clk(clk25M), 				// 25MHz  para 60 hz de 640x480
 	.pixelIn(data_mem), 		// entrada del valor de color  pixel RGB 444 
-	.pixelOut(data_RGB444),		// salida del valor pixel a la VGA 
+	.pixelOut(data_RGB444),		// salida del valor pixel a la VGA
+	 
 	.Hsync_n(VGA_Hsync_n),		// sennal de sincronizacion en horizontal negada
 	.Vsync_n(VGA_Vsync_n),		// sennal de sincronizacion en vertical negada 
 	.posX(VGA_posX), 			// posicion en horizontal del pixel siguiente
