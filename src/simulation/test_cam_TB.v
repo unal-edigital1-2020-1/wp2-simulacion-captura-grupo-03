@@ -73,7 +73,7 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
 		.CAM_href(CAM_href),
 		.CAM_px_data(CAM_px_data)
 	);
-	reg img_generate=0;
+	reg img_generate=1;
 	initial begin
 		// Initialize Inputs
 		clk = 0;
@@ -81,11 +81,11 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
 		pclk = 0;
 		CAM_vsync = 1;
 		CAM_href = 0;
-		CAM_px_data = 8'b11110000;
+		CAM_px_data = 8'b00001111;
    	// Wait 100 ns for global reset to finish
 		#20;
-		rst = 0;
-		#1000000;         // #1_000
+		rst = 0; // registros en físico para que reinicialicen.
+		#1_000_000;         // se puede quitar en simulacion, estoy esperando que la memoria se llene.
 		img_generate=1; // Estaban pegados
 	end
 

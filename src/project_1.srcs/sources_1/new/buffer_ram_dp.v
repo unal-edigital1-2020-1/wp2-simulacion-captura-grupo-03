@@ -1,4 +1,4 @@
-`timescale 10ns / 10ns
+`timescale 10ns / 1ns
 // Se puede cambiar por `timescale 1ns / 1ps.
 //////////////////////////////////////////////////////////////////////////////////
 //
@@ -27,6 +27,7 @@
 module buffer_ram_dp#(
 	parameter AW = 15,		 // Cantidad de bits  de la direccion.
 	parameter DW = 12,		 // Cantidad de Bits de los datos.
+	
 	parameter imageFILE = "D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.srcs/sources_1/new/imagen.men")
 	(
 	input clk_w,     		 // Frecuencia de toma de datos de cada pixel.
@@ -36,7 +37,7 @@ module buffer_ram_dp#(
 
 	input clk_r, 				    // Reloj 25MHz VGA.
 	input [AW-1: 0] addr_out, 		// Dirección de salida dada por VGA.
-	output reg [DW-1: 0] data_out,	// Datos enviados a la VGA.
+	output reg [DW-1: 0] data_out	// Datos enviados a la VGA.
 	//input reset					// De momento no se esta usando.
 	);
 

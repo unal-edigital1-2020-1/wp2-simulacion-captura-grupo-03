@@ -109,7 +109,7 @@ se hara este pedazo.
 
 */
 
-assign VGA_R = data_RGB444[11:7];
+assign VGA_R = data_RGB444[11:8];
 assign VGA_G = data_RGB444[7:4];
 assign VGA_B = data_RGB444[3:0];
 
@@ -143,6 +143,7 @@ captura_datos_downsampler
 **************************************************************************** */
 //captura_de_datos_downsampler
 
+//cam_read2_0 #(AW,DW) cam_read
 cam_read #(AW,DW) cam_read
 (  // Captura?? Otro nombre??.	// Entradas.
         //entradas
@@ -165,7 +166,7 @@ buffer_ram_dp buffer memoria dual port y reloj de lectura y escritura separados
 Se debe configurar AW  segn los calculos realizados en el Wp01
 se recomiendia dejar DW a 8, con el fin de optimizar recursos  y hacer RGB 332
 **************************************************************************** */
-buffer_ram_dp #(AW,DW) DP_RAM(
+buffer_ram_dp DP_RAM(
 		// Entradas.
 	.clk_w(CAM_pclk),				//Frecuencia de toma de datos de cada pixel.
 	.addr_in(DP_RAM_addr_in), 		// Dirección entrada dada por el capturador.
@@ -174,7 +175,7 @@ buffer_ram_dp #(AW,DW) DP_RAM(
 	.clk_r(clk25M), 				// Reloj VGA.
 	.addr_out(DP_RAM_addr_out),		// Direccion salida dada por VGA.
 		// Salida.
-	.data_out(data_mem),			// Datos enviados a la VGA.
+	.data_out(data_mem)			// Datos enviados a la VGA.
 	//.reset(rst)                   //(Sin usar)
 );
 
@@ -202,7 +203,7 @@ adicionales seran iguales al color del ultimo pixel de memoria
 **************************************************************************** */
 always @ (VGA_posX, VGA_posY) begin
 		if ((VGA_posX>CAM_SCREEN_X-1) || (VGA_posY>CAM_SCREEN_Y-1))
-			DP_RAM_addr_out = 15'1111_1111_1111_111;		// Esta seria ultima posicion. Estaba asi DP_RAM_addr_out=CAM_SCREEN_X*CAM_SCREEN_Y;
+			DP_RAM_addr_out = 15'b1111_1111_1111_111;		// Esta seria ultima posicion. Estaba asi DP_RAM_addr_out=CAM_SCREEN_X*CAM_SCREEN_Y;
 		else
 			DP_RAM_addr_out = VGA_posX + VGA_posY * CAM_SCREEN_Y;// Calcula posicion.
 end
