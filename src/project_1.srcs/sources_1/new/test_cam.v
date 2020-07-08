@@ -43,7 +43,7 @@ module test_cam
 	input wire CAM_pclk,		// Sennal PCLK de la camara. (wire?).
 	input wire CAM_href,		// Sennal HREF de la camara. (wire?).
 	input wire CAM_vsync,		// Sennal VSYNC de la camara. (wire?).
-	input wire CAM_px_data		// Me parece que falta declarar [7:0] CAM_px_data.
+	input wire [7:0] CAM_px_data		// Me parece que falta declarar [7:0] CAM_px_data.
 	
 				
 //	input CAM_D0,					// Bit 0 de los datos del pixel
@@ -175,7 +175,7 @@ buffer_ram_dp #(AW,DW) DP_RAM(
 	.addr_out(DP_RAM_addr_out),		// Direccion salida dada por VGA.
 		// Salida.
 	.data_out(data_mem),			// Datos enviados a la VGA.
-	.reset(rst)                     //(Sin usar)
+	//.reset(rst)                   //(Sin usar)
 );
 	
 /* ****************************************************************************
@@ -184,13 +184,13 @@ VGA_Driver640x480
 VGA_Driver160x120 VGA640x480 // Necesitamos otro driver.
 (
 	.rst(rst),
-	.clk(clk25M), 				// 25MHz  para 60 hz de 640x480
-	.pixelIn(data_mem), 		// entrada del valor de color  pixel RGB 444 
-	.pixelOut(data_RGB444),		// salida del valor pixel a la VGA 
-	.Hsync_n(VGA_Hsync_n),		// sennal de sincronizacion en horizontal negada
-	.Vsync_n(VGA_Vsync_n),		// sennal de sincronizacion en vertical negada 
-	.posX(VGA_posX), 			// posicion en horizontal del pixel siguiente
-	.posY(VGA_posY) 			// posicinn en vertical  del pixel siguiente
+	.clk(clk25M), 				// 25MHz  para 60 hz de 160x120
+	.pixelIn(data_mem), 		// Entrada del valor de color  pixel RGB 444. 
+	.pixelOut(data_RGB444),		// Salida del datos a la VGA. (Pixeles). 
+	.Hsync_n(VGA_Hsync_n),		// Sennal de sincronizacion en horizontal negada para la VGA.
+	.Vsync_n(VGA_Vsync_n),		// Sennal de sincronizacion en vertical negada  para la VGA.
+	.posX(VGA_posX), 			// Posicion en horizontal del pixel siguiente.
+	.posY(VGA_posY) 			// posicinn en vertical  del pixel siguiente.
 
 );
 
@@ -202,9 +202,9 @@ adicionales seran iguales al color del ultimo pixel de memoria
 **************************************************************************** */
 always @ (VGA_posX, VGA_posY) begin
 		if ((VGA_posX>CAM_SCREEN_X-1) || (VGA_posY>CAM_SCREEN_Y-1))
-			DP_RAM_addr_out=CAM_SCREEN_X*CAM_SCREEN_Y;
+			DP_RAM_addr_out = 15'1111_1111_1111_111;		// Esta seria ultima posicion. Estaba asi DP_RAM_addr_out=CAM_SCREEN_X*CAM_SCREEN_Y;
 		else
-			DP_RAM_addr_out=VGA_posX+VGA_posY*CAM_SCREEN_Y;
+			DP_RAM_addr_out = VGA_posX + VGA_posY * CAM_SCREEN_Y;// Calcula posicion.
 end
 
 endmodule
