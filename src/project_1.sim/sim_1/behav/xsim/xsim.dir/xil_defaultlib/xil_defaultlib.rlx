@@ -2,12 +2,10 @@
 2019.2
 Nov  6 2019
 21:57:16
-D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.sim/sim_1/behav/xsim/glbl.v,1594268413,verilog,,,,glbl,,,,,,,,
-D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.srcs/sources_1/new/PLL/clk24_25_nexys4.v,1594268413,verilog,,D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.srcs/sources_1/new/test_cam.v,,clk24_25_nexys4,,,,,,,,
-D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.srcs/sources_1/new/VGA_driver.v,1594186663,verilog,,D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.srcs/sources_1/new/buffer_ram_dp.v,,VGA_Driver160x120,,,,,,,,
-D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.srcs/sources_1/new/VGA_driver0.v,1594268413,verilog,,D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.srcs/sources_1/new/buffer_ram_dp.v,,VGA_Driver640x480,,,,,,,,
-D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.srcs/sources_1/new/buffer_ram_dp.v,1594269191,verilog,,D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.srcs/sources_1/new/cam_read2_0.v,,buffer_ram_dp,,,,,,,,
-D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.srcs/sources_1/new/cam_read.v,1594310554,verilog,,D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.srcs/sources_1/new/PLL/clk24_25_nexys4.v,,cam_read,,,,,,,,
-D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.srcs/sources_1/new/cam_read2_0.v,1594310026,verilog,,D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.srcs/sources_1/new/PLL/clk24_25_nexys4.v,,cam_read2_0,,,,,,,,
-D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.srcs/sources_1/new/test_cam.v,1594315814,verilog,,D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/simulation/test_cam_TB.v,,test_cam,,,,,,,,
-D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/simulation/test_cam_TB.v,1594316413,verilog,,,,test_cam_TB,,,,,,,,
+D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.sim/sim_1/behav/xsim/glbl.v,1573089660,verilog,,,,glbl,,,,,,,,
+D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/simulation/test_cam_TB.v,1594329249,verilog,,,,test_cam_TB,,,,,,,,
+D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/PLL/clk24_25_nexys4.v,1594268413,verilog,,D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v,,clk24_25_nexys4,,,,,,,,
+D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/VGA_driver0.v,1594268413,verilog,,D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/buffer_ram_dp.v,,VGA_Driver640x480,,,,,,,,
+D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/buffer_ram_dp.v,1594330235,verilog,,D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/cam_read2_0.v,,buffer_ram_dp,,,,,,,,
+D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/cam_read2_0.v,1594310026,verilog,,D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/PLL/clk24_25_nexys4.v,,cam_read2_0,,,,,,,,
+D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v,1594326725,verilog,,D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/simulation/test_cam_TB.v,,test_cam,,,,,,,,

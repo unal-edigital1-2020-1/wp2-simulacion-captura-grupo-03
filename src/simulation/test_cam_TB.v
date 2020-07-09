@@ -46,6 +46,10 @@ module test_cam_TB;
     // Senales de prueba ******************************
 
     wire [11:0] data_mem;
+	wire [14:0] DP_RAM_addr_in;
+	wire [11:0] DP_RAM_data_in;
+	wire [14:0] DP_RAM_addr_out;
+
 
     // Senales de prueba ******************************
 // Absolute Address in Esteban's computer
@@ -61,7 +65,11 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
 		.VGA_B(VGA_B),
 
 		// seï¿½ales de prueba *******************************************
-		.data_mem(data_mem),
+	   
+	   .data_mem(data_mem),
+	   .DP_RAM_addr_in(DP_RAM_addr_in),
+	   .DP_RAM_data_in(DP_RAM_data_in),
+	   .DP_RAM_addr_out(DP_RAM_addr_out),
 
 		//Prueba *******************************************
 
@@ -73,7 +81,7 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
 		.CAM_href(CAM_href),
 		.CAM_px_data(CAM_px_data)
 	);
-	reg img_generate=1;
+	reg img_generate=0;
 	initial begin
 		// Initialize Inputs
 		clk = 0;
@@ -85,7 +93,7 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
    	// Wait 100 ns for global reset to finish
 		#20;
 		rst = 0; // registros en físico para que reinicialicen.
-		#1_000;         // se puede quitar en simulacion, estoy esperando que la memoria se llene.
+		#1_000_000;         // se puede quitar en simulacion, estoy esperando que la memoria se llene.
 		img_generate=1; // Estaban pegados
 	end
 

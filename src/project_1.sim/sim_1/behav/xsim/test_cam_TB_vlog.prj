@@ -1,10 +1,10 @@
 # compile verilog/system verilog design source files
 verilog xil_defaultlib  \
-"../../../../project_1.srcs/sources_1/new/VGA_driver0.v" \
-"../../../../project_1.srcs/sources_1/new/buffer_ram_dp.v" \
-"../../../../project_1.srcs/sources_1/new/cam_read2_0.v" \
-"../../../../project_1.srcs/sources_1/new/PLL/clk24_25_nexys4.v" \
-"../../../../project_1.srcs/sources_1/new/test_cam.v" \
+"../../../../sources/VGA_driver0.v" \
+"../../../../sources/buffer_ram_dp.v" \
+"../../../../sources/cam_read2_0.v" \
+"../../../../sources/PLL/clk24_25_nexys4.v" \
+"../../../../sources/test_cam.v" \
 "../../../../simulation/test_cam_TB.v" \
 
 # compile glbl module
