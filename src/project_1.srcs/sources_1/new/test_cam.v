@@ -40,9 +40,9 @@ module test_cam
 	output wire CAM_xclk,		// System  clock input de la c�mara.
 	output wire CAM_pwdn,		// Power down mode.
 	output wire CAM_reset,		// Clear all registers of cam.
-	input wire CAM_pclk,		// Sennal PCLK de la camara. (wire?).
-	input wire CAM_href,		// Sennal HREF de la camara. (wire?).
-	input wire CAM_vsync,		// Sennal VSYNC de la camara. (wire?).
+	input wire CAM_pclk,		// Sennal PCLK de la camara. 
+	input wire CAM_href,		// Sennal HREF de la camara. 
+	input wire CAM_vsync,		// Sennal VSYNC de la camara.
 	input wire [7:0] CAM_px_data		// Me parece que falta declarar [7:0] CAM_px_data.
 
 
@@ -57,14 +57,12 @@ module test_cam
    );
 
 // TAMANNO DE ADQUISICION DE LA CAMARA
-// Tamano de la imagne wcxwr
+// Tamano de la imagne QQVGA
 localparam wc=160;
 localparam wr=120;
 
 parameter CAM_SCREEN_X = wc; 		// 640 / 4. Elegido por preferencia, menos memoria usada.
 parameter CAM_SCREEN_Y = wr;    	// 480 / 4.
-
-
 
 
 /* // El color es RGB 332
@@ -94,8 +92,8 @@ reg  [AW-1: 0] DP_RAM_addr_out;
 // Conexion VGA Driver
 wire [DW-1:0] data_mem;	   // Salida de dp_ram al driver VGA
 wire [DW-1:0] data_RGB444;  // salida del driver VGA al puerto
-wire [8:0] VGA_posX;		   // Determinar la pos de memoria que viene del VGA
-wire [7:0] VGA_posY;		   // Determinar la pos de memoria que viene del VGA
+wire [9:0] VGA_posX;		   // Determinar la pos de memoria que viene del VGA
+wire [8:0] VGA_posY;		   // Determinar la pos de memoria que viene del VGA
 
 
 /* ****************************************************************************
@@ -143,8 +141,8 @@ captura_datos_downsampler
 **************************************************************************** */
 //captura_de_datos_downsampler
 
-//cam_read2_0 #(AW,DW) cam_read
-cam_read #(AW,DW) cam_read
+cam_read2_0 #(AW,DW) cam_read
+// cam_read #(AW,DW) cam_read
 (  // Captura?? Otro nombre??.	// Entradas.
         //entradas
 		.CAM_px_data(CAM_px_data),
@@ -182,7 +180,7 @@ buffer_ram_dp DP_RAM(
 /* ****************************************************************************
 VGA_Driver640x480
 **************************************************************************** */
-VGA_Driver160x120 VGA640x480 // Necesitamos otro driver.
+VGA_Driver640x480 VGA640x480 // Necesitamos otro driver.
 (
 	.rst(rst),
 	.clk(clk25M), 				// 25MHz  para 60 hz de 160x120

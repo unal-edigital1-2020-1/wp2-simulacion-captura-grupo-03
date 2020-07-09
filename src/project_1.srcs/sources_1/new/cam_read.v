@@ -83,7 +83,7 @@ reg [1:0] cont = 1'b0;  // Contador inicializado en 0.
               DP_RAM_addr_in = DP_RAM_addr_in + 1; 
             end
             
-             if(DP_RAM_addr_in == 2**AW)
+             if(DP_RAM_addr_in == 19199)
              begin
                DP_RAM_addr_in = 0;
              end
