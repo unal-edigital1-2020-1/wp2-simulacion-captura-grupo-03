@@ -44,125 +44,71 @@ module cam_read2_0 #(
 		output reg [AW-1:0] DP_RAM_addr_in;
 		output reg [DW-1:0] DP_RAM_data_in;
 
-reg status=0,byte1=0,byte2=0,reset=0;
+
 parameter INIT=0,BYTE1=1,BYTE2=2,NOTHING=3,imaSiz=160*120;
+reg [1:0]status=0;
 
-
-always@(negedge CAM_pclk)begin
-    if(byte1)begin
-        DP_RAM_data_in={CAM_px_data[3:0],DP_RAM_data_in[7:0]};
-        DP_RAM_regW=0;
+always @(posedge CAM_pclk)begin
+    if(rst)begin
+    status=0;
+     DP_RAM_data_in<=0;
+     DP_RAM_addr_in<=0;
+     DP_RAM_regW<=0;
     end
-end
-
-always@(negedge CAM_pclk)begin
-    if(byte2)begin
-        DP_RAM_data_in={DP_RAM_data_in[11:8],CAM_px_data};
-        DP_RAM_regW=1;
-        DP_RAM_addr_in=DP_RAM_addr_in+1;
-    end
-    if(DP_RAM_addr_in==imaSiz) DP_RAM_addr_in=0; 
-end
-
-always@(negedge CAM_pclk) begin
-    if(reset|rst) begin
-		DP_RAM_regW=0; //enable
-		DP_RAM_addr_in=0;
-		DP_RAM_data_in=0;
-		status=INIT;
-	end
-end
-
-		
-always @(negedge CAM_pclk)
-begin
- case (status)
-     INIT:begin
-        byte1=0;
-        byte2=0;
-        reset=1;
-     
-        if(~CAM_vsync&CAM_href)begin
-        status=BYTE1;
-        end
-           
-     end
-     
-     BYTE1:begin
-      
-         byte1=1;
-         byte2=0;
-         reset=0;
-         
-         if(~CAM_href) status=NOTHING;
-         else if(CAM_vsync) status=INIT;
-         else status=BYTE2;
-     end
-     NOTHING:begin
-         byte1=0;
-         byte2=0;
-         reset=0;
-         if(CAM_href) status=BYTE1;
-         else if (CAM_vsync) status=INIT;
-     end
-     
-     BYTE2:begin
-         byte1=0;
-         byte2=1;
-         reset=0;
-         status=BYTE1;
-     end
-     default: status=INIT;
- endcase
-end
-		
-		
-reg [1:0] cont = 1'b0;  // Contador inicializado en 0.
-
-  always @ (posedge CAM_pclk)
-  begin
-    if(rst)
-    begin
-        DP_RAM_regW=0;
-        DP_RAM_addr_in=0;
-        DP_RAM_data_in=0;
-    end
-  
-  end
- 
-      always @ (posedge CAM_pclk)
-        begin
-          if(CAM_href & ~CAM_vsync)
-            begin
-              if(cont == 0)
-                begin
-                  DP_RAM_data_in <= {CAM_px_data[3:0], DP_RAM_data_in[7:0]};
-              	  DP_RAM_regW = 0;
-                end
-              else
-            	begin
-                  DP_RAM_data_in <= {DP_RAM_data_in[11:8], CAM_px_data[7:0]};
-                  DP_RAM_regW = 1;
-            	end
-          	  cont = cont + 1;
-        	end
-       	end
-       	
-       	
-
-      always @ (negedge CAM_pclk)
-        begin
-          if(CAM_href & ~CAM_vsync & (cont == 1))
-            begin
-              DP_RAM_addr_in = DP_RAM_addr_in + 1; 
+    else begin
+     case (status)
+         INIT:begin 
+            DP_RAM_data_in<=0;
+            DP_RAM_addr_in<=0;
+            DP_RAM_regW<=0;
+               
+            if(~CAM_vsync&CAM_href)begin
+            status<=BYTE2;
+            DP_RAM_data_in[11:8]=CAM_px_data[3:0];
             end
-            
-             if(DP_RAM_addr_in == 2**AW)
-             begin
-               DP_RAM_addr_in = 0;
+               
+         end
+         
+         BYTE1:begin
+         
+         
+         DP_RAM_regW<=0;
+         if(DP_RAM_addr_in==imaSiz) DP_RAM_addr_in<=0;
+         
+         
+         if(CAM_href)begin
+         DP_RAM_addr_in<=DP_RAM_addr_in+1;
+         DP_RAM_data_in[11:8]<=CAM_px_data[3:0];
+         DP_RAM_regW<=0;
+         status<=BYTE2;
+         end
+         else status<=NOTHING;
+         
+         end
+         
+         BYTE2:begin
+         
+             DP_RAM_data_in[7:0]<=CAM_px_data;
+             DP_RAM_regW<=1;    
+             status<=BYTE1;
+         
+         end
+         
+         NOTHING:begin
+             
+             if(CAM_href)begin
+             status<=BYTE2;
+             DP_RAM_data_in[11:8]<=CAM_px_data[3:0];
              end
-        end
-
+             else if (CAM_vsync) status=INIT;
+             
+         end
+         
+         default: status=INIT;
+    endcase
+ end
+end
+		
 
 /********************************************************************************
 
