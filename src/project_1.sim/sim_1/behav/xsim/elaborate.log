@@ -14,7 +14,7 @@ Compiling module xil_defaultlib.clk24_25_nexys4
 Compiling module xil_defaultlib.cam_read2_0
 Compiling module xil_defaultlib.buffer_ram_dp_default
 Compiling module xil_defaultlib.VGA_Driver640x480_default
-Compiling module xil_defaultlib.test_cam_default
+Compiling module xil_defaultlib.test_cam
 Compiling module xil_defaultlib.test_cam_TB
 Compiling module xil_defaultlib.glbl
 Built simulation snapshot test_cam_TB_behav

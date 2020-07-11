@@ -25,7 +25,7 @@ module VGA_Driver640x480#(DW = 12) (
 	output  Hsync_n,		// señal de sincronización en horizontal negada
 	output  Vsync_n,		// señal de sincronización en vertical negada 
 	output  [9:0] posX, 	// posicion en horizontal del pixel siguiente
-	output  [8:0] posY 		// posicion en vertical  del pixel siguiente
+	output  [9:0] posY 		// posicion en vertical  del pixel siguiente
 );
 
 localparam SCREEN_X = 640; 	// tamaño de la pantalla visible en horizontal 
@@ -43,7 +43,7 @@ localparam TOTAL_SCREEN_Y = SCREEN_Y+FRONT_PORCH_Y+SYNC_PULSE_Y+BACK_PORCH_Y; 	/
 
 
 reg  [9:0] countX;
-reg  [8:0] countY;
+reg  [9:0] countY;
 
 assign posX    = countX;
 assign posY    = countY;

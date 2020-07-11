@@ -92,8 +92,8 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
 		CAM_px_data = 8'b00001111;
    	// Wait 100 ns for global reset to finish
 		#20;
-		rst = 0; // registros en físico para que reinicialicen.
-		#1_000_000;         // se puede quitar en simulacion, estoy esperando que la memoria se llene.
+		rst = 0; // registros en fï¿½sico para que reinicialicen.
+		// #1_000_000;         // se puede quitar en simulacion, estoy esperando que la memoria se llene.
 		img_generate=1; // Estaban pegados
 	end
 
@@ -150,6 +150,7 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
                 if (row_cnt>BLACK_TAM_ROW-1)begin
                     if (line_cnt==0)begin
                         CAM_href  = 1;
+						CAM_px_data = ~ CAM_px_data;
                     end
                 end
                 if (line_cnt==TAM_LINE)begin

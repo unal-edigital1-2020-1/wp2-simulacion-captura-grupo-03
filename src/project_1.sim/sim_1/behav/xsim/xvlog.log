@@ -11,11 +11,9 @@ INFO: [VRFC 10-2458] undeclared symbol clkout0, assumed default net type wire [D
 INFO: [VRFC 10-2458] undeclared symbol clkout1, assumed default net type wire [D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/PLL/clk24_25_nexys4.v:135]
 INFO: [VRFC 10-2263] Analyzing Verilog file "D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module test_cam
-WARNING: [VRFC 10-3676] redeclaration of ansi port 'DP_RAM_addr_in' is not allowed [D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:89]
-WARNING: [VRFC 10-3676] redeclaration of ansi port 'DP_RAM_data_in' is not allowed [D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:90]
-WARNING: [VRFC 10-3676] redeclaration of ansi port 'DP_RAM_addr_out' is not allowed [D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:94]
-WARNING: [VRFC 10-3676] redeclaration of ansi port 'data_mem' is not allowed [D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:97]
+WARNING: [VRFC 10-3676] redeclaration of ansi port 'DP_RAM_addr_in' is not allowed [D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:86]
+WARNING: [VRFC 10-3676] redeclaration of ansi port 'DP_RAM_data_in' is not allowed [D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:87]
+WARNING: [VRFC 10-3676] redeclaration of ansi port 'DP_RAM_addr_out' is not allowed [D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:91]
+WARNING: [VRFC 10-3676] redeclaration of ansi port 'data_mem' is not allowed [D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:94]
 INFO: [VRFC 10-2263] Analyzing Verilog file "D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/simulation/test_cam_TB.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module test_cam_TB
-INFO: [VRFC 10-2263] Analyzing Verilog file "D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.sim/sim_1/behav/xsim/glbl.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module glbl

@@ -62,12 +62,9 @@ module test_cam
 
 // TAMANNO DE ADQUISICION DE LA CAMARA
 // Tamano de la imagne QQVGA
-localparam wc=160;
-localparam wr=120;
 
-parameter CAM_SCREEN_X = wc; 		// 640 / 4. Elegido por preferencia, menos memoria usada.
-parameter CAM_SCREEN_Y = wr;    	// 480 / 4.
-
+parameter CAM_SCREEN_X = 160; 		// 640 / 4. Elegido por preferencia, menos memoria usada.
+parameter CAM_SCREEN_Y = 120;    	// 480 / 4.
 
 /* // El color es RGB 332
 localparam RED_VGA =   8'b11100000;
@@ -97,7 +94,7 @@ reg  [AW-1: 0] DP_RAM_addr_out;
 wire [DW-1:0] data_mem;	   // Salida de dp_ram al driver VGA
 wire [DW-1:0] data_RGB444;  // salida del driver VGA al puerto
 wire [9:0] VGA_posX;		   // Determinar la pos de memoria que viene del VGA
-wire [8:0] VGA_posY;		   // Determinar la pos de memoria que viene del VGA
+wire [9:0] VGA_posY;		   // Determinar la pos de memoria que viene del VGA
 
 
 /* ****************************************************************************
@@ -207,7 +204,7 @@ always @ (VGA_posX, VGA_posY) begin
 		if ((VGA_posX>CAM_SCREEN_X-1)|(VGA_posY>CAM_SCREEN_Y-1))
 			DP_RAM_addr_out = 15'b1111_1111_1111_111;		// Esta seria ultima posicion. Estaba asi DP_RAM_addr_out=CAM_SCREEN_X*CAM_SCREEN_Y;
 		else
-			DP_RAM_addr_out = VGA_posX + VGA_posY * CAM_SCREEN_Y;// Calcula posicion.
+			DP_RAM_addr_out = VGA_posX + VGA_posY * CAM_SCREEN_X;// Calcula posicion.
 end
 
 endmodule
