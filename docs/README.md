@@ -18,7 +18,7 @@ Andrés Felipe Beltrán
 ![DIAGRAMA](./figs/test_cam.png)
 *Figura 1.Esquema general*
 
-![DIAGRAMA](./figs/Esquema.png)
+![DIAGRAMA](./figs/Esquema.PNG)
 
 
 ### Tareas asignadas
