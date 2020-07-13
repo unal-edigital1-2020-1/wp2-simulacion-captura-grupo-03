@@ -18,6 +18,8 @@ Andrés Felipe Beltrán
 ![DIAGRAMA](./figs/test_cam.png)
 *Figura 1.Esquema general*
 
+![DIAGRAMA](./figs/Esquema.png)
+
 
 ### Tareas asignadas
 #### 1. Módulo captura_datos_downsampler.v
