@@ -43,7 +43,7 @@ module buffer_ram_dp#(
 
 // Calcular el numero de posiciones totales de memoria.
 localparam NPOS = 2 ** AW; 			// Memoria.
-
+localparam imaSiz=160*120;
  reg [DW-1: 0] ram [0: NPOS-1];
 
 // Escritura  de la memoria port 1.
@@ -63,8 +63,8 @@ end
 initial begin
 // Lee en hexadecimal (readmemb lee en binario) dentro de ram [1, pÃ¡g 217].
 	$readmemh(imageFILE, ram);
-// Ultima posicion en memoria, igual a 0.
-	ram[15'b1111_1111_1111_111] = 12'b0000_0000_0000;
+// En la posición n+1 (160*120) se guarda el color azul
+	ram[imaSiz] = 12'h0;
 end
 endmodule
 

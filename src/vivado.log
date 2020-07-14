@@ -2,21 +2,21 @@
 # Vivado v2019.2 (64-bit)
 # SW Build 2708876 on Wed Nov  6 21:40:23 MST 2019
 # IP Build 2700528 on Thu Nov  7 00:09:20 MST 2019
-# Start of session at: Sat Jul 11 00:08:40 2020
-# Process ID: 12636
+# Start of session at: Sat Jul 11 09:34:20 2020
+# Process ID: 17396
 # Current directory: D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src
-# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent16232 D:\UNAL\semester6\digitali\proyecto\wp2-simulacion-captura-grupo-03\src\project_1.xpr
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent15068 D:\UNAL\semester6\digitali\proyecto\wp2-simulacion-captura-grupo-03\src\project_1.xpr
 # Log file: D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/vivado.log
 # Journal file: D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src\vivado.jou
 #-----------------------------------------------------------
 start_gui
 open_project D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.xpr
-Scanning sources...
-Finished scanning sources
-INFO: [IP_Flow 19-234] Refreshing IP repositories
-INFO: [IP_Flow 19-1704] No user IP repositories specified
-INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'C:/Xilinx/Vivado/2019.2/data/ip'.
-open_project: Time (s): cpu = 00:00:15 ; elapsed = 00:00:17 . Memory (MB): peak = 815.148 ; gain = 203.047
+INFO: [Common 17-41] Interrupt caught. Command should exit soon.
+INFO: [Common 17-344] 'open_project' was cancelled
+exit
+INFO: [Common 17-206] Exiting Vivado at Sat Jul 11 09:34:53 2020...
+do IP repository 'C:/Xilinx/Vivado/2019.2/data/ip'.
+open_project: Time (s): cpu = 00:00:24 ; elapsed = 00:00:14 . Memory (MB): peak = 839.500 ; gain = 172.074
 update_compile_order -fileset sources_1
 launch_simulation
 Command: launch_simulation 
@@ -47,9 +47,8 @@ WARNING: [VRFC 10-3676] redeclaration of ansi port 'DP_RAM_addr_out' is not allo
 WARNING: [VRFC 10-3676] redeclaration of ansi port 'data_mem' is not allowed [D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:94]
 INFO: [VRFC 10-2263] Analyzing Verilog file "D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/simulation/test_cam_TB.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module test_cam_TB
-INFO: [VRFC 10-2263] Analyzing Verilog file "D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.sim/sim_1/behav/xsim/glbl.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module glbl
-INFO: [USF-XSim-69] 'compile' step finished in '4' seconds
+run_program: Time (s): cpu = 00:00:01 ; elapsed = 00:00:08 . Memory (MB): peak = 873.977 ; gain = 0.000
+INFO: [USF-XSim-69] 'compile' step finished in '8' seconds
 INFO: [USF-XSim-3] XSim::Elaborate design
 INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.sim/sim_1/behav/xsim'
 "xelab -wto c9be66f33b86407ba8487a61a4f46e28 --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot test_cam_TB_behav xil_defaultlib.test_cam_TB xil_defaultlib.glbl -log elaborate.log"
@@ -59,7 +58,6 @@ Running: C:/Xilinx/Vivado/2019.2/bin/unwrapped/win64.o/xelab.exe -wto c9be66f33b
 Using 2 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
-WARNING: [VRFC 10-3091] actual bit length 10 differs from formal bit length 9 for port 'posY' [D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:193]
 Completed static elaboration
 Starting simulation data flow analysis
 Completed simulation data flow analysis
@@ -74,17 +72,8 @@ Compiling module xil_defaultlib.test_cam
 Compiling module xil_defaultlib.test_cam_TB
 Compiling module xil_defaultlib.glbl
 Built simulation snapshot test_cam_TB_behav
-
-****** Webtalk v2019.2 (64-bit)
-  **** SW Build 2708876 on Wed Nov  6 21:40:23 MST 2019
-  **** IP Build 2700528 on Thu Nov  7 00:09:20 MST 2019
-    ** Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
-
-source D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.sim/sim_1/behav/xsim/xsim.dir/test_cam_TB_behav/webtalk/xsim_webtalk.tcl -notrace
-webtalk_transmit: Time (s): cpu = 00:00:00 ; elapsed = 00:00:11 . Memory (MB): peak = 110.145 ; gain = 17.824
-INFO: [Common 17-206] Exiting Webtalk at Sat Jul 11 00:12:54 2020...
-run_program: Time (s): cpu = 00:00:01 ; elapsed = 00:00:27 . Memory (MB): peak = 898.414 ; gain = 0.000
-INFO: [USF-XSim-69] 'elaborate' step finished in '27' seconds
+run_program: Time (s): cpu = 00:00:01 ; elapsed = 00:00:17 . Memory (MB): peak = 873.977 ; gain = 0.000
+INFO: [USF-XSim-69] 'elaborate' step finished in '17' seconds
 INFO: [USF-XSim-4] XSim::Simulate design
 INFO: [USF-XSim-61] Executing 'SIMULATE' step in 'D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.sim/sim_1/behav/xsim'
 INFO: [USF-XSim-98] *** Running xsim
@@ -103,13 +92,15 @@ source test_cam_TB.tcl
 #   }
 # }
 # run 1000ns
-xsim: Time (s): cpu = 00:00:09 ; elapsed = 00:00:06 . Memory (MB): peak = 914.688 ; gain = 12.910
 INFO: [USF-XSim-96] XSim completed. Design snapshot 'test_cam_TB_behav' loaded.
 INFO: [USF-XSim-97] XSim simulation ran for 1000ns
-launch_simulation: Time (s): cpu = 00:00:12 ; elapsed = 00:00:38 . Memory (MB): peak = 914.688 ; gain = 16.273
+launch_simulation: Time (s): cpu = 00:00:10 ; elapsed = 00:00:32 . Memory (MB): peak = 878.781 ; gain = 4.805
+run 35 ms
+run: Time (s): cpu = 00:01:01 ; elapsed = 00:07:18 . Memory (MB): peak = 911.723 ; gain = 24.449
+run 35 ms
+run: Time (s): cpu = 00:00:01 ; elapsed = 00:00:05 . Memory (MB): peak = 921.859 ; gain = 0.000
 close_sim
 INFO: [Simtcl 6-16] Simulation closed
-close_sim: Time (s): cpu = 00:00:02 ; elapsed = 00:00:09 . Memory (MB): peak = 916.883 ; gain = 2.195
 launch_simulation
 Command: launch_simulation 
 INFO: [Vivado 12-5682] Launching behavioral simulation in 'D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.sim/sim_1/behav/xsim'
@@ -139,7 +130,7 @@ WARNING: [VRFC 10-3676] redeclaration of ansi port 'DP_RAM_addr_out' is not allo
 WARNING: [VRFC 10-3676] redeclaration of ansi port 'data_mem' is not allowed [D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:94]
 INFO: [VRFC 10-2263] Analyzing Verilog file "D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/simulation/test_cam_TB.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module test_cam_TB
-INFO: [USF-XSim-69] 'compile' step finished in '4' seconds
+INFO: [USF-XSim-69] 'compile' step finished in '3' seconds
 INFO: [USF-XSim-3] XSim::Elaborate design
 INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.sim/sim_1/behav/xsim'
 "xelab -wto c9be66f33b86407ba8487a61a4f46e28 --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot test_cam_TB_behav xil_defaultlib.test_cam_TB xil_defaultlib.glbl -log elaborate.log"
@@ -163,8 +154,8 @@ Compiling module xil_defaultlib.test_cam
 Compiling module xil_defaultlib.test_cam_TB
 Compiling module xil_defaultlib.glbl
 Built simulation snapshot test_cam_TB_behav
-run_program: Time (s): cpu = 00:00:00 ; elapsed = 00:00:06 . Memory (MB): peak = 916.883 ; gain = 0.000
-INFO: [USF-XSim-69] 'elaborate' step finished in '5' seconds
+run_program: Time (s): cpu = 00:00:00 ; elapsed = 00:00:06 . Memory (MB): peak = 935.992 ; gain = 0.000
+INFO: [USF-XSim-69] 'elaborate' step finished in '6' seconds
 INFO: [USF-XSim-4] XSim::Simulate design
 INFO: [USF-XSim-61] Executing 'SIMULATE' step in 'D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.sim/sim_1/behav/xsim'
 INFO: [USF-XSim-98] *** Running xsim
@@ -183,13 +174,14 @@ source test_cam_TB.tcl
 #   }
 # }
 # run 1000ns
-xsim: Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 916.883 ; gain = 0.000
 INFO: [USF-XSim-96] XSim completed. Design snapshot 'test_cam_TB_behav' loaded.
 INFO: [USF-XSim-97] XSim simulation ran for 1000ns
-launch_simulation: Time (s): cpu = 00:00:05 ; elapsed = 00:00:15 . Memory (MB): peak = 916.883 ; gain = 0.000
+launch_simulation: Time (s): cpu = 00:00:05 ; elapsed = 00:00:13 . Memory (MB): peak = 935.992 ; gain = 0.000
 run 35 ms
-run: Time (s): cpu = 00:00:11 ; elapsed = 00:05:55 . Memory (MB): peak = 916.883 ; gain = 0.000
+run: Time (s): cpu = 00:00:06 ; elapsed = 00:00:13 . Memory (MB): peak = 935.992 ; gain = 0.000
+run 35 ms
+run: Time (s): cpu = 00:00:16 ; elapsed = 00:07:13 . Memory (MB): peak = 935.992 ; gain = 0.000
 close_sim
 INFO: [Simtcl 6-16] Simulation closed
 exit
-INFO: [Common 17-206] Exiting Vivado at Sat Jul 11 00:24:14 2020...
+INFO: [Common 17-206] Exiting Vivado at Sat Jul 11 12:29:03 2020...

@@ -89,7 +89,7 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
 		pclk = 0;
 		CAM_vsync = 1;
 		CAM_href = 0;
-		CAM_px_data = 8'b00001111;
+		CAM_px_data = 8'h0f;
    	// Wait 100 ns for global reset to finish
 		#20;
 		rst = 0; // registros en f�sico para que reinicialicen.
@@ -101,8 +101,8 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
  	always #2 pclk  = ~pclk;
 
 
-	reg [9:0]line_cnt=0;
-	reg [9:0]row_cnt=0;
+	reg [8:0]line_cnt=0;   //2^9-1=511, TAM_LINE+BLACK_TAM_LINE=324  
+	reg [6:0]row_cnt=0;    //2^7-1= 127, TAM_ROW+BLACK_TAM_ROW=124 
 
 	parameter TAM_LINE=320;	// es 160x2 debido a que son dos pixeles de RGB
 	parameter TAM_ROW=120;

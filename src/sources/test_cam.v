@@ -82,6 +82,7 @@ wire clk24M;		// Para guardar el dato del reloj de la camara.
 
 localparam AW=15;
 localparam DW=12;
+localparam imaSiz= CAM_SCREEN_X*CAM_SCREEN_Y;// Posición n+1 
 
 wire [AW-1: 0] DP_RAM_addr_in;		// Direccion entrada.
 wire [DW-1: 0] DP_RAM_data_in;		// Dato entrada.
@@ -202,7 +203,8 @@ adicionales seran iguales al color del ultimo pixel de memoria
 **************************************************************************** */
 always @ (VGA_posX, VGA_posY) begin
 		if ((VGA_posX>CAM_SCREEN_X-1)|(VGA_posY>CAM_SCREEN_Y-1))
-			DP_RAM_addr_out = 15'b1111_1111_1111_111;		// Esta seria ultima posicion. Estaba asi DP_RAM_addr_out=CAM_SCREEN_X*CAM_SCREEN_Y;
+			//Posición n+1(160*120), en buffer_ram_dp.v se le asignó el color azul.
+			DP_RAM_addr_out = imaSiz;
 		else
 			DP_RAM_addr_out = VGA_posX + VGA_posY * CAM_SCREEN_X;// Calcula posicion.
 end
