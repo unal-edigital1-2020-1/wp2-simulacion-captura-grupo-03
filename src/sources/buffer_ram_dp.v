@@ -17,9 +17,9 @@
 // Additional Comments:
 //
 //////////////////////////////////////////////////////////////////////////////////
-// # Definir y sobreescribir parámetros [1, pág 211]
+// # Definir y sobreescribir parÃ¡metros [1, pÃ¡g 211]
 // Se usa para anchos de bits parametrizables
-// Uso: <name_module> #(a,b,...) <nombre de instanciación> (a.(),b.(),...);
+// Uso: <name_module> #(a,b,...) <nombre de instanciaciÃ³n> (a.(),b.(),...);
 // Al instanciar sin #(a,b,...) se colocan los valores inicialmente definidos.
 // AW se calcula como log_2(#pixeles)
 // DW bits por cada pixel.
@@ -31,12 +31,12 @@ module buffer_ram_dp#(
 	parameter imageFILE = "D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/imagen.men")
 	(
 	input clk_w,     		 // Frecuencia de toma de datos de cada pixel.
-	input [AW-1: 0] addr_in, // Dirección entrada dada por el capturador.
-	input [DW-1: 0] data_in, // Datos que entran de la cámara.
+	input [AW-1: 0] addr_in, // DirecciÃ³n entrada dada por el capturador.
+	input [DW-1: 0] data_in, // Datos que entran de la cÃ¡mara.
 	input regwrite,		  	 // Enable.
 
 	input clk_r, 				    // Reloj 25MHz VGA.
-	input [AW-1: 0] addr_out, 		// Dirección de salida dada por VGA.
+	input [AW-1: 0] addr_out, 		// DirecciÃ³n de salida dada por VGA.
 	output reg [DW-1: 0] data_out	// Datos enviados a la VGA.
 	//input reset					// De momento no se esta usando.
 	);
@@ -49,7 +49,7 @@ localparam imaSiz=160*120;
 // Escritura  de la memoria port 1.
 always @(posedge clk_w) begin
        if (regwrite == 1)
-// Escribe los datos de entrada en la dirección que addr_in se lo indique.
+// Escribe los datos de entrada en la direcciÃ³n que addr_in se lo indique.
              ram[addr_in] <= data_in;
 end
 
@@ -61,9 +61,9 @@ end
 
 
 initial begin
-// Lee en hexadecimal (readmemb lee en binario) dentro de ram [1, pág 217].
+// Lee en hexadecimal (readmemb lee en binario) dentro de ram [1, pÃ¡g 217].
 	$readmemh(imageFILE, ram);
-// En la posici�n n+1 (160*120) se guarda el color azul
+	// En la posición n+1 (160*120) se guarda el color negro
 	ram[imaSiz] = 12'h0;
 end
 endmodule
