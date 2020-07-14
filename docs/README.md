@@ -18,6 +18,8 @@ Andrés Felipe Beltrán
 ![DIAGRAMA](./figs/test_cam.png)
 *Figura 1.Esquema general*
 
+![DIAGRAMA](./figs/Esquema.png)
+
 
 ### Tareas asignadas
 #### 1. Módulo captura_datos_downsampler.v
@@ -230,10 +232,7 @@ Al culminar los hitos anteriores deben:
 
 ***RECUEDE: Es necesario documentar la implementación y registrar la información en README.md, lo puede hacer con ayuda de imágenes o videos***
 
-![DIAGRAMA](./figs/clockw1.PNG)
-![DIAGRAMA](./figs/clockw2.PNG)
-![DIAGRAMA](./figs/clockw3.PNG)
-![DIAGRAMA](./figs/clockw4.PNG)
+
 
 Referencias
 
