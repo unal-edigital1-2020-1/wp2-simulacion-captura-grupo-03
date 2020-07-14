@@ -31,7 +31,7 @@ module test_cam
     output wire [3:0] VGA_G,  // 4-bit VGA green output.
     output wire [3:0] VGA_B,  // 4-bit VGA blue output.
 
-	 // Se�ales de prueba *****************************************
+	 // Seï¿½ales de prueba *****************************************
 
 	output wire [11:0] data_mem,
 	output wire [14:0]  DP_RAM_addr_in,
@@ -41,7 +41,7 @@ module test_cam
 
 	//CAMARA input/output ********************************
 
-	output wire CAM_xclk,		// System  clock input de la c�mara.
+	output wire CAM_xclk,		// System  clock input de la cï¿½mara.
 	output wire CAM_pwdn,		// Power down mode.
 	output wire CAM_reset,		// Clear all registers of cam.
 	input wire CAM_pclk,		// Sennal PCLK de la camara. 
@@ -82,7 +82,7 @@ wire clk24M;		// Para guardar el dato del reloj de la camara.
 
 localparam AW=15;
 localparam DW=12;
-localparam imaSiz= CAM_SCREEN_X*CAM_SCREEN_Y;// Posici�n n+1 
+localparam imaSiz= CAM_SCREEN_X*CAM_SCREEN_Y;// Posición n+1 
 
 wire [AW-1: 0] DP_RAM_addr_in;		// Direccion entrada.
 wire [DW-1: 0] DP_RAM_data_in;		// Dato entrada.
@@ -118,9 +118,9 @@ assign VGA_B = data_RGB444[3:0];
 Asignacion de las seales de control xclk pwdn y reset de la camara
 **************************************************************************** */
 
-assign CAM_xclk = clk24M;		// Asignación reloj cámara.
+assign CAM_xclk = clk24M;		// AsignaciÃ³n reloj cÃ¡mara.
 assign CAM_pwdn = 0;			// Power down mode.
-assign CAM_reset = 0;			// Reset cámara.
+assign CAM_reset = 0;			// Reset cÃ¡mara.
 
 /* ****************************************************************************
   Este bloque se debe modificar segun sea le caso. El ejemplo esta dado para
@@ -134,7 +134,7 @@ assign CAM_reset = 0;			// Reset cámara.
 clk24_25_nexys4 clk25_24(
   .CLK_IN1(clk),				//Reloj de la FPGA.
   .CLK_OUT1(clk25M),			//Reloj de la VGA.
-  .CLK_OUT2(clk24M),			//Reloj de la cámara.
+  .CLK_OUT2(clk24M),			//Reloj de la cÃ¡mara.
   .RESET(rst)					//Reset.
  );
 
@@ -169,8 +169,8 @@ se recomiendia dejar DW a 8, con el fin de optimizar recursos  y hacer RGB 332
 buffer_ram_dp DP_RAM(
 		// Entradas.
 	.clk_w(CAM_pclk),				//Frecuencia de toma de datos de cada pixel.
-	.addr_in(DP_RAM_addr_in), 		// Dirección entrada dada por el capturador.
-	.data_in(DP_RAM_data_in),		// Datos que entran de la cámara.
+	.addr_in(DP_RAM_addr_in), 		// DirecciÃ³n entrada dada por el capturador.
+	.data_in(DP_RAM_data_in),		// Datos que entran de la cÃ¡mara.
 	.regwrite(DP_RAM_regW), 		// Enable.
 	.clk_r(clk25M), 				// Reloj VGA.
 	.addr_out(DP_RAM_addr_out),		// Direccion salida dada por VGA.
@@ -203,7 +203,7 @@ adicionales seran iguales al color del ultimo pixel de memoria
 **************************************************************************** */
 always @ (VGA_posX, VGA_posY) begin
 		if ((VGA_posX>CAM_SCREEN_X-1)|(VGA_posY>CAM_SCREEN_Y-1))
-			//Posici�n n+1(160*120), en buffer_ram_dp.v se le asign� el color azul.
+			//Posición n+1(160*120), en buffer_ram_dp.v se le asignó el color negro.
 			DP_RAM_addr_out = imaSiz;
 		else
 			DP_RAM_addr_out = VGA_posX + VGA_posY * CAM_SCREEN_X;// Calcula posicion.
