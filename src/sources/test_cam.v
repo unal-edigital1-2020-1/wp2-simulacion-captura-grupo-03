@@ -18,28 +18,30 @@
 // Additional Comments:
 //
 //////////////////////////////////////////////////////////////////////////////////
-// captura_datos_downsampler= cam_read
+// test_cam Main del proyeco
+// se instanciaron los siguientes modulos: Captura de datos(cam_read), RAM,Divisor de freuencia PLL, driver_ VGA
 module test_cam
 (
-    input wire clk,           // Board clock: 100 MHz Nexys4DDR.
-    input wire rst,		   	  // Reset button. Externo
+	//Entradas del test cam
+    input wire clk,           	// Board clock: 100 MHz Nexys4DDR.
+    input wire rst,	 	// Reset button. Externo
 
-	// VGA input/output
+	// Salida
     output wire VGA_Hsync_n,  // Horizontal sync output.
     output wire VGA_Vsync_n,  // Vertical sync output.
     output wire [3:0] VGA_R,  // 4-bit VGA red output.
     output wire [3:0] VGA_G,  // 4-bit VGA green output.
     output wire [3:0] VGA_B,  // 4-bit VGA blue output.
 
-	 // Seï¿½ales de prueba *****************************************
+	 // Conexiones *****************************************
 
-	output wire [11:0] data_mem,
-	output wire [14:0]  DP_RAM_addr_in,
-	output wire [11:0] DP_RAM_data_in,
-	output reg [14:0] DP_RAM_addr_out,
+	output wire [11:0] data_mem,           //Cable de DP_RAM a VGA 640X480
+	output wire [14:0] DP_RAM_addr_in,     //Cable Captura de datos a DP_RAM Dirección de memoria lectura 
+	output wire [11:0] DP_RAM_data_in,	//Cable Captura de datos a DP_RAM Datos a guardar en la dirección de memoria 	
+	output reg  [14:0] DP_RAM_addr_out,	//Registro Captura de datos a DP_RAM Dirección en memoria 
 
 
-	//CAMARA input/output ********************************
+	//CAMARA input/output conexiones de la camara al modulo principal ********************************
 
 	output wire CAM_xclk,		// System  clock input de la cï¿½mara.
 	output wire CAM_pwdn,		// Power down mode.
@@ -47,71 +49,46 @@ module test_cam
 	input wire CAM_pclk,		// Sennal PCLK de la camara. 
 	input wire CAM_href,		// Sennal HREF de la camara. 
 	input wire CAM_vsync,		// Sennal VSYNC de la camara.
-	input wire [7:0] CAM_px_data		// Me parece que falta declarar [7:0] CAM_px_data.
-
-
-//	input CAM_D0,					// Bit 0 de los datos del pixel
-//	input CAM_D1,					// Bit 1 de los datos del pixel
-//	input CAM_D2,					// Bit 2 de los datos del pixel
-//	input CAM_D3,					// Bit 3 de los datos del pixel
-//	input CAM_D4,					// Bit 4 de los datos del pixel
-//	input CAM_D5,					// Bit 5 de los datos del pixel
-//	input CAM_D6,					// Bit 6 de los datos del pixel
-//	input CAM_D7 					// Bit 7 de los datos del pixel
+	input wire [7:0] CAM_px_data	// Data de la camara, con esto se genera la imagen.
    );
 
 // TAMANNO DE ADQUISICION DE LA CAMARA
-// Tamano de la imagne QQVGA
+// Tamano de la imagne QQVGA 160X120 Pixeles
 
 parameter CAM_SCREEN_X = 160; 		// 640 / 4. Elegido por preferencia, menos memoria usada.
 parameter CAM_SCREEN_Y = 120;    	// 480 / 4.
 
-/* // El color es RGB 332
-localparam RED_VGA =   8'b11100000;
-localparam GREEN_VGA = 8'b00011100;
-localparam BLUE_VGA =  8'b00000011;
-Creo que esto no va.
-*/
-
-// Clk
-wire clk100M;       // Reloj de un puerto de la Nexys 4 DDR
-wire clk25M;		// Para guardar el dato del reloj de la Pantalla.
+// conexiondes del Clk
+wire clk100M;           // Reloj de un puerto de la Nexys 4 DDR entrada.
+wire clk25M;	// Para guardar el dato del reloj de la Pantalla (VGA 680X240 y DP_RAM).
 wire clk24M;		// Para guardar el dato del reloj de la camara.
 
 // Conexion dual por ram
 
-localparam AW=15;
-localparam DW=12;
-localparam imaSiz= CAM_SCREEN_X*CAM_SCREEN_Y;// Posición n+1 
+localparam AW=15; // Se determina de acuerdo al tamaño de de la dirección, de acuerdo a l arreglo de pixeles dado por el formato en este caso Log(2)(160*120)=15
+localparam DW=12; // Se determina de acuerdo al tamaño de la data, formaro RGB444 = 12 bites.
+localparam imaSiz= CAM_SCREEN_X*CAM_SCREEN_Y;// Posición n+1 del tamañp del arreglo de pixeles de acuerdo al formato.
 
-wire [AW-1: 0] DP_RAM_addr_in;		// Direccion entrada.
-wire [DW-1: 0] DP_RAM_data_in;		// Dato entrada.
-wire DP_RAM_regW;					// Enable escritura.
+wire [AW-1: 0] DP_RAM_addr_in;		// Conexión  Direccion entrada.
+wire [DW-1: 0] DP_RAM_data_in;      	// Conexion Dato entrada.
+wire DP_RAM_regW;			// Enable escritura de dato en memoria .
 
-
-reg  [AW-1: 0] DP_RAM_addr_out;
+reg  [AW-1: 0] DP_RAM_addr_out;		//Registro de la dirección de memoria. 
 
 // Conexion VGA Driver
-wire [DW-1:0] data_mem;	   // Salida de dp_ram al driver VGA
-wire [DW-1:0] data_RGB444;  // salida del driver VGA al puerto
-wire [9:0] VGA_posX;		   // Determinar la pos de memoria que viene del VGA
-wire [9:0] VGA_posY;		   // Determinar la pos de memoria que viene del VGA
+wire [DW-1:0] data_mem;	    		// Salida de dp_ram al driver VGA
+wire [DW-1:0] data_RGB444;  		// salida del driver VGA a la pantalla
+wire [9:0] VGA_posX;			// Determinar la posición en X del pixel en la pantalla 
+wire [9:0] VGA_posY;			// Determinar la posición de Y del pixel en la pantalla
 
 
 /* ****************************************************************************
-La pantalla VGA es RGB 444, pero el almacenamiento en memoria se hace 332
-por lo tanto, los bits menos significactivos deben ser cero
+Asignación de la información de la salida del driver a la pantalla
+del regisro data_RGB444
 **************************************************************************** */
-/*
-
-Todos los datos a manejar estan en formato RGB 444. Cuando se haga el driver
-se hara este pedazo.
-
-*/
-
-assign VGA_R = data_RGB444[11:8];
-assign VGA_G = data_RGB444[7:4];
-assign VGA_B = data_RGB444[3:0];
+assign VGA_R = data_RGB444[11:8]; 	//los 4 bites más significativos corresponden al color ROJO (RED) 
+assign VGA_G = data_RGB444[7:4];  	//los 4 bites siguientes son del color VERDE (GREEN)
+assign VGA_B = data_RGB444[3:0]; 	//los 4 bites menos significativos son del color AZUL(BLUE)
 
 
 /* ****************************************************************************
@@ -123,30 +100,25 @@ assign CAM_pwdn = 0;			// Power down mode.
 assign CAM_reset = 0;			// Reset cÃ¡mara.
 
 /* ****************************************************************************
-  Este bloque se debe modificar segun sea le caso. El ejemplo esta dado para
-  fpga Spartan6 lx9 a 32MHz.
-  usar "tools -> Core Generator ..."  y general el ip con Clocking Wizard
-  el bloque genera un reloj de 25Mhz usado para el VGA  y un relo de 24 MHz
-  utilizado para la camara , a partir de una frecuencia de 32 Mhz
+   Se uso "IP Catalog >FPGA Features and Desing > Clocking > Clocking Wizard"  y general el ip con Clocking Wizard
+  el bloque genera un reloj de 25Mhz usado para el VGA  y un reloj de 24 MHz
+  utilizado para la camara , a partir de una frecuencia de 100 Mhz que corresponde a la Nexys 4
 **************************************************************************** */
-// assign clk100M =clk;			// Se guarda el reloj FPGA en variable. (No se esta usando).
+
 
 clk24_25_nexys4 clk25_24(
   .CLK_IN1(clk),				//Reloj de la FPGA.
-  .CLK_OUT1(clk25M),			//Reloj de la VGA.
-  .CLK_OUT2(clk24M),			//Reloj de la cÃ¡mara.
+  .CLK_OUT1(clk25M),				//Reloj de la VGA.
+  .CLK_OUT2(clk24M),				//Reloj de la cÃ¡mara.
   .RESET(rst)					//Reset.
  );
 
 /* ****************************************************************************
-captura_datos_downsampler
+Modulo de captura de datos /captura_de_datos_downsampler = cam_read
 **************************************************************************** */
-//captura_de_datos_downsampler
 
 cam_read2_0 #(AW,DW) cam_read
-// cam_read #(AW,DW) cam_read
-(  // Captura?? Otro nombre??.	// Entradas.
-        //entradas
+( 
 		.CAM_px_data(CAM_px_data),
 		.CAM_pclk(CAM_pclk),
 		.CAM_vsync(CAM_vsync),
