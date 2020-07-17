@@ -15,7 +15,7 @@ Andrés Felipe Beltrán
 - Recuerde, esta documentación debe ser tal que, cualquier compañero de futuros semestres comprenda sus anotaciones y la relación con los módulos diseñados.
 
 
-![DIAGRAMA](./figs/test_cam.png)
+![DIAGRAMA](./figs/testcam.png)
 *Figura 1.Esquema general*
 
 ![DIAGRAMA](./figs/Esquema.png)
