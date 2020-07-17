@@ -65,9 +65,9 @@ Analizando los tiempos que se presentan en la Figura Figura 5 se tiene:
 
 ***RECUEDE: Es necesario documentar el módulo diseñado con los respectivos diagramas funcionales y estructurales y registrar la información en README.md***
 
-#### 2. Revisar si el bloque PLL, `clk_32MHZ_to_25M_24M.v`
+#### 2. Revisar si el bloque PLL, `clk_100MHZ_to_25M_24M.v`
 
-- Adaptar el bloque azul PLL para las frecuencias de 24 MHz y 25 MHz para la pantalla VGA y la cámara respectivamente según la FPGA a utilizar, que en nuestro caso tiene un reloj de 50 MHz. El archivo es clk_32MHZ_to_25M_24M.v y se encuentran en el interior de la carpeta hdl/scr/PLL.
+- Adaptar el bloque azul PLL para las frecuencias de 24 MHz y 25 MHz para la pantalla VGA y la cámara respectivamente según la FPGA a utilizar, que en nuestro caso tiene un reloj de 100 MHz. El archivo es clk_100MHZ_to_25M_24M.v y se encuentran en el interior de la carpeta hdl/scr/PLL.
 
 Para este hito se recomienda generar un nuevo PLL con `Clocking Wizard`. en el IDE de ISE debe utilizar `tools -> Core Generator ...` y general el ip con Clocking Wizard. Una vez, generado el nuevo bloque de Clk:
 * Copiar el archivo en la carpeta `hdl/scr/PLL`.
