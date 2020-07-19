@@ -47,20 +47,11 @@ module test_cam
 	input wire CAM_pclk,		// Sennal PCLK de la camara. 
 	input wire CAM_href,		// Sennal HREF de la camara. 
 	input wire CAM_vsync,		// Sennal VSYNC de la camara.
-	input wire [7:0] CAM_px_data		// Me parece que falta declarar [7:0] CAM_px_data.
+	input wire [7:0] CAM_px_data// Datos de entrada simulados 
 
-
-//	input CAM_D0,					// Bit 0 de los datos del pixel
-//	input CAM_D1,					// Bit 1 de los datos del pixel
-//	input CAM_D2,					// Bit 2 de los datos del pixel
-//	input CAM_D3,					// Bit 3 de los datos del pixel
-//	input CAM_D4,					// Bit 4 de los datos del pixel
-//	input CAM_D5,					// Bit 5 de los datos del pixel
-//	input CAM_D6,					// Bit 6 de los datos del pixel
-//	input CAM_D7 					// Bit 7 de los datos del pixel
    );
 
-// TAMANNO DE ADQUISICION DE LA CAMARA
+// TAMANO DE ADQUISICION DE LA CAMARA
 // Tamano de la imagne QQVGA
 
 parameter CAM_SCREEN_X = 160; 		// 640 / 4. Elegido por preferencia, menos memoria usada.
@@ -182,7 +173,7 @@ buffer_ram_dp DP_RAM(
 /* ****************************************************************************
 VGA_Driver640x480
 **************************************************************************** */
-VGA_Driver640x480 VGA640x480 // Necesitamos otro driver.
+VGA_Driver VGA_640x480 // Necesitamos otro driver.
 (
 	.rst(rst),
 	.clk(clk25M), 				// 25MHz  para 60 hz de 160x120

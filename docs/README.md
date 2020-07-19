@@ -18,7 +18,7 @@ Andrés Felipe Beltrán
 ![DIAGRAMA](./figs/test_cam.png)
 *Figura 1.Esquema general*
 
-![DIAGRAMA](./figs/Esquema.png)
+![DIAGRAMA](./figs/Esquema.png)V
 
 
 ### Tareas asignadas
@@ -80,9 +80,20 @@ Supongo que seguir los cuatro primeros pasos.
 
 #### 3. Modificación del archivo test_cam.v para señales de entrada y salida de la cámara.
 
- Modificar el módulo test_cam.v para agregar las señales de entrada y salida necesarias para la cámara (señales amarillas del diagrama).
+Las señales amarillas de la Figura 1, se sustituyen por las señales rojas de la siguiente Figura:
 
-![DIAGRAMA](./figs/test_cam2.png)
+![DIAGRAMA](./figs/test_cam_sim.PNG)
+
+Durante la simulación fue necesario agregarle las señales de salida que se muestra a continuación para comprobar el correcto funcionamiento de los distintos módulos intanciados:
+
+```verilog 
+	output wire [11:0] data_mem,
+	output wire [14:0]  DP_RAM_addr_in,
+	output wire [11:0] DP_RAM_data_in,
+	output reg [14:0] DP_RAM_addr_out,
+``` 
+* `data_mem` es el pixel de 12 bits que el módulo `buffer_ram_dp` le entrega al módulo `VGA` en la ubicación `DP_RAM_addr_out`.
+* Las señales  DP_RAM_addr_in
 
 #### 4. Instanciamiento módulo captura_datos_downsampler.v
 
