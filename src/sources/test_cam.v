@@ -59,15 +59,15 @@ module test_cam
 parameter CAM_SCREEN_X = 160; 		// 640 / 4. Elegido por preferencia, menos memoria usada.
 parameter CAM_SCREEN_Y = 120;    	// 480 / 4.
 
+localparam AW=15; // Se determina de acuerdo al tamaño de de la dirección, de acuerdo a l arreglo de pixeles dado por el formato en este caso Log(2)(160*120)=15
+localparam DW=12; // Se determina de acuerdo al tamaño de la data, formaro RGB444 = 12 bites.
+
 // conexiondes del Clk
 wire clk100M;           // Reloj de un puerto de la Nexys 4 DDR entrada.
 wire clk25M;	// Para guardar el dato del reloj de la Pantalla (VGA 680X240 y DP_RAM).
 wire clk24M;		// Para guardar el dato del reloj de la camara.
 
 // Conexion dual por ram
-
-localparam AW=15; // Se determina de acuerdo al tamaño de de la dirección, de acuerdo a l arreglo de pixeles dado por el formato en este caso Log(2)(160*120)=15
-localparam DW=12; // Se determina de acuerdo al tamaño de la data, formaro RGB444 = 12 bites.
 localparam imaSiz= CAM_SCREEN_X*CAM_SCREEN_Y;// Posición n+1 del tamañp del arreglo de pixeles de acuerdo al formato.
 
 wire [AW-1: 0] DP_RAM_addr_in;		// Conexión  Direccion entrada.
@@ -118,15 +118,16 @@ clk24_25_nexys4 clk25_24(
 Modulo de captura de datos /captura_de_datos_downsampler = cam_read
 **************************************************************************** */
 
-cam_read2_0 #(AW,DW) cam_read
-( 
+cam_read #(AW,DW) cam_read
+(
+	// Inputs 
 		.CAM_px_data(CAM_px_data),
 		.CAM_pclk(CAM_pclk),
 		.CAM_vsync(CAM_vsync),
 		.CAM_href(CAM_href),
 		.rst(rst),
 
-		//Salidas
+	//outputs
 		.DP_RAM_regW(DP_RAM_regW), //enable
 		.DP_RAM_addr_in(DP_RAM_addr_in),
 		.DP_RAM_data_in(DP_RAM_data_in)

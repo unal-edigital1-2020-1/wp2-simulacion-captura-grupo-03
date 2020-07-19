@@ -80,11 +80,13 @@ Supongo que seguir los cuatro primeros pasos.
 
 #### 3. Modificación del archivo test_cam.v para señales de entrada y salida de la cámara.
 
-Las señales amarillas de la Figura 1, se sustituyen por las señales rojas de la siguiente Figura:
+Las señales amarillas de la Figura 1, se sustituyen por las señales rojas de la Figura 7:
 
 ![DIAGRAMA](./figs/test_cam_sim.PNG)
 
-Durante la simulación fue necesario agregarle las señales de salida que se muestra a continuación para comprobar el correcto funcionamiento de los distintos módulos intanciados:
+*Figura 7. Diagrama de simulación*
+
+Durante la simulación fue necesario agregar las señales de salida para comprobar el correcto funcionamiento de los distintos módulos intanciados, estas son:
 
 ```verilog 
 	output wire [11:0] data_mem,
@@ -92,18 +94,71 @@ Durante la simulación fue necesario agregarle las señales de salida que se mue
 	output wire [11:0] DP_RAM_data_in,
 	output reg [14:0] DP_RAM_addr_out,
 ``` 
-* `data_mem` es el pixel de 12 bits que el módulo `buffer_ram_dp` le entrega al módulo `VGA` en la ubicación `DP_RAM_addr_out`.
-* Las señales  DP_RAM_addr_in
+* `data_mem` es el pixel de 12 bits que el módulo `buffer_ram_dp` le transfiere al módulo `VGA_Driver.v` en la ubicación `DP_RAM_addr_out`.
+* Las señales `DP_RAM_data_in` y `DP_RAM_addr_in` son salidas del módulo `cam_read.v` que llevan los datos y las posiciones que utiliza el módulo `buffer_ram_dp.v` para almacenar temporalmente las capturas de datos.
 
-#### 4. Instanciamiento módulo captura_datos_downsampler.v
+Se sustituyó:
+```verilog
+	input CAM_PCLK,				// Sennal PCLK de la camara
+	input CAM_HREF,				// Sennal HREF de la camara
+	input CAM_VSYNC,				// Sennal VSYNC de la camara
+``` 
+Por:
 
-Instanciar el módulo diseñado en el hito 1 y 2 en el módulo `test_cam.v`.
+```verilog
+	input wire CAM_pclk,		// Sennal PCLK de la camara. 
+	input wire CAM_href,		// Sennal HREF de la camara. 
+	input wire CAM_vsync,		// Sennal VSYNC de la camara.
+```
 
-- Supongo que es solamente el hito 1.
+Para que fueran coherentes las entradas con la Figura 7.
+
+Por otra parte, las entradas de los datos de la cámara,
+
+```verilog
+	input CAM_D0,					// Bit 0 de los datos del pixel
+	input CAM_D1,					// Bit 1 de los datos del pixel
+	input CAM_D2,					// Bit 2 de los datos del pixel
+	input CAM_D3,					// Bit 3 de los datos del pixel
+	input CAM_D4,					// Bit 4 de los datos del pixel
+	input CAM_D5,					// Bit 5 de los datos del pixel
+	input CAM_D6,					// Bit 6 de los datos del pixel
+	input CAM_D7 					// Bit 7 de los datos del pixel
+``` 
+
+Fueron sustituidos por:
+
+```verilog
+input wire [7:0] CAM_px_data// Datos de entrada simulados
+```
+Ya que al simular se proporcionaba un bus de 8 bits.
+
+#### 4. Instanciamiento módulo cam_read.v
+Se instancea el módulo `cam_read.v` en módulos `test_cam.v` como se ilustra a continuación:
+
+```verilog
+cam_read #(AW,DW) cam_read
+(
+	// Entradas 
+		.CAM_px_data(CAM_px_data), // Bytes simulados de la cámara
+		.CAM_pclk(CAM_pclk), // Reloj de captura de datos, con frecuencia de 25 MHz
+		.CAM_vsync(CAM_vsync), // VSYNC que especifica la cámara
+		.CAM_href(CAM_href), // HREF que especifica la cámara
+		.rst(rst), // reset general
+
+	//Salidas
+		.DP_RAM_regW(DP_RAM_regW), // habilita la escritura de datos en el módulo buffer_ram_dp.v
+		.DP_RAM_addr_in(DP_RAM_addr_in), // Dirrección a guardar la información en buffer_ram_dp.v
+		.DP_RAM_data_in(DP_RAM_data_in) // Dato que se desea guardar en buffer_ram_dp.v en la dirección antes mencionada.
+	);
+```
 
 #### 5. Implementación del proyecto
 
  Implementar el proyecto completo y documentar los resultados. Recuerde adicionar el nombre de las señales y módulos en la Figura 1 y registre el cambio en el archivo README.md
+
+
+##### Módulo `test_cam.v`
 
 
 ##### Módulo `clk24_25_nexys4.v` 
@@ -164,53 +219,19 @@ En el módulo TOP `test_cam.v` se instancea como:
 113 assign CAM_reset = 0;			
 ```
 
-##### Módulo `test_cam.v`
-* Se inabilitó en módulo captura de datos
-```verilog
-/*
- captura #(AW,DW)(  // Captura?? Otro nombre??.	// Entradas.
-	.PCLK(CAM_PCLK),		// Reloj de la FPGA.
-	.HREF(CAM_HREF),		// Horizontal Ref.
-	.VSYNC(CAM_VSYNC),		// Vertical Sync.
-	.D0(CAM_D0),			// Bits dados por la camara. (D0 - D7).
-	.D1(CAM_D1),
-	.D2(CAM_D2),
-	.D3(CAM_D3),
-	.D4(CAM_D4),
-	.D5(CAM_D5),
-	.D6(CAM_D6),
-	.D7(CAM_D7),
-	// Salidas.
-	.DP_RAM_data_in(DP_RAM_data_in), // Datos capturados. 
-	.DP_RAM_addr_in(DP_RAM_addr_in), // Direccion datos capturados.
-	.DP_RAM_regW(DP_RAM_regW)        //	Enable.
-	);
-*/
-```
-
-Observaciones: Quitar los siguientes wires y colocarlos como entradas 
-
-* wire [AW-1: 0] DP_RAM_addr_in 
-
-* wire [DW-1: 0] DP_RAM_data_in 
-
-* wire DP_RAM_regW
-
-
 ### Simulación
 
-Como se ha explicado en la reuniòn es un entorno de simulación completo de la càmara y la pantalla VGA.
+Con la modificación que se le hizo al módulo `test_cam_TB.v` y `VGA_Driver.v` solo es necesario simular aproximadamente 17 ms para generar una imagen. La siguiente fórmula explica el tiempo de simulación.
 
-A la plantilla de proyecto se adicionan los siguientes archivos:
-1. ***cam_read.v*** fichero que contiene la declaraciòn de la caja negra, con las respectivas entradas  y salidas. Este archivo debe se utilizado para realiza la descripción funcional de la captura de datos de la camara en formato RGB565
-2. ***test_cam_TB.v*** fichero que contiene la simulación de las señales  de la camara y almacena la salida VGA en un archivo de texto plano.  
+![tie_sim](./figs/tie_sim.png)
 
-***RECUEDE: Es necesario documentar el módulo diseñado con los respectivos diagramas funcionales y estructurales y registrar la información en README.md ***
+#### Imagen 1. Verde 
 
-Una vez clone el repositorio, en su computador de la plantilla del proyecto
+#### Imagen 2. Verde y Rosado
 
-1. Cargar el proyecto en el entorno y analizar el archivo ***test_cam_TB.v***.
-2. En las propiedades de simulaciòn modificar el tiempo de simulación a 30ms. y generar la simulación.
+Comprobar la combinación de colores ingresando a [Link](https://htmlcolorcodes.com/es/)
+
+
 3. Una vez terminada la simulaciòn revisar dentro del directorio `HW` que contenga el fichero ***test_vga.txt***
 4. ingresar a la web [vga-simulator](https://ericeastwood.com/lab/vga-simulator/)  y cargar el archivo ***test_vga.txt***, dejar los datos de configuraciòn tal cual como aparecen.
 5. ejecutar `submit`.
