@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+`timescale 10ns / 1ns
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -19,7 +19,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module cam_read #(
-		parameter AW = 15,  // Cantidad de bits  de la dirección
+		parameter AW = 15,  // Cantidad de bits  de la direcciï¿½n
 		parameter DW = 12 
 		)
 		(
@@ -28,6 +28,7 @@ module cam_read #(
 		CAM_vsync,
 		CAM_href,
 		rst,
+		
 		DP_RAM_regW, 
 		DP_RAM_addr_in,
 		DP_RAM_data_in
@@ -42,53 +43,77 @@ module cam_read #(
 		output reg DP_RAM_regW; //enable
 		output reg [AW-1:0] DP_RAM_addr_in;
 		output reg [DW-1:0] DP_RAM_data_in;
-		
-reg [1:0] cont = 1'b0;  // Contador inicializado en 0.
 
-  always @ (posedge CAM_pclk)
-  begin
-    if(rst)
-    begin
-        DP_RAM_regW=0;
-        DP_RAM_addr_in=0;
-        DP_RAM_data_in=0;
+
+parameter INIT=0,BYTE1=1,BYTE2=2,NOTHING=3,imaSiz=19199;
+reg [1:0]status=0;
+reg readyPassed=0;
+
+always @(posedge CAM_pclk)begin
+    if(rst)begin
+    status<=0;
+     DP_RAM_data_in<=0;
+     DP_RAM_addr_in<=0;
+     DP_RAM_regW<=0;
+     readyPassed<=0;
     end
-  
-  end
- 
-      always @ (posedge CAM_pclk)
-        begin
-          if(CAM_href & ~CAM_vsync)
+    else begin
+     case (status)
+         INIT:begin 
+            DP_RAM_data_in<=0;
+            DP_RAM_addr_in<=0;
+            DP_RAM_regW<=0;
+            readyPassed<=0;   
+            if(~CAM_vsync&CAM_href)begin
+            status<=BYTE2;
+            DP_RAM_data_in[11:8]<=CAM_px_data[3:0];
+            end
+               
+         end
+         
+         BYTE1:begin
+         DP_RAM_regW<=0;
+         
+         if(CAM_href)begin
+         DP_RAM_data_in[11:8]<=CAM_px_data[3:0];
+         DP_RAM_regW<=0;
+         status<=BYTE2;
+         end
+         else status<=NOTHING;
+         
+         end
+         
+         BYTE2:begin
+            if(DP_RAM_addr_in==imaSiz|(DP_RAM_addr_in==0&~readyPassed))
             begin
-              if(cont == 0)
-                begin
-                  DP_RAM_data_in <= {CAM_px_data[3:0], DP_RAM_data_in[7:0]};
-              	  DP_RAM_regW = 0;
-                end
-              else
-            	begin
-                  DP_RAM_data_in <= {DP_RAM_data_in[11:8], CAM_px_data[7:0]};
-                  DP_RAM_regW = 1;
-            	end
-          	  cont = cont + 1;
-        	end
-       	end
-       	
-       	
-
-      always @ (negedge CAM_pclk)
-        begin
-          if(CAM_href & ~CAM_vsync & (cont == 1))
-            begin
-              DP_RAM_addr_in = DP_RAM_addr_in + 1; 
+                DP_RAM_addr_in<=0;
+                readyPassed<=1;
+            end
+            else begin
+            DP_RAM_addr_in<=DP_RAM_addr_in+1;
             end
             
-             if(DP_RAM_addr_in == 19199)
-             begin
-               DP_RAM_addr_in = 0;
+             DP_RAM_data_in[7:0]<=CAM_px_data;
+             DP_RAM_regW<=1;    
+             status<=BYTE1;
+         
+         end
+         
+         NOTHING:begin
+             
+             if(CAM_href)begin
+             status<=BYTE2;
+             DP_RAM_data_in[11:8]<=CAM_px_data[3:0];
              end
-        end
-
+             else if (CAM_vsync) status<=INIT;
+             
+         end
+         
+         default: status<=INIT;
+    endcase
+ end
+end
+		
 
 /********************************************************************************
 
