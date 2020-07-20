@@ -162,11 +162,12 @@ cam_read #(AW,DW) cam_read
 ##### Módulo `test_cam.v`
 
 En el modulo tescam podemos observar que es un modulo que se compone del conjunto de modulos:
+![Modulo_test_cam](./figs/Modulo_test_Cam.jpg)
 * cam_read.v
 * clk24_25_nexys4.v
 * VGA_Driver.v
 * buffer_ram_dp.v
-![Modulo_test_cam](./figs/Modulo_test_Cam.jpg)
+
 Como este módulo se compone de un conjunto de modulos, las señales de entrada y salida de este módulo son las conexiones de los modulos internos(conjunto de modulos que componen el modulo `test_cam.v`) y los externos ya sean las simulaciones de la camara y la pantalla VGA o los componentes en fisico (la camara y la pantalla).
 ###### Señales de de entrada y salida
 * Señales de entrada 
