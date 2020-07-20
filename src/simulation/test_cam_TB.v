@@ -123,6 +123,7 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
     	parameter[3:0]G=4'b0000; //verde del pixel GGGG
     	parameter[3:0]B=4'b0000; //azul del pixel BBBB
     	reg [11:0]colorRGB444= {R[3:0],G[3:0],B[3:0]}; //color RRRR GGGG BBBB,first byte= XXXX RRRR, second byte= GGGG BBBB
+	//asignacion del color
 	always @(posedge pclk) begin
 	cont=cont+1;
 	if (cont ==0)begin//first Byte
