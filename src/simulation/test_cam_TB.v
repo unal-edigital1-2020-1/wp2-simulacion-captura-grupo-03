@@ -116,6 +116,26 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
 	/*************************************************************************
 			INICIO DE SIMULACION DE SE�ALES DE LA CAMARA
 	**************************************************************************/
+	/* //ejemplo para la simulacion de 4 secciones(de dos colore donde se empieza y se termina con media ssecion de color
+	//simuacion de lineas de color para 4 secciones se divide el largo en 4 120/4=30 lineas
+	always @(posedge pclk) begin
+	if (row_cnt<15)begin //para tener media seccion al principio se cuentan 15 posiciones verticales
+	colorRGB444=12'b111100001111; //color rosa
+	end
+	else if (row_cnt<45)begin //cuando se superan las 15 lineas pero esta por debajo de las 45 (una seccion de 30 depues de la media de 15)
+	colorRGB444=12'b000011110000;//color verde
+	end
+	else if (row_cnt<75)begin//cuando se superan las 45 lineas pero esta por debajo de las 75
+	colorRGB444=12'b111100001111;//color rosa
+	end
+	else if (row_cnt<105)begin//cuando se superan las 75 lineas pero esta por debajo de las 105 
+	colorRGB444=12'b000011110000;//color verde
+	end
+	else if (row_cnt<120)begin//cuando se superan las 105 lineas pero esta por debajo de las 120 (media seccion de 15 depues de las 105 lineas)
+	colorRGB444=12'b111100001111;//color rosa
+	end
+	end
+	*/
 	/*//simulacion de color(propuesta 2)
 	//registros de simulacion del color
     	reg cont=0;
