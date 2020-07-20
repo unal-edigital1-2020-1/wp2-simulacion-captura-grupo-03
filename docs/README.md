@@ -188,6 +188,29 @@ module test_cam
     output wire VGA_Hsync_n,  // Horizontal sync output.
     output wire VGA_Vsync_n,  // Vertical sync output.
 ```
+###### Conexiones internas, señales de control y registros
+```verilog
+	output wire [11:0] data_mem,		//Conexión de buffer_ram_dp.v a VGA_Driver.v
+	output reg  [14:0] DP_RAM_addr_out,	//Registro con las direcciones de los datos asociados a un pixel(valor del color RGB444)
+```
+* Conexiones de salida del módulo cam_read.v a buffer_ram_dp.v
+```verilog
+    
+	output wire [14:0] DP_RAM_addr_in,     //Señal que envia los datos de la dirección donde se encuentra el pixel RGB444
+	output wire [11:0] DP_RAM_data_in,	//Señal con el valor de color del pixel RGB444 en la dirección de memoria 	
+	output wire DP_RAM_regW,	//Señal de control la cual indica cuando un pixel esta completo.
+```
+* Entradas y Salidas de la camara (ya sea fisica o del modulo de simulación de la camara)
+```verilog
+	output wire CAM_xclk,		// System  clock input de la camara.
+	output wire CAM_pwdn,		// Power down mode.
+	output wire CAM_reset,		// Clear all registers of cam.
+	input wire CAM_pclk,		// Señal PCLK de la camara. 
+	input wire CAM_href,		// Señal HREF de la camara. 
+	input wire CAM_vsync,		// Señal VSYNC de la camara.
+	input wire [7:0] CAM_px_data	// Datos de salida de la camara (ya sean simulados o valores enviados por la captura de imagen de la camara.
+	);
+```
 * Registros y señales internos del Módulo `test_cam.v`
 
 ```verilog
@@ -305,29 +328,7 @@ always @ (VGA_posX, VGA_posY) begin
 end
 endmodule
 ```
-###### Conexiones internas, señales de control y registros
-```verilog
-	output wire [11:0] data_mem,		//Conexión de buffer_ram_dp.v a VGA_Driver.v
-	output reg  [14:0] DP_RAM_addr_out,	//Registro con las direcciones de los datos asociados a un pixel(valor del color RGB444)
-```
-* Conexiones de salida del módulo cam_read.v a buffer_ram_dp.v
-```verilog
-    
-	output wire [14:0] DP_RAM_addr_in,     //Señal que envia los datos de la dirección donde se encuentra el pixel RGB444
-	output wire [11:0] DP_RAM_data_in,	//Señal con el valor de color del pixel RGB444 en la dirección de memoria 	
-	output wire DP_RAM_regW,	//Señal de control la cual indica cuando un pixel esta completo.
-```
-* Entradas y Salidas de la camara (ya sea fisica o del modulo de simulación de la camara)
-```verilog
-	output wire CAM_xclk,		// System  clock input de la camara.
-	output wire CAM_pwdn,		// Power down mode.
-	output wire CAM_reset,		// Clear all registers of cam.
-	input wire CAM_pclk,		// Señal PCLK de la camara. 
-	input wire CAM_href,		// Señal HREF de la camara. 
-	input wire CAM_vsync,		// Señal VSYNC de la camara.
-	input wire [7:0] CAM_px_data	// Datos de salida de la camara (ya sean simulados o valores enviados por la captura de imagen de la camara.
-	);
-```
+
 ##### Módulo `clk24_25_nexys4.v` 
 
 Se genero el modulo clk24_25_nexys4.v con ayuda de la ip clock wizard v6 disponible para vivado teniendo en cuenta los paramatros del proyecto, como apoyo se consulto la documentación del fabricante del Clock Wizard v6 [2]
