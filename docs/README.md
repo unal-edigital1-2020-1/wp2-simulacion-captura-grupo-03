@@ -403,7 +403,7 @@ Lineas de codigo usadas para simular color en el Módulo `test_cam_TB.v`:
  //registros de simulacion del color
     	reg cont=0;
     	parameter[3:0]R=4'b0000; //rojo del pixel RRRR
-    	parameter[3:0]G=4'b0000; //verde del pixel GGGG
+    	parameter[3:0]G=4'b1111; //verde del pixel GGGG
     	parameter[3:0]B=4'b0000; //azul del pixel BBBB
     	reg [11:0]colorRGB444= {R[3:0],G[3:0],B[3:0]}; //color RRRR GGGG BBBB,first byte= XXXX RRRR, second byte= GGGG BBBB
 	//asignacion del color
@@ -417,6 +417,9 @@ Lineas de codigo usadas para simular color en el Módulo `test_cam_TB.v`:
 	end
 	end
 ```
+Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeastwood.com/lab/vga-simulator/):
+
+![colorVerde](./figs/simulacion%20verde.jpg)
 #### Imagen 2. Verde y Rosado
 
 #### Imagne 3. Color Azul
