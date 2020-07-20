@@ -421,7 +421,49 @@ Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeast
 
 ![colorVerde](./figs/simulacion%20verde.jpg)
 #### Imagen 2. Verde y Rosado
+Lineas de codigo para intercalar el color según la linea en donde se encuentre el pixel
+```verilog
+ always @(posedge pclk) begin
+	if (row_cnt<15)begin //para tener media seccion al principio se cuentan 15 posiciones verticales
+	colorRGB444=12'b111100001111; //color rosa
+	end
+	else if (row_cnt<45)begin //cuando se superan las 15 lineas pero esta por debajo de las 45 (una seccion de 30 depues de la media de 15)
+	colorRGB444=12'b000011110000;//color verde
+	end
+	else if (row_cnt<75)begin//cuando se superan las 45 lineas pero esta por debajo de las 75
+	colorRGB444=12'b111100001111;//color rosa
+	end
+	else if (row_cnt<105)begin//cuando se superan las 75 lineas pero esta por debajo de las 105 
+	colorRGB444=12'b000011110000;//color verde
+	end
+	else if (row_cnt<120)begin//cuando se superan las 105 lineas pero esta por debajo de las 120 (media seccion de 15 depues de las 105 lineas)
+	colorRGB444=12'b111100001111;//color rosa
+	end
+	end
+```
 
+Lineas de codigo usadas para simular color en el Módulo `test_cam_TB.v`:
+```verilog
+ //registros de simulacion del color
+    	reg cont=0;
+    	parameter[3:0]R=4'b0000; //rojo del pixel RRRR
+    	parameter[3:0]G=4'b1111; //verde del pixel GGGG
+    	parameter[3:0]B=4'b0000; //azul del pixel BBBB
+    	reg [11:0]colorRGB444= {R[3:0],G[3:0],B[3:0]}; //color RRRR GGGG BBBB,first byte= XXXX RRRR, second byte= GGGG BBBB
+	//asignacion del color
+	always @(posedge pclk) begin
+	cont=cont+1;
+	if (cont ==0)begin//first Byte
+	CAM_px_data[3:0]=colorRGB444[11:8];
+	end
+	if(cont == 1)begin//second Byte
+	CAM_px_data = colorRGB444[7:0];
+	end
+	end
+```
+
+Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeastwood.com/lab/vga-simulator/):
+![colorVerdeyros](./figs/lineasverdesyrosas.jpg)
 #### Imagne 3. Color Azul
 
 Las líneas de código que se utilizan en el`test_cam_TB.v` son:
