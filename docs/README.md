@@ -463,6 +463,7 @@ Lineas de codigo usadas para simular color en el Módulo `test_cam_TB.v`:
 ```
 
 Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeastwood.com/lab/vga-simulator/):
+
 ![colorVerdeyros](./figs/lineasverdesyrosas.jpg)
 #### Imagne 3. Color Azul
 
