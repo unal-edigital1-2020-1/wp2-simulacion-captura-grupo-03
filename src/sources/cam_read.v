@@ -47,7 +47,6 @@ module cam_read #(
 
 parameter INIT=0,BYTE1=1,BYTE2=2,NOTHING=3,imaSiz=19199;
 reg [1:0]status=0;
-reg readyPassed=0;
 
 always @(posedge CAM_pclk)begin
     if(rst)begin
@@ -55,18 +54,16 @@ always @(posedge CAM_pclk)begin
      DP_RAM_data_in<=0;
      DP_RAM_addr_in<=0;
      DP_RAM_regW<=0;
-     readyPassed<=0;
     end
     else begin
      case (status)
          INIT:begin 
             DP_RAM_data_in<=0;
             DP_RAM_addr_in<=0;
-            DP_RAM_regW<=0;
-            readyPassed<=0;   
+            DP_RAM_regW<=0; 
             if(~CAM_vsync&CAM_href)begin
-            status<=BYTE2;
-            DP_RAM_data_in[11:8]<=CAM_px_data[3:0];
+                status<=BYTE2;
+                DP_RAM_data_in[11:8]<=CAM_px_data[3:0];
             end
                
          end
@@ -75,23 +72,24 @@ always @(posedge CAM_pclk)begin
          DP_RAM_regW<=0;
          
          if(CAM_href)begin
-         DP_RAM_data_in[11:8]<=CAM_px_data[3:0];
-         DP_RAM_regW<=0;
-         status<=BYTE2;
+
+                if(DP_RAM_addr_in==imaSiz)
+                begin
+                    DP_RAM_addr_in<=0;
+                end
+                else begin
+                    DP_RAM_addr_in<=DP_RAM_addr_in+1;
+                end
+    
+             DP_RAM_data_in[11:8]<=CAM_px_data[3:0];
+             DP_RAM_regW<=0;
+             status<=BYTE2;
          end
          else status<=NOTHING;
          
          end
          
          BYTE2:begin
-            if(DP_RAM_addr_in==imaSiz|(DP_RAM_addr_in==0&~readyPassed))
-            begin
-                DP_RAM_addr_in<=0;
-                readyPassed<=1;
-            end
-            else begin
-            DP_RAM_addr_in<=DP_RAM_addr_in+1;
-            end
             
              DP_RAM_data_in[7:0]<=CAM_px_data;
              DP_RAM_regW<=1;    
@@ -104,6 +102,7 @@ always @(posedge CAM_pclk)begin
              if(CAM_href)begin
              status<=BYTE2;
              DP_RAM_data_in[11:8]<=CAM_px_data[3:0];
+             DP_RAM_addr_in<=DP_RAM_addr_in+1;
              end
              else if (CAM_vsync) status<=INIT;
              

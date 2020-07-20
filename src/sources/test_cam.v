@@ -36,10 +36,13 @@ module test_cam
 	 // Conexiones *****************************************
 
 	output wire [11:0] data_mem,           //Cable de DP_RAM a VGA 640X480
-	output wire [14:0] DP_RAM_addr_in,     //Cable Captura de datos a DP_RAM Dirección de memoria lectura 
-	output wire [11:0] DP_RAM_data_in,	//Cable Captura de datos a DP_RAM Datos a guardar en la dirección de memoria 	
 	output reg  [14:0] DP_RAM_addr_out,	//Registro Captura de datos a DP_RAM Dirección en memoria 
-
+    
+    // Salidas de cam_read.v
+    
+    output wire [14:0] DP_RAM_addr_in,     //Cable Captura de datos a DP_RAM Dirección de memoria lectura 
+	output wire [11:0] DP_RAM_data_in,	//Cable Captura de datos a DP_RAM Datos a guardar en la dirección de memoria 	
+    output wire DP_RAM_regW, // Indica cuando un pixel esta completo.
 
 	//CAMARA input/output conexiones de la camara al modulo principal ********************************
 

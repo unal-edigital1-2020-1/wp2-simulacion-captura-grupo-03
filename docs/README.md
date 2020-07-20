@@ -3,13 +3,13 @@
 
 ## Integrantes 
 
-Esteban Ladino Fajardo
+Andrés Felipe Beltrán
 
 Johan Leonardo Castellanos
 
 Nikolai Alexander Caceres
-
-Andrés Felipe Beltrán 
+ 
+Esteban Ladino Fajardo
 
 <span style="color:red">Consideraciones</span>
 - Recuerde, esta documentación debe ser tal que, cualquier compañero de futuros semestres comprenda sus anotaciones y la relación con los módulos diseñados.
@@ -134,7 +134,7 @@ input wire [7:0] CAM_px_data// Datos de entrada simulados
 Ya que al simular se proporcionaba un bus de 8 bits.
 
 #### 4. Instanciamiento módulo cam_read.v
-Se instancea el módulo `cam_read.v` en módulos `test_cam.v` como se ilustra a continuación:
+Se instancea el módulo `cam_read.v` en el módulo `test_cam.v` como se indica a continuación:
 
 ```verilog
 cam_read #(AW,DW) cam_read
@@ -157,6 +157,7 @@ cam_read #(AW,DW) cam_read
 
  Implementar el proyecto completo y documentar los resultados. Recuerde adicionar el nombre de las señales y módulos en la Figura 1 y registre el cambio en el archivo README.md
 
+***Por favor, explicar por medio de la simulación los resultados***
 
 ##### Módulo `test_cam.v`
 
@@ -223,14 +224,69 @@ En el módulo TOP `test_cam.v` se instancea como:
 
 Con la modificación que se le hizo al módulo `test_cam_TB.v` y `VGA_Driver.v` solo es necesario simular aproximadamente 17 ms para generar una imagen. La siguiente fórmula explica el tiempo de simulación.
 
+
+Comprobar la combinación de colores ingresando a [Link](https://htmlcolorcodes.com/es/)
+
 ![tie_sim](./figs/tie_sim.png)
 
 #### Imagen 1. Verde 
 
 #### Imagen 2. Verde y Rosado
 
-Comprobar la combinación de colores ingresando a [Link](https://htmlcolorcodes.com/es/)
+#### Imagne 3. Color Azul
 
+Las líneas de código que se utilizan en el`test_cam_TB.v` son:
+
+```verilog
+ reg cont=0;   
+    initial forever  begin
+		@(negedge pclk) begin
+        if(cont==0) begin 
+        CAM_px_data=8'h0;
+        end
+        else begin
+        CAM_px_data=8'h0f;
+        end
+        cont=cont+1;
+        end
+	end
+```
+Al simular 17 ms y simular en [vga-simulator](https://ericeastwood.com/lab/vga-simulator/) se tiene:
+
+![colorAzul](./figs/colorAzul.png)
+
+La adquisición de datos del módulo `cam_read.v` se describe a continuación:
+
+* En el estado **INIT**, se debe cumplir:
+
+```verilog
+            DP_RAM_data_in<=0;
+            DP_RAM_addr_in<=0;
+            DP_RAM_regW<=0;
+```
+Debe permanecer en este estado si `rst=0`y no se cumple `if(~CAM_vsync&CAM_href)`, lo que se verifica en la siguiente imagen de simulación:
+
+![colorAzul](./figs/exp_cam_read1.png)
+
+De *0* a *52.04* us *rst* cambia de 1 a 0 y permanece en este último valor, *CAM_sync* habilita la adquisición de datos, pero *CAM_href* no (No ha llegado todavía al siguiente *posedge*), lo que implica que se continua en el estado **INIT**. Como se observa `DP_RAM_data_in`, `DP_RAM_addr_in` y `DP_RAM_regW` permanecen en 0.
+
+* De **INIT** a estado **BYTE2**
+
+En la siguiente Figura, se Ilustra el paso de estado **INIT** a estado **BYTE2** ya que `CAM_vsync=0` y `CAM_href=1` . EL registro `DP_RAM_regW` está en cero, ya que solo se tiene el color rojo del pixel. Dado que `CAM_px_data=8'h0`, la componete roja es `4'h0`. Además, `DP_RAM_data_in` y `DP_RAM_addr_in` permanecen en cero tal como se espera.   
+
+![exp_cam_read2](./figs/exp_cam_read2.png)
+
+
+* En estado **BYTE2**
+
+`CAM_vsync=0` y `CAM_href=1` permiten pasar al estado **BYTE2** donde se completa el GB del pixel. `CAM_px_data=8'h0f`, lo que implica que `G=4'h0` y `B=4hf`. Esto, da como resultado que `DP_RAM_regW=1` indicando que el pixel ya está completo, que en la posición `DP_RAM_addr_in=0` se guarde el dato `DP_RAM_data_in=12'h00f` que corresponde a un pixel azul. En Figura que se muestra a continuación se aprecia lo descrito.
+
+![exp_cam_read4](./figs/exp_cam_read4.png)
+
+* Estado **BYTE1**
+
+
+***
 
 3. Una vez terminada la simulaciòn revisar dentro del directorio `HW` que contenga el fichero ***test_vga.txt***
 4. ingresar a la web [vga-simulator](https://ericeastwood.com/lab/vga-simulator/)  y cargar el archivo ***test_vga.txt***, dejar los datos de configuraciòn tal cual como aparecen.
@@ -242,6 +298,7 @@ Comprobar la combinación de colores ingresando a [Link](https://htmlcolorcodes.
 ***Nota:*** Observe que en esta instancia usted no ha modificado el hardware del proyecto, por lo tanto, lo que observa en la pantalla VGA simulada, es la imagen almacenada en memoria por defecto.
 
 7. Una vez tenga listo el anterior entorno de trabajo, debe proceder a  modificar el fichero  ***cam_read.v***. Solamnte en este módulo debe trabajar  y describir el funcionamiento de la adquiciòn de los datos de la cámara.
+
 
 8. Al terminar de decribir la adquisión de la cámara repita los paso 2 a 6.  Si el resultado es el que se observa en la siguiente imagen, indica que el módulo cam_read es adecuado y por lo tanto, se dara por terminado este paquete de trabajo, de lo contrario  vuelva al punto 7.
 

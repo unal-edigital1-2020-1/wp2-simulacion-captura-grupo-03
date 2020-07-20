@@ -46,10 +46,11 @@ module test_cam_TB;
     // Senales de prueba ******************************
 
     wire [11:0] data_mem;
-	wire [14:0] DP_RAM_addr_in;
-	wire [11:0] DP_RAM_data_in;
 	wire [14:0] DP_RAM_addr_out;
-
+    
+    wire DP_RAM_regW;
+    wire [14:0] DP_RAM_addr_in;
+	wire [11:0] DP_RAM_data_in;
 
     // Senales de prueba ******************************
 // Absolute Address in Esteban's computer
@@ -67,10 +68,13 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
 		// se�ales de prueba *******************************************
 	   
 	   .data_mem(data_mem),
-	   .DP_RAM_addr_in(DP_RAM_addr_in),
-	   .DP_RAM_data_in(DP_RAM_data_in),
 	   .DP_RAM_addr_out(DP_RAM_addr_out),
-
+       
+        // salidas de cam_read.v
+       .DP_RAM_regW(DP_RAM_regW), 
+       .DP_RAM_addr_in(DP_RAM_addr_in),
+	   .DP_RAM_data_in(DP_RAM_data_in),
+        
 		//Prueba *******************************************
 
 		.CAM_xclk(CAM_xclk),
@@ -150,7 +154,7 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
                 if (row_cnt>BLACK_TAM_ROW-1)begin
                     if (line_cnt==0)begin
                         CAM_href  = 1;
-						CAM_px_data = ~ CAM_px_data;
+                        CAM_px_data=~CAM_px_data;
                     end
                 end
                 if (line_cnt==TAM_LINE)begin
@@ -159,8 +163,19 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
             end
 		end
 	end
-
-
+ /*reg cont=0;   
+    initial forever  begin
+		@(negedge pclk) begin
+        if(cont==0) begin 
+        CAM_px_data=8'h0;
+        end
+        else begin
+        CAM_px_data=8'h0f;
+        end
+        cont=cont+1;
+        end
+	end
+*/
 	/*************************************************************************
 			FIN SIMULACI�N DE SE�ALES DE LA CAMARA
 	**************************************************************************/
