@@ -112,7 +112,7 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
 	parameter TAM_ROW=120;
 	parameter BLACK_TAM_LINE=4;
 	parameter BLACK_TAM_ROW=4;
-	/*//simulacion de color(propuesta)
+	/*//simulacion de color(propuesta 2)
 	//registros de simulacion del color
     reg cont=0;
     parameter[3:0]R=4'b0000; //rojo del pixel RRRR
@@ -124,7 +124,7 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
 			INICIO DE SIMULACION DE SE�ALES DE LA CAMARA
 	**************************************************************************/
 	/*
-	//simulacion del color
+	//simulacion del color(propuesta 2)
 	// color =firstByte XXXX RRRR _ Second BYTE GGGG BBBB;
 	always @(posedge pclk) begin
 	cont=cont+1;
