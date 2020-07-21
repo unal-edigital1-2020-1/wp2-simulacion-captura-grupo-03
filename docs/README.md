@@ -477,16 +477,14 @@ endmodule
 ```
 
 
-### Simulación
+## Simulación
 
 Con la modificación que se le hizo al módulo `test_cam_TB.v` y `VGA_Driver.v` solo es necesario simular aproximadamente 17 ms para generar una imagen. La siguiente fórmula explica el tiempo de simulación.
 
 
-Comprobar la combinación de colores ingresando a [Link](https://htmlcolorcodes.com/es/)
-
 ![tie_sim](./figs/tie_sim.png)
 
-#### Imagen 1. Verde 
+### Imagen 1. Verde 
 Lineas de codigo usadas para simular color en el Módulo `test_cam_TB.v`:
 ```verilog
  //registros de simulacion del color
@@ -509,7 +507,7 @@ Lineas de codigo usadas para simular color en el Módulo `test_cam_TB.v`:
 Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeastwood.com/lab/vga-simulator/):
 
 ![colorVerde](./figs/simulacion%20verde.jpg)
-#### Imagen 2. Verde y Rosado
+### Imagen 2. Verde y Rosado
 Lineas de codigo para intercalar el color según la linea en donde se encuentre el pixel
 ```verilog
  always @(posedge pclk) begin
@@ -551,10 +549,15 @@ Lineas de codigo usadas para simular color en el Módulo `test_cam_TB.v`:
 	end
 ```
 
-Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeastwood.com/lab/vga-simulator/):
+Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeastwood.com/lab/vga-simulator/).
 
 ![colorVerdeyros](./figs/lineasverdesyrosas.jpg)
-#### Imagen 3. Color Azul
+
+Para verificar que la combinación de `R=4'hf` y `B=4'hf` fuera una especie de rosado se recurre a este [link](https://htmlcolorcodes.com/es/).
+
+![expRojoYVerde](./figs/expRojoYVerde.png)
+
+### Imagen 3. Color Azul
 
 Las líneas de código que se utilizan en el`test_cam_TB.v` son:
 
