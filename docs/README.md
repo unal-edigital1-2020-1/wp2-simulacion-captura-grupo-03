@@ -14,6 +14,9 @@ Esteban Ladino Fajardo
 <span style="color:red">Consideraciones</span>
 - Recuerde, esta documentación debe ser tal que, cualquier compañero de futuros semestres comprenda sus anotaciones y la relación con los módulos diseñados.
 
+## Abstract
+
+El presente trabajo describe el desarrollo de un sistema controlado por una matriz de puertas lógicas programable en campo​​ (FPGA) cuyas entradas son los datos proporcionados por la camara digital (OV7670) y cuya salida son los diferentes datos requeridos por una pantalla estándar analógica de computadora (VGA) para la visualizacion de una imagen, sea esta producto de los estimulos captados por la camara o del sistema mismo. En primer lugar, se muestra el proceso de diseño que se realiza  para  elaborar la memoria RAM. Sucesivamente, se desarrolla el modulo de captura de datos, por medio del cual, se adquiere la informacion enviada por la cámara OV7670. Se procede de la misma manera con los modulos PLL, XCLK y VGA para finalmente presentar el ensamble total del sistema en conjunto con sus respectivas simulaciones. La FPGA utilizada es la NEXYS 4 mientras que el lenguaje de descripcion de hardware utilizado (HDL) es verilog, el cual es programado a traves de la plataforma de Xilinx Vivado.
 
 ![DIAGRAMA](./figs/testcam.png)
 *Figura 1.Esquema general*
@@ -483,7 +486,7 @@ Las líneas de código que se utilizan en el`test_cam_TB.v` son:
         end
 	end
 ```
-Al simular 17 ms y usar [vga-simulator](https://ericeastwood.com/lab/vga-simulator/) se tiene:
+Al simular 17 ms y simular en [vga-simulator](https://ericeastwood.com/lab/vga-simulator/) se tiene:
 
 ![colorAzul](./figs/colorAzul.png)
 
@@ -515,50 +518,10 @@ En la siguiente Figura, se Ilustra el paso de estado **INIT** a estado **BYTE2**
 
 ![exp_cam_read4](./figs/exp_cam_read4.png)
 
-Para capturar un dato de `CAM_px_data` se nos recomendo realizarlo en cada posedge de `pclk` ya que en un negedge no se sabía si el dato que se iba a registrar era el anterior o el siguiente, según se observa en el datasheet de la cámara Figura 3. En el cambio de `DP_RAM_data_in=0` a `DP_RAM_data_in=8'h00f` se espera que cuando se escriba en `buffer_ram_dp.v`, no se tenga la misma ambiguedad de `CAM_px_data`. Además, no se observa de qué manera se pude hacer para que `CAM_px_data=0f` se pueda asignar antes del posedge.   
-
 * Estado **BYTE1**
 
-En la máquina de estados finita se eligen los 4 bits menos significativos de `CAM_px_data` y se asignan en el color rojo, que en este caso es *4'h0*. Además, con `DP_RAM_regW=0` se inabilita la escritura en `buffer_ram_dp.v`. También, se optó por aumentar `DP_RAM_addr_in` para que en el estado `BYTE2` se disminuya la probabilidad de asignar `DP_RAM_data_in` en la dirección anterior. Justo antes de esta simulación se aumentaba la dirección en el estado `BYTE2`; sin embargo, se observo que cuando se habilitaba la escritura en el `buffer_ram_dp.v`, el aumento de dirección estaba en un punto intermedio. La simulación mostraba que `DP_RAM_data_in` alcanzaba a aumentar cuando estaba en la mitad del valor anterior y el valor siguiente, este último era el que se necesitaba, en este caso se corregió una posible falla de implementación a diferencia de `DP_RAM_addr_in`.
-![exp_cam_read5](./figs/exp_cam_read5.png)
-
-
-* Estado **BYTE2** por segunda vez
-
-`CAM_vsync` y `CAM_href` habilitan la adquisición de datos, en el posedge de `pclk` se toma el valor de `CAM_px_data=8'h0f` y se habilita la escritura en `buffer_ram_dp.v`. El valor que toma `DP_ram_addr_in` es 1 (uno más que en el caso anterior de este estado) y `DP_RAM_data_in` toma el valor de `12'h00f`. En los siguientes posedges permanece entre los estados `BYTE1` y `BYTE2` realizando las operaciones descritas con anterioridad. En la siguiente Figura se puede observar lo que se ha vendido explicando y se evidencia la concordancia de valores que cada salida del módulo `cam_read` debe tomar.
-
-![exp_cam_read6](./figs/exp_cam_read6.png)
-
-
-* Estado **NOTHING**
-
-El estado actual que muestra la línea el cursor de la Figura que continua es `BYTE1` y dado que `CAM_href=0` el estado siguiente es `NOTHING`.  
-
-![exp_cam_read7](./figs/exp_cam_read7.png)
-
-El estado `NOTHING` comprende el intervalo que se encuentra comprendido entre los cursores amarillos.
-
-![exp_cam_read8](./figs/exp_cam_read8.png)
-
-Nótese que cuando `pclk` llega al posedge donde `href` vuelve a ser 1, el estado actual es `NOTHING` y el siguiente es `BYTE2`. En el este cambio de estado se hacen las asignaciones del estado `BYTE1`; es decir, `DP_RAM_regw` es 0, `DP_RAM_addr_in` aumenta y pasa a la primera posición de la segunda fila horizontal (`DP_RAM_addr_in=160`) y `DP_RAM_data_in` permanence igual. En el estado `BYTE2`, vuelve al estado `BYTE1` y continua en estos dos estados hasta que `CAM_href=0`. 
-
-* De estado **NOTHING** a **INIT**
-
-![exp_cam_read9](./figs/exp_cam_read9.png)
-
-
-* Estado **INIT**
-
-![exp_cam_read10](./figs/exp_cam_read10.png)
-
-![exp_cam_read11](./figs/exp_cam_read11.png)
-
-![exp_cam_read12](./figs/exp_cam_read12.png)
 
 ***
-
-
-
 
 3. Una vez terminada la simulaciòn revisar dentro del directorio `HW` que contenga el fichero ***test_vga.txt***
 4. ingresar a la web [vga-simulator](https://ericeastwood.com/lab/vga-simulator/)  y cargar el archivo ***test_vga.txt***, dejar los datos de configuraciòn tal cual como aparecen.
