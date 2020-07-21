@@ -7,7 +7,7 @@ Andrés Felipe Beltrán
 
 Johan Leonardo Castellanos
 
-Nikolai Alexander Caceres
+Nikolái Alexander Cáceres
  
 Esteban Ladino Fajardo
 
@@ -16,12 +16,83 @@ Esteban Ladino Fajardo
 
 ## Abstract
 
-El presente trabajo describe el desarrollo de un sistema controlado por una matriz de puertas lógicas programable en campo​​ (FPGA) cuyas entradas son los datos proporcionados por la camara digital (OV7670) y cuya salida son los diferentes datos requeridos por una pantalla estándar analógica de computadora (VGA) para la visualizacion de una imagen, sea esta producto de los estimulos captados por la camara o del sistema mismo. En primer lugar, se muestra el proceso de diseño que se realiza  para  elaborar la memoria RAM. Sucesivamente, se desarrolla el modulo de captura de datos, por medio del cual, se adquiere la informacion enviada por la cámara OV7670. Se procede de la misma manera con los modulos PLL, XCLK y VGA para finalmente presentar el ensamble total del sistema en conjunto con sus respectivas simulaciones. La FPGA utilizada es la NEXYS 4 mientras que el lenguaje de descripcion de hardware utilizado (HDL) es verilog, el cual es programado a traves de la plataforma de Xilinx Vivado.
+El presente trabajo describe el desarrollo de un sistema controlado por una matriz de puertas lógicas programable en campo​​ (FPGA) cuyas entradas son los datos proporcionados por la camara digital (OV7670) y cuyas salidas son los diferentes datos requeridos por una pantalla estándar analógica de computadora (VGA) para la visualizacion de una imagen, sea esta producto de los estimulos captados por la camara o del sistema mismo. En primer lugar, se muestra el proceso de diseño que se realiza  para  elaborar la memoria RAM. Sucesivamente, se desarrolla el modulo de captura de datos, por medio del cual, se adquiere la informacion enviada por la cámara OV7670. Se procede de la misma manera con los modulos PLL, XCLK y VGA para finalmente presentar el ensamble total del sistema en conjunto con sus respectivas simulaciones. La FPGA utilizada es la NEXYS 4 mientras que el lenguaje de descripcion de hardware utilizado (HDL) es verilog, el cual es programado a traves de la plataforma de Xilinx Vivado.
+
+## Introduccioón
+
+Hablar sobre la camara, hablar sobre la vga, mostrar la importancia del sistema y sucesivamente los retos a afrontar.
+
+
 
 ![DIAGRAMA](./figs/testcam.png)
 *Figura 1.Esquema general*
 
 ![DIAGRAMA](./figs/Esquema.png)V
+
+## Módulo Buffer RAM
+
+Para poder almacenar la información adquirida por la cámara , y teniendo en cuanta la cámara  usada no tiene memoria FIFO, se debe diseñar e implementar una memoria RAM  de doble puerto 
+
+![DIAGRAMA](./docs/figs/cajaramdp.png)
+
+*Figura 1. Módulo Buffer*
+
+El tamaño máximo de buffer de memoria que se puede crear esta limitado por la capacidad máxima de la FPGA a usar, por lo cual, se procede a analizar el datasheet de la FPGA Nexys 4 DDR. Se obtienen entonces las características de la Figura 2.
+
+![DIAGRAMA1](./docs/figs/Features.png)
+
+*Figura 2. Espacio Nexys 4[1]*
+
+Tal y como se puede apreciar, la FPGA Nexys 4 DDR tiene la capacidad de almacenamiento de 4 860 Kb lo que equivale a 607,5 KB. 
+
+
+
+Vale la pena aclarar que, tal y como se nos indica por el profesor, se busca tanto el formato como la resolución se ajuste de una mejor manera al 50% del tamaño de la memoria calculada en el inciso anterior, es decir, 2 488 320 bits. A continuación, se muestra una tabla de la Figura 3 que relaciona cada uno de los formatos y resoluciones con el porcentaje de la cantidad de memoria, a usar, que estos requieren.
+
+![DIAGRAMA2](./docs/figs/formato.png)
+
+*Figura 3. Memoría utlizada según las resoluciones y el formato*
+
+Se elige en pricipio un formato RGB 444, ya que la pantalla a usar se encuentra configurada para este. Sucesivamente y teniendo en cuenta la tabla presentada anteriormente, lo que se hace es elegir el tamaño de imagen que menos memoria consume, es decir, el tamaño 160 x 120 pixeles.
+
+Estos 160 x 120 pixeles, lo que equivale a 19200 pixeles, mediante una representacion binaria son representados por _2^n_ , donde _n_ corresponde al número de bit necesarios. Es posible hallar _n_ de la siguiente manera:
+
+
+
+log_2(pixeles)=n ; log_2(19200)= 14.22
+
+
+
+Entonces, se requiere de 15 bits como mínimo para representar con éxito la matriz de datos que provee la cámara, con los cuales es posible representar $2^n$ datos, lo que equivale a 32768 datos. En el programa diseñado este _n_ hace referencia al parámetro AW (address width)  y representa la cantidad de bits de la dirección. Además, como cada uno de nuestros datos (píxeles) requiere 12 bits esto corresponde al parámetro DW (Data Width) utilizado en el código de programación. Por tanto, la memoria a diseñar debe tener la capacidad de almacenar _AW*DW_  bits (393 216 bits), lo que representa un _15.8%_ de la memoria que se permite usar en la FPGA.
+
+#### Simulación (TestBench):
+
+En primer lugar se debe aclarar que el archivo **image.men** se encarga de suministrar los datos de entrada del archivo **buffer_ram_dp.v** (memoria Ram diseñada). Como se explico en el inciso 2 se sabe que, por un lado, para el formato RGB444 cada pixel (dato) requiere de 12 bits y que por otra parte, se deben representar 32 768 pixeles. Además, teniendo en cuenta que en el archivo **buffer_ram_dp.v** la lectura del archivo **image.men** se hace de manera hexadecimal (con la instruccion **$readmemh(imageFILE, ram)**), se modifica el archivo **image.men** de la siguiente manera:
+
+Se agregan 32 768 lineas de datos, donde cada dato se representa por tres números hexadecimales consecutivos, cada uno de estos representando 4 bits. Por ejemplo, la primer linea del archivo contiene el siguiente dato: **f00** donde f representa que los cuatro bits del color "Red" estan en 1, es decir el número hexadecimal f en binario (1111); de la misma manera el 0 indica que los cuatro bits del color "Green" se encuentran en 0 y de manera similar con el color "Blue". Despues, se activa el Green (0f0) y todos los demás se desabilitan; finalmente se activa el Blue (00f). Se continua esta frecuencia por nueve filas y el resto se deja en _f00_.
+
+El archivo **TB_ram** es modificado en primer lugar para que el flanco de subida del reloj (ckl) coincida con el flanco de subida del registro de escritura, de lectura y de asignación de direcciones lo que permite una sincronizacion adecuada para cada una de las operaciones a ejecutar. Esto se implemeta en el código de la Figura 4 y se podrá evidenciar en la simulación.
+
+![DIAGRAMA3](./docs/figs/codigo.PNG)
+
+*Figura 4. Parte 1 de la prueba del módulo Buffer.*
+
+El registro de escritura **regwrite** es puesto en 1 luego de un delay de 10 ns, con esto se inicializan los registros y permite que se comience a escribir en el registro ram del archivo **buffer_ram_dp.v**. Lo sucede en paralelo  es que existe un delay de 2 seguntos para cada uno de los incrementos del ciclo for, en este además mediante el registro **cont** se están generando las direcciones de memoria de escritura, lo que corresponde a un delay de 20 ns que sumados a los 10 ns iniciales da como resultado 30 ns. Luego, el registro **regread** tarda 40 ns en cambiar su estado de 0 a 1 incluyendo el delay de la linea 78 de 10 ns razón por la cual _data_out_ se inicializa hasta ese valor. Esto se puede notar en la Figura 5. 
+
+![DIAGRAMA4](./docs/figs/simulacion.PNG)
+
+*Figura 5. Simulación del Buffer.*
+
+En la simulacion de la Figura 5, una vez **regwrite** esta en 1 en **data_in** se van guardando los datos del archivo imagen.men,  en este caso solo se están escribiendo 10 datos comenzando por la dirreción 0 y se están cargador mediante la instrucción **$readmemh(file,inputData)** como se observa en la Figura 6. Pasados 20 ns, **regwrite** pasa a ser 0 y **regread** cambia su estado a 1 después de 10 ns, lo que da lugar a que se cargen las dirreciones de los datos de salida mediante representada por **addr_out** mediante el registro **cont** ubicado en el for de la linea 80 según el código de la Figura 4 y por consiguiente, se cargan los datos **data_out** ubicados en el módulo **buffer_ram_dp.v**. La instrucción **always #1 clk=~clk** genera el reloj.
+ 
+![DIAGRAMA5](./docs/figs/lastPart.png)
+
+*Figura 6. Parte 2 de la prueba del módulo Buffer.*
+
+Los resustados en general fueron satisfactorios, lo que generó mas incertidumbre fue encontrar la dirección relativa para colocar el archivo **imagen.men** por lo que se optó por colocar la dirección absoluta.
+
+
+
 
 
 ### Tareas asignadas
