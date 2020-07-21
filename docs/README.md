@@ -539,7 +539,7 @@ Lineas de codigo usadas para simular color en el Módulo `test_cam_TB.v`:
 Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeastwood.com/lab/vga-simulator/):
 
 ![colorVerdeyros](./figs/lineasverdesyrosas.jpg)
-#### Imagne 3. Color Azul
+#### Imagen 3. Color Azul
 
 Las líneas de código que se utilizan en el`test_cam_TB.v` son:
 
@@ -557,11 +557,18 @@ Las líneas de código que se utilizan en el`test_cam_TB.v` son:
         end
 	end
 ```
-Al simular 17 ms y simular en [vga-simulator](https://ericeastwood.com/lab/vga-simulator/) se tiene:
+Al simular 17 ms y usar [vga-simulator](https://ericeastwood.com/lab/vga-simulator/) se tiene:
 
 ![colorAzul](./figs/colorAzul.png)
 
 La adquisición de datos del módulo `cam_read.v` se describe a continuación:
+
+* De Reset activo `rst=1` a `INIT`
+
+Cuando reset es desactivado, se pasa al funcionamiento de la máquina de estados. El cursor de la siguiente Figura lo ilustra.
+
+![exp_cam_read0](./figs/exp_cam_read0.png)
+
 
 * En el estado **INIT**, se debe cumplir:
 
@@ -570,29 +577,124 @@ La adquisición de datos del módulo `cam_read.v` se describe a continuación:
             DP_RAM_addr_in<=0;
             DP_RAM_regW<=0;
 ```
-Debe permanecer en este estado si `rst=0`y no se cumple `if(~CAM_vsync&CAM_href)`, lo que se verifica en la siguiente imagen de simulación:
+Debe permanecer en este estado si `rst=0` y no se cumple `if(~CAM_vsync&CAM_href)`, lo que se verifica en la siguiente Figura de simulación:
 
 ![colorAzul](./figs/exp_cam_read1.png)
 
-De *0* a *52.04* us *rst* cambia de 1 a 0 y permanece en este último valor, *CAM_sync* habilita la adquisición de datos, pero *CAM_href* no (No ha llegado todavía al siguiente *posedge*), lo que implica que se continua en el estado **INIT**. Como se observa `DP_RAM_data_in`, `DP_RAM_addr_in` y `DP_RAM_regW` permanecen en 0.
+A los *52.04* us `CAM_href` cambia de 0 a 1 lo que significa que el estado actual es **INIT**. Como se observa `DP_RAM_data_in`, `DP_RAM_addr_in` y `DP_RAM_regW` permanecen en 0.
 
 * De **INIT** a estado **BYTE2**
 
-En la siguiente Figura, se Ilustra el paso de estado **INIT** a estado **BYTE2** ya que `CAM_vsync=0` y `CAM_href=1` . EL registro `DP_RAM_regW` está en cero, ya que solo se tiene el color rojo del pixel. Dado que `CAM_px_data=8'h0`, la componete roja es `4'h0`. Además, `DP_RAM_data_in` y `DP_RAM_addr_in` permanecen en cero tal como se espera.   
+En la siguiente Figura, se Ilustra el paso de estado **INIT** a estado **BYTE2** ya que `CAM_vsync=0` y `CAM_href=1` . EL registro `DP_RAM_regW` está en cero, ya que solo se tiene el color rojo del pixel. Dado que `CAM_px_data=8'h0`, la componete roja es `4'h0`. Además, `DP_RAM_data_in` y `DP_RAM_addr_in` permanecen en cero tal como se espera.    
 
 ![exp_cam_read2](./figs/exp_cam_read2.png)
 
 
+|Estado actual| Estado Siguiente|
+|:----|:----|
+|INIT|BYTE2|
+
 * En estado **BYTE2**
 
-`CAM_vsync=0` y `CAM_href=1` permiten pasar al estado **BYTE2** donde se completa el GB del pixel. `CAM_px_data=8'h0f`, lo que implica que `G=4'h0` y `B=4hf`. Esto, da como resultado que `DP_RAM_regW=1` indicando que el pixel ya está completo, que en la posición `DP_RAM_addr_in=0` se guarde el dato `DP_RAM_data_in=12'h00f` que corresponde a un pixel azul. En Figura que se muestra a continuación se aprecia lo descrito.
+`CAM_vsync=0` y `CAM_href=1` permiten pasar al estado **BYTE2** donde se completa el GB del pixel. `CAM_px_data=8'h0f`, lo que implica que `G=4'h0` y `B=4'hf`. Esto, da como resultado que `DP_RAM_regW=1` indicando que el pixel ya está completo, que en la posición `DP_RAM_addr_in=0` se guarde el dato `DP_RAM_data_in=12'h00f` que corresponde a un pixel azul. En Figura que se muestra a continuación se aprecia lo descrito.
 
 ![exp_cam_read4](./figs/exp_cam_read4.png)
 
+
+|Estado actual| Estado Siguiente|
+|:----|:----|
+|BYTE2|BYTE1|
+
+
+Para capturar un dato de `CAM_px_data` se nos recomendo realizarlo en cada posedge de `pclk` ya que en un negedge no se sabía si el dato que se iba a registrar era el anterior o el siguiente, según se observa en el datasheet de la cámara Figura 3. En el cambio de `DP_RAM_data_in=0` a `DP_RAM_data_in=8'h00f` se espera que cuando se escriba en `buffer_ram_dp.v` no se tenga la misma ambiguedad de `CAM_px_data`. Además, no se observa de qué manera se pude hacer para que `CAM_px_data=0f` se pueda asignar antes del posedge.   
+
 * Estado **BYTE1**
 
+En el estado `BYTE1` se eligen los 4 bits menos significativos de `CAM_px_data` correspondientes al color rojo, que en este caso es *4'h0*. Además, con `DP_RAM_regW=0` se inabilita la escritura en `buffer_ram_dp.v`. También, se optó por aumentar `DP_RAM_addr_in` para que en el estado `BYTE2` se disminuya la probabilidad de asignar `DP_RAM_data_in` en la dirección anterior. Justo antes de esta simulación se aumentaba la dirección en el estado `BYTE2`; sin embargo, se observo que cuando se habilitaba la escritura en el `buffer_ram_dp.v`, el aumento de dirección estaba en un punto intermedio. La simulación mostraba que `DP_RAM_data_in` alcanzaba a aumentar cuando estaba en la mitad del valor anterior y el valor siguiente, este último era el que se necesitaba, en este caso se corregió una posible falla de implementación a diferencia de `DP_RAM_addr_in`.
+
+![exp_cam_read5](./figs/exp_cam_read5.png)
+
+|Estado actual| Estado Siguiente|
+|:----|:----|
+|BYTE1|BYTE2|
+
+
+* Estado **BYTE2** por segunda vez
+
+`CAM_vsync` y `CAM_href` habilitan la adquisición de datos, en el posedge de `pclk` se toma el valor de `CAM_px_data=8'h0f` y se habilita la escritura en `buffer_ram_dp.v`. El valor que toma `DP_ram_addr_in` es 1 (uno más que en el caso anterior donde estuvo presente este estado) y `DP_RAM_data_in` toma el valor de `12'h00f`. En los siguientes posedges permanece entre los estados `BYTE1` y `BYTE2` realizando las operaciones descritas con anterioridad, hasta que `CAM_href=0`. En la siguiente Figura se puede observar lo que se ha vendido explicando y se evidencia la concordancia de valores que cada salida del módulo `cam_read` debe tomar.
+
+![exp_cam_read6](./figs/exp_cam_read6.png)
+
+|Estado actual| Estado Siguiente|
+|:----|:----|
+|BYTE2|BYTE1|
+
+
+* Estado **NOTHING**
+
+En la posición del cursor se nota:
+
+|Estado actual| Estado Siguiente|
+|:----|:----|
+|BYTE1|NOTHING|
+
+Según la Figura que continúa.
+
+![exp_cam_read7](./figs/exp_cam_read7.png)
+
+El estado `NOTHING` comprende el intervalo que se encuentra comprendido entre los cursores amarillos. Se resalta que la posición `DP_RAM_addr_in` permanece en 159 antes que el estado siguiente sea `BYTE2`, esta posición corresponte a la última de la primera fila de la matriz 160X120 (160 columnas y 120 filas). Dado que las direcciones se empiezan a  asignar desde 0, cuando se llega a 159 hay 160 posiciones (número de posiciones=final-inicio+1). 
+
+![exp_cam_read8](./figs/exp_cam_read8.png)
+
+Nótese que cuando `pclk` llega al posedge donde `href` vuelve a ser 1, el estado actual es `NOTHING` y el siguiente es `BYTE2`. En el este cambio de estado se hacen las asignaciones del estado `BYTE1`; es decir, `DP_RAM_regW` es 0, `DP_RAM_addr_in` aumenta y pasa a la primera posición de la segunda fila vertical (`DP_RAM_addr_in=160`) y `DP_RAM_data_in` permanence igual. En el estado `BYTE2`, vuelve al estado `BYTE1` y continua en estos dos estados hasta que `CAM_href=0`. 
+
+* De estado **NOTHING** a **INIT**
+
+El estado actual que muestra el cursor de la Figura que continua es **NOTHING** y dado que `CAM_vsync` es 1, el estado siguiente es **INIT**. `DP_RAM_regW=0` tal como debería ser, `DP_RAM_addr_in` llega hasta la posición *19199* que sería la ultíma posición de una matriz de 160*120 si empezamos a asignar direcciones desde la posición cero y `DP_RAM_data_in=8'h00f`, pero no está habilitado para ser escrito.
+
+![exp_cam_read11](./figs/exp_cam_read11.png)
+
+
+* Estado **INIT**
+
+En este  `pclk` el estado actual y siguiente es **INIT** y se observa que:
+
+```verilog
+CAM_vsync=1;
+CAM_href=1;
+DP_RAM_redW=0;
+DP_RAM_addr_in=0; // se reinicializa
+DP_RAM_data_in=0; // se reinicializa
+
+```
+
+Tal como se nota en la siguiente Figura.
+
+![exp_cam_read13](./figs/exp_cam_read13.png)
+
+
+A continuación, se muestra una Figura de aproximadamente la duración de estado **INIT** (No es exacta porque los tiempos pertencene al cambio de `CAM_href` de 0 a 1). Se verifica en la simulación que `DP_RAM_regW` permanece en cero y que  `DP_RAM_addr_in` junto con `DP_RAM_data_in` permanecen la mayor parte del tiempo como cero.
+
+![exp_cam_read10](./figs/exp_cam_read10.png)
+
+
+
+* De **INIT** a **BYTE2**
+
+El estado actual es **INIT** y el estado siguente es **BYTE2**. En la siguiente Figura se observa:
+
+![exp_cam_read12](./figs/exp_cam_read12.png)
+
+* Comentarios 
+
+Se verificó en cada estado que el valor que tomaran las señales de salida fueran las indicadas. Además, sirvió para asesorarnos del correcto funcionamiente de la máquina de estados y mejorar el aumento de la dirección `DP_RAM_addr_in` colocándolo en el estado `BYTE1`.
+
+En color Azul se genera entre el intérvalo de tiempo comprendido por los cursores amarillos.
+
+![exp_cam_read12](./figs/exp_color_azul.png)
 
 ***
+
 
 3. Una vez terminada la simulaciòn revisar dentro del directorio `HW` que contenga el fichero ***test_vga.txt***
 4. ingresar a la web [vga-simulator](https://ericeastwood.com/lab/vga-simulator/)  y cargar el archivo ***test_vga.txt***, dejar los datos de configuraciòn tal cual como aparecen.
