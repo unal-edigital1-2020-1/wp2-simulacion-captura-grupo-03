@@ -16,11 +16,29 @@ Esteban Ladino Fajardo
 
 ## Abstract
 
-El presente trabajo describe el desarrollo de un sistema controlado por una matriz de puertas lógicas programable en campo​​ (FPGA) cuyas entradas son los datos proporcionados por la camara digital (OV7670) y cuyas salidas son los diferentes datos requeridos por una pantalla estándar analógica de computadora (VGA) para la visualizacion de una imagen, sea esta producto de los estimulos captados por la camara o del sistema mismo. En primer lugar, se muestra el proceso de diseño que se realiza  para  elaborar la memoria RAM. Sucesivamente, se desarrolla el modulo de captura de datos, por medio del cual, se adquiere la informacion enviada por la cámara OV7670. Se procede de la misma manera con los modulos PLL, XCLK y VGA para finalmente presentar el ensamble total del sistema en conjunto con sus respectivas simulaciones. La FPGA utilizada es la NEXYS 4 mientras que el lenguaje de descripcion de hardware utilizado (HDL) es verilog, el cual es programado a traves de la plataforma de Xilinx Vivado.
+El presente trabajo describe el desarrollo de un sistema controlado por una matriz de puertas lógicas programable en campo​​ (FPGA) cuyas entradas son los datos proporcionados por la camara digital (OV7670) y cuyas salidas son los diferentes datos requeridos por una pantalla estándar analógica de computadora (VGA) para la visualizacion de una imagen, sea esta producto de los estimulos captados por la camara o del sistema mismo. En primer lugar, se desarrolla el modulo de captura de datos, por medio del cual, se adquiere la informacion enviada por la cámara OV7670. Lo propio se hace para los módulos PLL y XCLK. Se continua mostrando el proceso de diseño que se realiza  para  elaborar la memoria RAM y el módulo VGA para finalmente presentar el ensamble total del sistema en conjunto con sus respectivas simulaciones. La FPGA utilizada es la NEXYS 4 mientras que el lenguaje de descripcion de hardware utilizado (HDL) es verilog, el cual es programado a traves de la plataforma de Xilinx Vivado.
 
-## Introducción
+## Introduccioón
 
-Hablar sobre la camara, hablar sobre la vga, mostrar la importancia del sistema y sucesivamente los retos a afrontar.
+El sensor de una cámara digital está formado por millones de celdas fotosensibles llamadas pixeles, los cuales, mediante un fotodiodo dependiendo de la cantidad de luz apreciada envian electricidad. Además, estos incluyen otros componentes electronicos que permitenleer la información de cada píxel cada vez que se captura una foto.
+
+![Camara](./figs/sensor.png)
+*Figura 1. Comportamiento sensor de camara digital.*
+
+Las celdas sólo detectan la intensidad de la luz, es decir, número de fotones a lo largo de un determinado tiempo, mientras que unos filtros tipo Bayer descomponen la luz en tres componentes: rojo, verde y azul de forma que unas celdas reciben sólo la luz correspondiente a la componente roja, otras sólo la componente azul y otras sólo la componente verde. En los sensores Foveon la distribución es diferente, pero el principio de funcionamiento es el mismo.
+
+Cada fotodiodo (elemento fotosensible de la celda) funciona como un panel solar: recibe fotones que, al interactuar con los átomos del material, generan electrones. Es decir, convierten luz en electricidad.
+
+El módulo de cámara OV7670 está basado en el sensor OV7670 de omnivision.[2] Es un dispositivo CMOS de bajo voltaje que proporciona imágenes de 8 bits y que cuenta, en primer lugar, con una matriz de imágenes capaz de operar a una velocidad de hasta 30 cuadros por segundo (fps) y, en segundo lugar, con diferentes circuitos destinados al procesamiento de la imagen capturada, como lo son el de control
+de exposición automática (AEC), control del balance de blancos (AWB), cancelación de ruido, saturación, gamma, etc..[3] Existe también, la posibilidad de trabajar a distintas resoluciones (VGA, QVGA,
+CIF, QCIF) y diferentes espacios de color (RGB555, RGB565 y YUV). Todos estos parámetros pueden configurarse a través del bus SCCB (Serial Camera Control Bus).[4]
+
+El presente trabajo describe el desarrollo de un sistema controlado por una matriz de puertas lógicas programable en campo​​ (FPGA) cuyas entradas son los datos proporcionados por la camara digital (OV7670) y cuyas salidas son los diferentes datos requeridos por una pantalla estándar analógica de computadora (VGA) para la visualizacion de una imagen, sea esta producto de los estimulos captados por la camara o del sistema mismo tal y como es posible apreciar en Figura 2.
+
+![DiagramaFundamental](./figs/testcam.png)
+*Figura 2. Esquema general*
+
+Como se logra observar en el esquema general, el diseño del sistema se aborda mediante la construccion de módulos mas pequeños con funcionalidades concretas, haciendo uso, claro esta, de la programación estructural en que se basa el lenguaje de descripcion de hardware (HDL) utiliizado, Verilog. Una vez desarrollados estos por completo, se procede con la interconeccion de los mismos para finalmente presentar los resultados del presente trabajo a traves de varias simulaciones.
 
 
 
