@@ -156,7 +156,7 @@ Supongo que seguir los cuatro primeros pasos.
 
 Las señales amarillas de la Figura 1, se sustituyen por las señales rojas de la Figura 7:
 
-![DIAGRAMA](./figs/test_cam_sim.PNG)
+![Diagrama_test](./figs/test_cam_sim.png)
 
 *Figura 7. Diagrama de simulación*
 
