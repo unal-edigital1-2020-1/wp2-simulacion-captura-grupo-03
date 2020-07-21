@@ -691,7 +691,7 @@ Tal como se nota en la siguiente Figura.
 ![exp_cam_read13](./figs/exp_cam_read13.png)
 
 
-A continuación, se muestra una Figura de aproximadamente la duración de estado **INIT** (No es exacta porque los tiempos pertencene al cambio de `CAM_href` de 0 a 1). Se verifica en la simulación que `DP_RAM_regW` permanece en cero y que  `DP_RAM_addr_in` junto con `DP_RAM_data_in` permanecen la mayor parte del tiempo como cero.
+A continuación, se muestra una Figura de la duración de estado **INIT**. Se verifica en la simulación que `DP_RAM_regW` permanece en cero y que  `DP_RAM_addr_in` junto con `DP_RAM_data_in` permanecen la mayor parte del tiempo como cero.
 
 ![exp_cam_read10](./figs/exp_cam_read10.png)
 

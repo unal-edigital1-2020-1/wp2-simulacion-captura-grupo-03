@@ -156,6 +156,7 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
 	*/
 	// Color azul
 	reg cont=0;   
+
     initial forever  begin
 		@(negedge pclk) begin
             if(cont==0) begin 
@@ -164,8 +165,8 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
             else begin
                 CAM_px_data<=8'h0f;
             end
-        cont=cont+1;
-        end
+			cont=cont+1;
+         end
 	end
  
 
