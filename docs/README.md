@@ -18,11 +18,12 @@ Esteban Ladino Fajardo
 
 El presente trabajo describe el desarrollo de un sistema controlado por una matriz de puertas lógicas programable en campo​​ (FPGA) cuyas entradas son los datos proporcionados por la camara digital (OV7670) y cuyas salidas son los diferentes datos requeridos por una pantalla estándar analógica de computadora (VGA) para la visualizacion de una imagen, sea esta producto de los estimulos captados por la camara o del sistema mismo. En primer lugar, se desarrolla el modulo de captura de datos, por medio del cual, se adquiere la informacion enviada por la cámara OV7670. Lo propio se hace para los módulos PLL y XCLK. Se continua mostrando el proceso de diseño que se realiza  para  elaborar la memoria RAM y el módulo VGA para finalmente presentar el ensamble total del sistema en conjunto con sus respectivas simulaciones. La FPGA utilizada es la NEXYS 4 mientras que el lenguaje de descripcion de hardware utilizado (HDL) es verilog, el cual es programado a traves de la plataforma de Xilinx Vivado.
 
-## Introduccioón
+## Introducción
 
 El sensor de una cámara digital está formado por millones de celdas fotosensibles llamadas pixeles, los cuales, mediante un fotodiodo dependiendo de la cantidad de luz apreciada envian electricidad. Además, estos incluyen otros componentes electronicos que permitenleer la información de cada píxel cada vez que se captura una foto.[1]
 
 ![Camara](./figs/sensor.png)
+
 *Figura 1. Comportamiento sensor de camara digital.*
 
 Las celdas sólo detectan la intensidad de la luz, es decir, número de fotones a lo largo de un determinado tiempo, mientras que unos filtros tipo Bayer descomponen la luz en tres componentes: rojo, verde y azul de forma que unas celdas reciben sólo la luz correspondiente a la componente roja, otras sólo la componente azul y otras sólo la componente verde. En los sensores Foveon la distribución es diferente, pero el principio de funcionamiento es el mismo.
@@ -36,16 +37,10 @@ CIF, QCIF) y diferentes espacios de color (RGB555, RGB565 y YUV). Todos estos pa
 El presente trabajo describe el desarrollo de un sistema controlado por una matriz de puertas lógicas programable en campo​​ (FPGA) cuyas entradas son los datos proporcionados por la camara digital (OV7670) y cuyas salidas son los diferentes datos requeridos por una pantalla estándar analógica de computadora (VGA) para la visualizacion de una imagen, sea esta producto de los estimulos captados por la camara o del sistema mismo tal y como es posible apreciar en Figura 2.
 
 ![DiagramaFundamental](./figs/testcam.png)
+
 *Figura 2. Esquema general*
 
 Como se logra observar en el esquema general, el diseño del sistema se aborda mediante la construccion de módulos mas pequeños con funcionalidades concretas, haciendo uso, claro esta, de la programación estructural en que se basa el lenguaje de descripcion de hardware (HDL) utiliizado, Verilog. Una vez desarrollados estos por completo, se procede con la interconeccion de los mismos para finalmente presentar los resultados del presente trabajo a traves de varias simulaciones.
-
-
-
-![DIAGRAMA](./figs/testcam.png)
-*Figura 1.Esquema general*
-
-![DIAGRAMA](./figs/Esquema.png)V
 
 
 ## Módulos
@@ -54,29 +49,34 @@ Como se logra observar en el esquema general, el diseño del sistema se aborda m
 
 
 ![CAPTURADATOS](./figs/cajacapturadatos.png)
-*Figura 2.Módulo de captura de datos*
 
-Se van a describir las entradas y salidas del bloque de la Figura 2.
+*Figura 3.Módulo de captura de datos*
 
-* Href: Está sincronizado con PCLK ( Pixel  Clock Output)[1,pág 4] de tal manera que el t<sub>PHL</sub> (tiempo de propagación de alto a bajo) coincide con el instante justo antes de cambiar de su estado low tal como se muestra en la Figura 3. Además, pasados un definido número de tPCLK ( Pixel Clock Output)[1, pág 4] el cambio de su estado High ocurre en otro  tPHL del PCLK. Row data hace referencia datos de una fila según el formato elegido.
+Se van a describir las entradas y salidas del bloque de la Figura 3.
+
+* Href: Está sincronizado con PCLK ( Pixel  Clock Output)[1,pág 4] de tal manera que el t<sub>PHL</sub> (tiempo de propagación de alto a bajo) coincide con el instante justo antes de cambiar de su estado low tal como se muestra en la Figura 4. Además, pasados un definido número de tPCLK ( Pixel Clock Output)[1, pág 4] el cambio de su estado High ocurre en otro  tPHL del PCLK. Row data hace referencia datos de una fila según el formato elegido.
 
 ![RGB444](./figs/RGB444.png)
-*Figura 3. Sincronización de PCLK, HREF, D[7:0] y distribución de pixeles.*
 
-* Datos [7:0]: En la Figura 3 se muestra que cuando HREF está en HIGH se generan los datos de una fila de la matriz según el tamaño predefinido para la imagen. En el caso del formato RGB 444, cada pixel tiene 2 bytes donde cada uno está compuesto por un vector de D[7:0] y se generan por cada negedge del PCLK. Los cuatro bits menos significativos del primer byte pertenecen al color rojo, en el segundo byte los cuatro bits más significativos son del color verde y los restantes del color azul. Finalmente, se infiere de la Figura 4 que los datos D[i] ingresan de manera paralela y por tanto se deben declarar siete entradas.
+*Figura 4. Sincronización de PCLK, HREF, D[7:0] y distribución de pixeles.*
+
+* Datos [7:0]: En la Figura 4 se muestra que cuando HREF está en HIGH se generan los datos de una fila de la matriz según el tamaño predefinido para la imagen. En el caso del formato RGB 444, cada pixel tiene 2 bytes donde cada uno está compuesto por un vector de D[7:0] y se generan por cada negedge del PCLK. Los cuatro bits menos significativos del primer byte pertenecen al color rojo, en el segundo byte los cuatro bits más significativos son del color verde y los restantes del color azul. Finalmente, se infiere de la Figura 5 que los datos D[i] ingresan de manera paralela y por tanto se deben declarar siete entradas.
 
 ![RGB444](./figs/diagrama_de_pines.png)
-*Figura 4. Diagrama de pines en la vista superior [1, pág 1].*
 
-* Vsync: Vsync (Vertical sync output)[1, pág 4] cuando está en LOW permite capturar los datos hasta que todas las filas que conforman las fotos son llenadas y cada vez que pasa de estado LOW a HIGH se comienza a tomar una nueva foto como se observa en la Figura 5. En nuestro caso elegimos un formato 160x120, ya que dentro de las funcionalidades de la cámara, se permite hacer un escalamiento del formato CIF hasta 40x30 [1,pág 1].  
+*Figura 5. Diagrama de pines en la vista superior [1, pág 1].*
+
+* Vsync: Vsync (Vertical sync output)[1, pág 4] cuando está en LOW permite capturar los datos hasta que todas las filas que conforman las fotos son llenadas y cada vez que pasa de estado LOW a HIGH se comienza a tomar una nueva foto como se observa en la Figura 6. En nuestro caso elegimos un formato 160x120, ya que dentro de las funcionalidades de la cámara, se permite hacer un escalamiento del formato CIF hasta 40x30 [1,pág 1].  
 
 ![RGB444](./figs/VGA_frame_timing.png)
-*Figura 5. VGA(640x480) Frame Timing [1, pág 7].*
 
-Con el tamaño de Imagen de QQVGA (160x120, 160 columnas y 120 filas) HREF se comporta como se indica en la Figura 6. Entonces, por cada cuatro periodos de HREF VGA se genera un  periodo de HREF QQVGA, lo que produce una reducción en la cuarta parte del número de filas como se ilustra en la Figura 5, pasando así de 480 a 120 columnas. De la misma manera, si HREF solo está activo uno de cada cuatro periodos se reduce el número de columnas de 640 a 160 como se indica en la Figura 3, dando así el resultado esperado que es el formato 160x120.      
+*Figura 6. VGA(640x480) Frame Timing [1, pág 7].*
+
+Con el tamaño de Imagen de QQVGA (160x120, 160 columnas y 120 filas) HREF se comporta como se indica en la Figura 7. Entonces, por cada cuatro periodos de HREF VGA se genera un  periodo de HREF QQVGA, lo que produce una reducción en la cuarta parte del número de filas como se ilustra en la Figura 6, pasando así de 480 a 120 columnas. De la misma manera, si HREF solo está activo uno de cada cuatro periodos se reduce el número de columnas de 640 a 160 como se indica en la Figura 4, dando así el resultado esperado que es el formato 160x120.      
 
 ![RGB444](./figs/VGA_to_QQVGA.png)
-*Figura 6. QQVGA frame timing [1, pág 7].*
+
+*Figura 7. QQVGA frame timing [1, pág 7].*
 
 
 Analizando los tiempos que se presentan en la Figura Figura 5 se tiene:
@@ -97,7 +97,7 @@ Analizando los tiempos que se presentan en la Figura Figura 5 se tiene:
 
 ### Módulo `clk24_25_nexys4.v` y señales de control (`Xclk/Reset/PWDN`)
 
-Se genero el modulo clk24_25_nexys4.v con ayuda de la ip clock wizard v6 disponible para vivado teniendo en cuenta los paramatros del proyecto, como apoyo se consulto la documentación del fabricante del Clock Wizard v6 [2]
+Se genero el modulo clk24_25_nexys4.v con ayuda de la ip clock wizard v6 disponible para vivado teniendo en cuenta los paramatros del proyecto, como apoyo se consulto la documentación del fabricante del Clock Wizard v6 [5]
 
 ![DIAGRAMA](./figs/clockw1.PNG)
 
@@ -163,66 +163,63 @@ En el módulo TOP `test_cam.v` se instancea como:
 
 ### Módulo Buffer RAM
 
+Para poder almacenar la información adquirida por la cámara , y teniendo en cuanta que la cámara usada no tiene memoria FIFO, se debe diseñar e implementar una memoria RAM  de doble puerto tal y como se observa en la figura 13.
 
-Para poder almacenar la información adquirida por la cámara , y teniendo en cuanta la cámara  usada no tiene memoria FIFO, se debe diseñar e implementar una memoria RAM  de doble puerto 
+![Buffer](./figs/cajaramdp.png)
 
-![DIAGRAMA](./figs/cajaramdp.png)
+*Figura 13. Módulo Buffer*
 
-*Figura 1. Módulo Buffer*
+El tamaño máximo de buffer de memoria que se puede crear esta limitado por la capacidad máxima de la FPGA a usar, por lo cual, se procede a analizar el datasheet de la FPGA Nexys 4 DDR del cual se obtienen las siguientes características:
 
-El tamaño máximo de buffer de memoria que se puede crear esta limitado por la capacidad máxima de la FPGA a usar, por lo cual, se procede a analizar el datasheet de la FPGA Nexys 4 DDR. Se obtienen entonces las características de la Figura 2.
+![features](./figs/Features.png)
 
-![DIAGRAMA1](./figs/Features.png)
-
-*Figura 2. Espacio Nexys 4[1]*
+*Figura 14. Espacio Nexys 4[1]*
 
 Tal y como se puede apreciar, la FPGA Nexys 4 DDR tiene la capacidad de almacenamiento de 4 860 Kb lo que equivale a 607,5 KB. 
 
-
-
-Vale la pena aclarar que, tal y como se nos indica por el profesor, se busca tanto el formato como la resolución se ajuste de una mejor manera al 50% del tamaño de la memoria calculada en el inciso anterior, es decir, 2 488 320 bits. A continuación, se muestra una tabla de la Figura 3 que relaciona cada uno de los formatos y resoluciones con el porcentaje de la cantidad de memoria, a usar, que estos requieren.
+Vale la pena aclarar que, tal y como se nos indica por el profesor, se busca tanto el formato como la resolución se ajuste de una mejor manera al 50% del tamaño de la memoria calculada en el inciso anterior, es decir, 2 488 320 bits. A continuación, se muestra la tabla de la Figura 15 que relaciona cada uno de los formatos y resoluciones con el porcentaje de la cantidad de memoria, a usar, que estos requieren.
 
 ![DIAGRAMA2](./figs/formato.png)
 
-*Figura 3. Memoría utlizada según las resoluciones y el formato*
+*Figura 15. Memoría utlizada según las resoluciones y el formato*
 
 Se elige en pricipio un formato RGB 444, ya que la pantalla a usar se encuentra configurada para este. Sucesivamente y teniendo en cuenta la tabla presentada anteriormente, lo que se hace es elegir el tamaño de imagen que menos memoria consume, es decir, el tamaño 160 x 120 pixeles.
 
 Estos 160 x 120 pixeles, lo que equivale a 19200 pixeles, mediante una representacion binaria son representados por _2^n_ , donde _n_ corresponde al número de bit necesarios. Es posible hallar _n_ de la siguiente manera:
 
-
-
 log_2(pixeles)=n ; log_2(19200)= 14.22
 
+![formula1](https://render.githubusercontent.com/render/math?math=log_2(pixeles)=n)
 
+![formula2](https://render.githubusercontent.com/render/math?math=log_2(19200)=%2014.22)
 
 Entonces, se requiere de 15 bits como mínimo para representar con éxito la matriz de datos que provee la cámara, con los cuales es posible representar $2^n$ datos, lo que equivale a 32768 datos. En el programa diseñado este _n_ hace referencia al parámetro AW (address width)  y representa la cantidad de bits de la dirección. Además, como cada uno de nuestros datos (píxeles) requiere 12 bits esto corresponde al parámetro DW (Data Width) utilizado en el código de programación. Por tanto, la memoria a diseñar debe tener la capacidad de almacenar _AW*DW_  bits (393 216 bits), lo que representa un _15.8%_ de la memoria que se permite usar en la FPGA.
 
 #### Simulación (TestBench):
 
-En primer lugar se debe aclarar que el archivo **image.men** se encarga de suministrar los datos de entrada del archivo **buffer_ram_dp.v** (memoria Ram diseñada). Como se explico en el inciso 2 se sabe que, por un lado, para el formato RGB444 cada pixel (dato) requiere de 12 bits y que por otra parte, se deben representar 32 768 pixeles. Además, teniendo en cuenta que en el archivo **buffer_ram_dp.v** la lectura del archivo **image.men** se hace de manera hexadecimal (con la instruccion **$readmemh(imageFILE, ram)**), se modifica el archivo **image.men** de la siguiente manera:
+En primer lugar se debe aclarar que el archivo **image.men** se encarga de suministrar los datos de entrada del archivo **buffer_ram_dp.v** (memoria Ram diseñada). Como se explica en el inciso 2 se sabe que, por un lado, para el formato RGB444 cada pixel (dato) requiere de 12 bits y que por otra parte, se deben representar 32 768 pixeles. Además, teniendo en cuenta que en el archivo **buffer_ram_dp.v** la lectura del archivo **image.men** se hace de manera hexadecimal (con la instruccion **$readmemh(imageFILE, ram)**), se modifica el archivo **image.men** de la siguiente manera:
 
 Se agregan 32 768 lineas de datos, donde cada dato se representa por tres números hexadecimales consecutivos, cada uno de estos representando 4 bits. Por ejemplo, la primer linea del archivo contiene el siguiente dato: **f00** donde f representa que los cuatro bits del color "Red" estan en 1, es decir el número hexadecimal f en binario (1111); de la misma manera el 0 indica que los cuatro bits del color "Green" se encuentran en 0 y de manera similar con el color "Blue". Despues, se activa el Green (0f0) y todos los demás se desabilitan; finalmente se activa el Blue (00f). Se continua esta frecuencia por nueve filas y el resto se deja en _f00_.
 
-El archivo **TB_ram** es modificado en primer lugar para que el flanco de subida del reloj (ckl) coincida con el flanco de subida del registro de escritura, de lectura y de asignación de direcciones lo que permite una sincronizacion adecuada para cada una de las operaciones a ejecutar. Esto se implemeta en el código de la Figura 4 y se podrá evidenciar en la simulación.
+El archivo **TB_ram** es modificado en primer lugar para que el flanco de subida del reloj (ckl) coincida con el flanco de subida del registro de escritura, de lectura y de asignación de direcciones lo que permite una sincronizacion adecuada para cada una de las operaciones a ejecutar. Esto se implemeta en el código de la Figura 16 y se puede evidenciar en la simulación.
 
 ![DIAGRAMA3](./figs/codigo.PNG)
 
-*Figura 4. Parte 1 de la prueba del módulo Buffer.*
+*Figura 16. Parte 1 de la prueba del módulo Buffer.*
 
 El registro de escritura **regwrite** es puesto en 1 luego de un delay de 10 ns, con esto se inicializan los registros y permite que se comience a escribir en el registro ram del archivo **buffer_ram_dp.v**. Lo sucede en paralelo  es que existe un delay de 2 seguntos para cada uno de los incrementos del ciclo for, en este además mediante el registro **cont** se están generando las direcciones de memoria de escritura, lo que corresponde a un delay de 20 ns que sumados a los 10 ns iniciales da como resultado 30 ns. Luego, el registro **regread** tarda 40 ns en cambiar su estado de 0 a 1 incluyendo el delay de la linea 78 de 10 ns razón por la cual _data_out_ se inicializa hasta ese valor. Esto se puede notar en la Figura 5. 
 
 ![DIAGRAMA4](./figs/simulacion.PNG)
 
-*Figura 5. Simulación del Buffer.*
+*Figura 17. Simulación del Buffer.*
 
-En la simulacion de la Figura 5, una vez **regwrite** esta en 1 en **data_in** se van guardando los datos del archivo imagen.men,  en este caso solo se están escribiendo 10 datos comenzando por la dirreción 0 y se están cargador mediante la instrucción **$readmemh(file,inputData)** como se observa en la Figura 6. Pasados 20 ns, **regwrite** pasa a ser 0 y **regread** cambia su estado a 1 después de 10 ns, lo que da lugar a que se cargen las dirreciones de los datos de salida mediante representada por **addr_out** mediante el registro **cont** ubicado en el for de la linea 80 según el código de la Figura 4 y por consiguiente, se cargan los datos **data_out** ubicados en el módulo **buffer_ram_dp.v**. La instrucción **always #1 clk=~clk** genera el reloj.
+En la simulacion de la Figura 17, una vez **regwrite** esta en 1 en **data_in** se van guardando los datos del archivo imagen.men,  en este caso solo se están escribiendo 10 datos comenzando por la dirreción 0 y se están cargador mediante la instrucción **$readmemh(file,inputData)** como se observa en la Figura 6. Pasados 20 ns, **regwrite** pasa a ser 0 y **regread** cambia su estado a 1 después de 10 ns, lo que da lugar a que se cargen las dirreciones de los datos de salida mediante representada por **addr_out** mediante el registro **cont** ubicado en el for de la linea 80 según el código de la Figura 4 y por consiguiente, se cargan los datos **data_out** ubicados en el módulo **buffer_ram_dp.v**. La instrucción **always #1 clk=~clk** genera el reloj.
  
 ![DIAGRAMA5](./figs/lastPart.png)
 
-*Figura 6. Parte 2 de la prueba del módulo Buffer.*
+*Figura 18. Parte 2 de la prueba del módulo Buffer.*
 
-Los resustados en general fueron satisfactorios, lo que generó mas incertidumbre fue encontrar la dirección relativa para colocar el archivo **imagen.men** por lo que se optó por colocar la dirección absoluta.
+Los resustados en general fueron satisfactorios, lo que genera mas incertidumbre fue encontrar la dirección relativa para colocar el archivo **imagen.men** por lo que se opta por colocar la dirección absoluta.
 
 
 ### VGA_Driver
@@ -233,11 +230,11 @@ Los resustados en general fueron satisfactorios, lo que generó mas incertidumbr
 
 ### Modificación del archivo test_cam.v para señales de entrada y salida de la cámara.
 
-Las señales amarillas de la Figura 1, se sustituyen por las señales rojas de la Figura 7:
+Las señales amarillas de la Figura 1, se sustituyen por las señales rojas de la Figura 19:
 
 ![Diagrama_test](./figs/test_cam_sim.png)
 
-*Figura 7. Diagrama de simulación*
+*Figura 19. Diagrama de simulación*
 
 Durante la simulación fue necesario agregar las señales de salida para comprobar el correcto funcionamiento de los distintos módulos intanciados, estas son:
 
@@ -778,5 +775,6 @@ Referencias
 [4] Carrasco. S. Sistema hardware de adquisición de vídeo basado en el
 sensor de imagen OV7670. Available [Online] https://repositorio.upct.es/bitstream/handle/10317/4371/tfg413.pdf?sequence=1
 
-[1] Recuperado de http://web.mit.edu/6.111/www/f2016/tools/OV7670_2006.pdf
-[2] Recuperado de https://www.xilinx.com/support/documentation/ip_documentation/clk_wiz/v6_0/pg065-clk-wiz.pdf
+[5] Recuperado de http://web.mit.edu/6.111/www/f2016/tools/OV7670_2006.pdf
+
+[6] Recuperado de https://www.xilinx.com/support/documentation/ip_documentation/clk_wiz/v6_0/pg065-clk-wiz.pdf
