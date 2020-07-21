@@ -18,7 +18,7 @@ Esteban Ladino Fajardo
 
 El presente trabajo describe el desarrollo de un sistema controlado por una matriz de puertas lógicas programable en campo​​ (FPGA) cuyas entradas son los datos proporcionados por la camara digital (OV7670) y cuyas salidas son los diferentes datos requeridos por una pantalla estándar analógica de computadora (VGA) para la visualizacion de una imagen, sea esta producto de los estimulos captados por la camara o del sistema mismo. En primer lugar, se muestra el proceso de diseño que se realiza  para  elaborar la memoria RAM. Sucesivamente, se desarrolla el modulo de captura de datos, por medio del cual, se adquiere la informacion enviada por la cámara OV7670. Se procede de la misma manera con los modulos PLL, XCLK y VGA para finalmente presentar el ensamble total del sistema en conjunto con sus respectivas simulaciones. La FPGA utilizada es la NEXYS 4 mientras que el lenguaje de descripcion de hardware utilizado (HDL) es verilog, el cual es programado a traves de la plataforma de Xilinx Vivado.
 
-## Introduccioón
+## Introducción
 
 Hablar sobre la camara, hablar sobre la vga, mostrar la importancia del sistema y sucesivamente los retos a afrontar.
 
