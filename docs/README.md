@@ -20,7 +20,7 @@ El presente trabajo describe el desarrollo de un sistema controlado por una matr
 
 ## Introduccioón
 
-El sensor de una cámara digital está formado por millones de celdas fotosensibles llamadas pixeles, los cuales, mediante un fotodiodo dependiendo de la cantidad de luz apreciada envian electricidad. Además, estos incluyen otros componentes electronicos que permitenleer la información de cada píxel cada vez que se captura una foto.
+El sensor de una cámara digital está formado por millones de celdas fotosensibles llamadas pixeles, los cuales, mediante un fotodiodo dependiendo de la cantidad de luz apreciada envian electricidad. Además, estos incluyen otros componentes electronicos que permitenleer la información de cada píxel cada vez que se captura una foto.[1]
 
 ![Camara](./figs/sensor.png)
 *Figura 1. Comportamiento sensor de camara digital.*
@@ -768,6 +768,15 @@ Al culminar los hitos anteriores deben:
 
 
 Referencias
+
+[1]Dischner. Z. Cómo funciona el sensor de una cámara digital. Available [Online] https://quecamarareflex.com/como-funciona-el-sensor-de-una-camara-digital/
+
+[2] GeekFactory. Cámara OV7670. Available [Online] https://www.geekfactory.mx/tienda/sensores/camara-ov7670/
+
+[3] OmniVision. OV7670/OV7171 CMOS VGA. Available [Online] https://datasheetspdf.com/pdf-file/555220/OmniVisionTechnologies/OV7670/1
+
+[4] Carrasco. S. Sistema hardware de adquisición de vídeo basado en el
+sensor de imagen OV7670. Available [Online] https://repositorio.upct.es/bitstream/handle/10317/4371/tfg413.pdf?sequence=1
 
 [1] Recuperado de http://web.mit.edu/6.111/www/f2016/tools/OV7670_2006.pdf
 [2] Recuperado de https://www.xilinx.com/support/documentation/ip_documentation/clk_wiz/v6_0/pg065-clk-wiz.pdf
