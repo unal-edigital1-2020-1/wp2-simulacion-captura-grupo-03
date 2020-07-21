@@ -136,7 +136,7 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
 	end
 	end
 	*/
-	/*//simulacion de color(propuesta 2)
+	/*simulacion de color(propuesta 2)
 	//registros de simulacion del color
     	reg cont=0;
     	parameter[3:0]R=4'b0000; //rojo del pixel RRRR
@@ -154,8 +154,26 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
 	end
 	end
 	*/
+	// Color azul
+	reg cont=0;   
+    initial forever  begin
+		@(negedge pclk) begin
+            if(cont==0) begin 
+                CAM_px_data<=8'h0;
+            end
+            else begin
+                CAM_px_data<=8'h0f;
+            end
+        cont=cont+1;
+        end
+	end
+ 
+
+	
+	
+	
 	/*simulaci�n de contador de pixeles para  general Href y vsync*/
-	initial forever  begin
+	    initial forever  begin
 	    //CAM_px_data=~CAM_px_data;
 		@(posedge pclk) begin
 		if (img_generate==1) begin
@@ -192,7 +210,6 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
                 if (row_cnt>BLACK_TAM_ROW-1)begin
                     if (line_cnt==0)begin
                         CAM_href  = 1;
-                        CAM_px_data=~CAM_px_data;
                     end
                 end
                 if (line_cnt==TAM_LINE)begin
@@ -201,19 +218,13 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
             end
 		end
 	end
- /*reg cont=0;   
-    initial forever  begin
-		@(negedge pclk) begin
-        if(cont==0) begin 
-        CAM_px_data=8'h0;
-        end
-        else begin
-        CAM_px_data=8'h0f;
-        end
-        cont=cont+1;
-        end
-	end
-*/
+	
+	
+	//genera color azul
+	
+	
+	
+    
 	/*************************************************************************
 			FIN SIMULACI�N DE SE�ALES DE LA CAMARA
 	**************************************************************************/

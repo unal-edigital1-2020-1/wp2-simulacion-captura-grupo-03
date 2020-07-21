@@ -58,34 +58,29 @@ always @(posedge CAM_pclk)begin
     else begin
      case (status)
          INIT:begin 
-            DP_RAM_data_in<=0;
-            DP_RAM_addr_in<=0;
-            DP_RAM_regW<=0; 
             if(~CAM_vsync&CAM_href)begin
                 status<=BYTE2;
                 DP_RAM_data_in[11:8]<=CAM_px_data[3:0];
+            end
+            else begin
+                DP_RAM_data_in<=0;
+                DP_RAM_addr_in<=0;
+                DP_RAM_regW<=0; 
             end
                
          end
          
          BYTE1:begin
-         DP_RAM_regW<=0;
-         
-         if(CAM_href)begin
 
-                if(DP_RAM_addr_in==imaSiz)
-                begin
-                    DP_RAM_addr_in<=0;
-                end
-                else begin
-                    DP_RAM_addr_in<=DP_RAM_addr_in+1;
-                end
-    
-             DP_RAM_data_in[11:8]<=CAM_px_data[3:0];
-             DP_RAM_regW<=0;
-             status<=BYTE2;
-         end
-         else status<=NOTHING;
+         DP_RAM_regW<=0;
+            if(CAM_href)begin
+                if(DP_RAM_addr_in==imaSiz) DP_RAM_addr_in<=0;
+                else DP_RAM_addr_in<=DP_RAM_addr_in+1;
+        
+                DP_RAM_data_in[11:8]<=CAM_px_data[3:0];
+                status<=BYTE2;
+            end
+            else status<=NOTHING;   
          
          end
          
@@ -107,7 +102,6 @@ always @(posedge CAM_pclk)begin
              else if (CAM_vsync) status<=INIT;
              
          end
-         
          default: status<=INIT;
     endcase
  end
