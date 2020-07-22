@@ -44,7 +44,8 @@ module test_cam_TB;
 	wire CAM_reset;
 
     // Senales de prueba ******************************
-
+    
+    wire clk25M;
     wire [11:0] data_mem;
 	wire [14:0] DP_RAM_addr_out;
     
@@ -67,6 +68,8 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
 
 		// se�ales de prueba *******************************************
 	   
+	     //  Algunas conexiones de Driver_VGA.
+	   .clk25M(clk25M),
 	   .data_mem(data_mem),
 	   .DP_RAM_addr_out(DP_RAM_addr_out),
        

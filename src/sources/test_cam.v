@@ -34,7 +34,9 @@ module test_cam
     output wire [3:0] VGA_B,  // 4-bit VGA blue output.
 
 	 // Conexiones *****************************************
-
+    
+    //  Algunas conexiones de Driver_VGA.
+    output wire clk25M, // 25MHz de la VGA
 	output wire [11:0] data_mem,           //Cable de DP_RAM a VGA 640X480
 	output reg  [14:0] DP_RAM_addr_out,	//Registro Captura de datos a DP_RAM Dirección en memoria 
     

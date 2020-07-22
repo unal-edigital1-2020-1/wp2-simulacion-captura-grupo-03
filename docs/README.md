@@ -239,12 +239,16 @@ Las señales amarillas de la Figura 1, se sustituyen por las señales rojas de l
 Durante la simulación fue necesario agregar las señales de salida para comprobar el correcto funcionamiento de los distintos módulos intanciados, estas son:
 
 ```verilog 
+    output wire clk25M, // 25MHz de la VGA
 	output wire [11:0] data_mem,
 	output wire [14:0]  DP_RAM_addr_in,
 	output wire [11:0] DP_RAM_data_in,
 	output reg [14:0] DP_RAM_addr_out,
 ``` 
+* `clk25M` reloj de 25 MHz para la VGA
+
 * `data_mem` es el pixel de 12 bits que el módulo `buffer_ram_dp` le transfiere al módulo `VGA_Driver.v` en la ubicación `DP_RAM_addr_out`.
+
 * Las señales `DP_RAM_data_in` y `DP_RAM_addr_in` son salidas del módulo `cam_read.v` que llevan los datos y las posiciones que utiliza el módulo `buffer_ram_dp.v` para almacenar temporalmente las capturas de datos.
 
 Se sustituyó:
@@ -664,7 +668,9 @@ Al simular 17 ms y usar [vga-simulator](https://ericeastwood.com/lab/vga-simulat
 
 ![colorAzul](./figs/colorAzul.png)
 
-La adquisición de datos del módulo `cam_read.v` se describe a continuación:
+
+#### Análisis en el módulo `cam_read.v`
+
 
 * De Reset activo `rst=1` a `INIT`
 
@@ -792,9 +798,58 @@ El estado actual es **INIT** y el estado siguente es **BYTE2**. En la siguiente 
 
 Se verificó en cada estado que el valor que tomaran las señales de salida fueran las indicadas. Además, sirvió para asesorarnos del correcto funcionamiente de la máquina de estados y mejorar el aumento de la dirección `DP_RAM_addr_in` colocándolo en el estado `BYTE1`.
 
-En color Azul se genera entre el intérvalo de tiempo comprendido por los cursores amarillos.
+#### Análisis en el módulo VGA_Driver
 
-![exp_cam_read12](./figs/exp_color_azul.png)
+Al simular 18.4 ms aproximadamente,se puede notar que la imagen azul en el formato VGA más los píxeles negros adicionales, se generan entre los intérvalo amarillos que muestran la Figura. La resta de los tiempos extremos es de 16.8 ms (17.926235-1.126235 [ms]), lo que coincide con los cálculos realizados.  
+
+![exp_color_azul](./figs/exp_color_azul.png)
+
+Nótese que `CAM_vsync` ha cambiado 11 veces de 0 a 1 y de 1 a 0, lo que indica que `cam_read` ha registrado 10 imágenes en formato QQVGA, pero VGA_Driver solo forma una imagen. Por otra parte, las señales de sincronización del `VGA_Driver` se pueden asimilar a la Figura que continua.
+
+![vga_timing](./figs/vga_timing.png)
+
+*Tomado de [7].* 
+ 
+ Las señales `VGA_Hsync_n` y `VGA_Vsync_n` permiten que halla la sincronización en la VGA. Despues que `VGA_Vsync_n` cambia de 1 a cero y de cero a 1, se indica que el siguiente pixel va a ocupar la posición 1 de la matriz VGA (640x480) más sus adiciones (800x525). Esto se indica en la siguiente Figura:
+
+![exp_color_azul2](./figs/exp_color_azul2.png)
+
+
+
+Se procece a analizar con más detalle la interacción de `VGA_Driver` con `buffer_ram_dp`. A partir de una dirrección que el módulo `VGA_Driver` envía a `buffer_ram_dp` representada por la señal `DP_RAM_addr_out`, éste último módulo debe enviar por medio de `data_mem` el pixel almacenado en dicha dirrección. El módulo `cam_read`, es el encargado de almacenar en el `buffer_ram_dp` los datos capturados por la cámara; entonces, las señales de salida del módulo `cam_read` de dirrección y de datos ( `DP_RAM_addr_in` y `DP_RAM_data_in`) deben coincidir con las señales de dirección y datos de VGA_Driver (`DP_RAM_addr_out` y `data_mem`). Esto se nota en la siguiente Figura de simulación.
+
+![exp_color_azul3](./figs/exp_color_azul3.png)
+
+En la posición 0 `cam_read` había escrito `00f` y en esa misma posición `VGA_controlador` lee ese mismo dato. Además, `VGA_R=4'h0`, `VGA_G=4'h0` y `VGA_B=4'hf` indicando que el color capturado es el azul. 
+
+Dado que la imagen que se guarda tiene un tamaño QQVGA(160x120),se necesita enviar información de tal modo que se complete el tamaño VGA más sus adiciones. Esto se logra haciendo que cada vez que se llega hasta el final de una linea vertical del formato QQVGA se asignen los restantes píxeles con un color predefinido en una dirrección específica. En este caso, se guardó en el módulo `buffer_ram_dp` el color negro en la posición 160x120=19200. La siguiente Figura muestra los casos donde esto se presenta.
+
+  ![exp_color_azul4](./figs/exp_color_azul4.png)
+
+Por ejemplo, en la posición 159 que la última de la primera fila se toma el dato `12'h00f`, en el siguiente posedge de clk25M se pasa a la posición 19200 donde está el dato `12'h000`. Esto se observa en la Figura de simulación: 
+
+![exp_color_azul5](./figs/exp_color_azul5.png)
+
+Después de terminar la primera línea vertical del tamaño 800x525, se regresa a la dirección 160. Esta posición corresponde primera posición de la segunda fila almacenada en el formato QQVGA por el módulo `cam_read` esta contiene el dato `12'h00f`, como se nota en la Figura que continua.
+
+![exp_color_azul6](./figs/exp_color_azul6.png)
+
+Cuando `DP_RAM_addr_out` llega hasta la posición 19199 que corresponde a última que se ha almacenado en el formato QQVGA, en el siguiente posedge de `clk25M` toma el valor de 19200 que contiene el color negro. Luego, se asigna el color negro hasta completar el tamaño 800x525.
+
+![exp_color_azul7](./figs/exp_color_azul7.png)
+
+Para tomarse una nueva imagen,`DP_RAM_addr_out` toma el valor de 0 y se realiza el mismo proceso que se ha venido describiendo.
+
+![exp_color_azul8](./figs/exp_color_azul8.png)
+
+
+
+
+
+
+
+
+
 
 ***
 
@@ -848,3 +903,5 @@ sensor de imagen OV7670. Available [Online] https://repositorio.upct.es/bitstrea
 [5] Recuperado de http://web.mit.edu/6.111/www/f2016/tools/OV7670_2006.pdf
 
 [6] Recuperado de https://www.xilinx.com/support/documentation/ip_documentation/clk_wiz/v6_0/pg065-clk-wiz.pdf
+
+[7] Recuperado de https://www.avrfreaks.net/forum/vga-hsync-vsync
