@@ -525,6 +525,7 @@ Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeast
 ### Imagen 2. Verde y Rosado
 Lineas de codigo para intercalar el color según la linea en donde se encuentre el pixel
 ```verilog
+//(pseudocodigo para generar las lineas intercaladas)
  always @(posedge pclk) begin
 	if (row_cnt<15)begin //para tener media seccion al principio se cuentan 15 posiciones verticales
 	colorRGB444=12'b111100001111; //color rosa
@@ -548,10 +549,12 @@ Lineas de codigo usadas para simular color en el Módulo `test_cam_TB.v`:
 ```verilog
  //registros de simulacion del color
     	reg cont=0;
+	//dado que el pseudocodigo para generar las lineas intercaladas modifica el registro del color(colorRGB444)
+	//el color generado en los parametros R,G,B; se pierde(se sobreescribe)
     	parameter[3:0]R=4'b0000; //rojo del pixel RRRR
     	parameter[3:0]G=4'b1111; //verde del pixel GGGG
     	parameter[3:0]B=4'b0000; //azul del pixel BBBB
-    	reg [11:0]colorRGB444= {R[3:0],G[3:0],B[3:0]}; //color RRRR GGGG BBBB,first byte= XXXX RRRR, second byte= GGGG BBBB
+    	reg [11:0]colorRGB444= {R[3:0],G[3:0],B[3:0]}; //color RRRR GGGG BBBB,first byte= XXXX RRRR, second byte= GGGG BBBB 
 	//asignacion del color
 	always @(posedge pclk) begin
 	cont=cont+1;
