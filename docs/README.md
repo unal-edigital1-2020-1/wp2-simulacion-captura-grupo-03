@@ -284,7 +284,7 @@ input wire [7:0] CAM_px_data// Datos de entrada simulados
 Ya que al simular se proporcionaba un bus de 8 bits.
 
 ### Instanciamiento módulo cam_read.v
-![Maquina de estados](./figs/diagrama cam_read.png)
+![Maquina de estados](./figs/diagramacam_read.png)
 
 Se instancea el módulo `cam_read.v` en el módulo `test_cam.v` como se indica a continuación:
 
