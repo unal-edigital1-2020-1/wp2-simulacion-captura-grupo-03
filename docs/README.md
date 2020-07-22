@@ -320,7 +320,9 @@ Como este módulo se compone de un conjunto de modulos, las señales de entrada 
 #### Señales de de entrada y salida
 
 * Señales de entrada 
-
+Diferencias con la version original del módulo:
+Ninguna al codigo.
+Modificacion en los comentarios.
 ```verilog 
 module test_cam
 (
@@ -335,6 +337,9 @@ module test_cam
 ```
 
 * Señales de salida
+Diferencias con la version original del módulo:
+Ninguna al codigo.
+Ninguna en los comentarios.
 
 ```verilog
 //Salidas que se pueden observar en el modulo Data_RGB444(este modulo es un modulo de transformacion de datos dependiendo de los valores RGB de la camara a los valores RGB444 de la pantalla VGA)
@@ -347,13 +352,16 @@ module test_cam
 ```
 
 ##### Conexiones internas, señales de control y registros
-
+Diferencias con la version original del módulo:
+Este fragmento de codigo fue agregado a las señales presentes en el modulo.
 ```verilog
 	output wire [11:0] data_mem,		//Conexión de buffer_ram_dp.v a VGA_Driver.v
 	output reg  [14:0] DP_RAM_addr_out,	//Registro con las direcciones de los datos asociados a un pixel(valor del color RGB444)
 ```
 
 * Conexiones de salida del módulo cam_read.v a buffer_ram_dp.v
+Diferencias con la version original del módulo:
+Este fragmento es agregado al codigo (dado a que el cam_read.v debe de ser diseñado/creado estas conexiones/señales no estan presentes el en original)
 
 ```verilog
     
@@ -362,7 +370,9 @@ module test_cam
 	output wire DP_RAM_regW,	//Señal de control la cual indica cuando un pixel esta completo.
 ```
 * Entradas y Salidas de la camara (ya sea física o del módulo de simulación de la cámara)
-
+Diferencias con la version original del módulo:
+Ninguna al codigo.
+Se agregaron comentarios a algunas señales que no los tenian.
 ```verilog
 	output wire CAM_xclk,		// System  clock input de la camara.
 	output wire CAM_pwdn,		// Power down mode.
@@ -374,7 +384,9 @@ module test_cam
 	);
 ```
 * Registros y señales internos del Módulo `test_cam.v`
-
+Diferencias con la version original del módulo:
+Se cambiaron algunos nombres de algunas conexiones y se eliminaron los parametros locales relacionados al color RGB332 presentes en el modulo original.
+Se agregaron comentarios a algunas señales,registros y asignaciones que no los tenian.
 ```verilog
 //Tamaño de la imagen seleccionado por su bajo requisito de memoria 
 parameter CAM_SCREEN_X = 160; 		// 640 / 4. 
@@ -382,6 +394,19 @@ parameter CAM_SCREEN_Y = 120;    	// 480 / 4.
 
 localparam AW=15; //Se determina de acuerdo al tamaño de la resolución Log(2)(160*120)=15
 localparam DW=12; //Se determina de acuerdo al tamaño del dato del formato de color RGB444 = 12 bites.
+
+```
+Entre estas dos secciones del codigo se eliminaron los parametros locales del color RGB332 porque en se opto por usar la configuracion de color RGB444.
+```verilog
+localparam RED_VGA =   8'b11100000;
+localparam GREEN_VGA = 8'b00011100;
+localparam BLUE_VGA =  8'b00000011;
+```
+Aqui se modificaron los nombre de:
+El nombre del reloj clk32M a clk100M (dado a que el reloj de la nexys 4 usado es de 100Mhz).
+El nombre de la conexion data_RGB332 a data_RGB444(dado a que se opto por la configuracion en la camara de RGB444).
+Se agrego el parameto local imaSiz,
+```verilog
 // conexiondes del clk24_25_nexys4.v
 wire clk100M;           // Reloj de un puerto de la Nexys 4 DDR entrada.
 wire clk25M;// Para guardar el dato del reloj de la Pantalla (VGA 680X240 y DP_RAM).
@@ -398,7 +423,9 @@ wire [DW-1:0] data_mem;	    		// Salida de dp_ram al driver VGA
 wire [DW-1:0] data_RGB444;  		// salida del driver VGA a la pantalla
 wire [9:0] VGA_posX;			// Determinar la posición en X del pixel en la pantalla 
 wire [9:0] VGA_posY;			// Determinar la posición de Y del pixel en la pantalla
-
+```
+Aqui tambien se modifico el nombre de la conexion data_RGB332 a data_RGB444.
+```verilog
 /* ****************************************************************************
 Asignación de la información de la salida del driver a la pantalla
 del regisro data_RGB444
@@ -414,6 +441,12 @@ assign CAM_pwdn = 0;			// Power down mode.
 assign CAM_reset = 0;			// Reset cÃ¡mara.
 ```
 * instanciamiento de modulos 
+Diferencias con la version original del módulo:
+Se modifico por completo el bloque del cam_read.v
+Se agregaron comentarios a las señales de cada bloque.
+
+
+Aqui se agregaron comentarios a cada señal.
 ```verilog
 /* ****************************************************************************
    Se uso "IP Catalog >FPGA Features and Desing > Clocking > Clocking Wizard"  y general el ip con Clocking Wizard
@@ -426,6 +459,9 @@ clk24_25_nexys4 clk25_24(
   .CLK_OUT2(clk24M),				//Reloj de la cÃ¡mara.
   .RESET(rst)					//Reset.
  );
+ ```
+Este bloque fue modificado completamente con respecto al de la version original dada la forma en la que se diseño del modulo cam_read.v
+ ```verilog
 /* ****************************************************************************
 Modulo de captura de datos /captura_de_datos_downsampler = cam_read
 **************************************************************************** */
@@ -442,10 +478,12 @@ cam_read #(AW,DW) cam_read
 		.DP_RAM_addr_in(DP_RAM_addr_in),
 		.DP_RAM_data_in(DP_RAM_data_in)
 	);
+```
+Aqui solo se agregaron comentarios a cada señal.
+```verilog
 /* ****************************************************************************
 buffer_ram_dp buffer memoria dual port y reloj de lectura y escritura separados
 Se debe configurar AW  segn los calculos realizados en el Wp01
-se recomiendia dejar DW a 8, con el fin de optimizar recursos  y hacer RGB 332
 **************************************************************************** */
 buffer_ram_dp DP_RAM(
 		// Entradas.
@@ -475,6 +513,10 @@ VGA_Driver VGA_640x480
 );
 ```
 * Actualizacion del pixel
+Diferencias con la version original del módulo:
+Se modifico la igualdad del DP_RAM_addr_out dentro del la condicion if,de
+DP_RAM_addr_out=15'b111111111111111; a DP_RAM_addr_out = imaSiz;
+
 ```verilog
 /* ****************************************************************************
 Logica para actualizar el pixel acorde con la buffer de memoria y el pixel de
@@ -525,7 +567,7 @@ Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeast
 ### Imagen 2. Verde y Rosado
 Lineas de codigo para intercalar el color según la linea en donde se encuentre el pixel
 ```verilog
-//(pseudocodigo para generar las lineas intercaladas)
+//(seccion de codigo para generar las lineas intercaladas)
  always @(posedge pclk) begin
 	if (row_cnt<15)begin //para tener media seccion al principio se cuentan 15 posiciones verticales
 	colorRGB444=12'b111100001111; //color rosa
@@ -549,7 +591,7 @@ Lineas de codigo usadas para simular color en el Módulo `test_cam_TB.v`:
 ```verilog
  //registros de simulacion del color
     	reg cont=0;
-	//dado que el pseudocodigo para generar las lineas intercaladas modifica el registro del color(colorRGB444)
+	//dado que la seccion de codigo para generar las lineas intercaladas modifica el registro del color(colorRGB444)
 	//el color generado en los parametros R,G,B; se pierde(se sobreescribe)
     	parameter[3:0]R=4'b0000; //rojo del pixel RRRR
     	parameter[3:0]G=4'b1111; //verde del pixel GGGG
