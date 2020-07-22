@@ -94,6 +94,16 @@ Analizando los tiempos que se presentan en la Figura Figura 5 se tiene:
 
 ***RECUEDE: Es necesario documentar el módulo diseñado con los respectivos diagramas funcionales y estructurales y registrar la información en README.md***
 
+#### Diagrama Funcional
+
+#### Máquina de estados 
+
+![Maquina de estados](./figs/diagramacam_read.png)
+
+
+#### Diagrama estructural
+
+
 
 ### Módulo `clk24_25_nexys4.v` y señales de control (`Xclk/Reset/PWDN`)
 
@@ -223,7 +233,122 @@ Los resustados en general fueron satisfactorios, lo que genera mas incertidumbre
 
 
 ### VGA_Driver
+* Cambio 1
 
+La entradas y salidas de este módulo están declaradas como:
+
+```verilog
+module VGA_Driver640x480 (
+	input rst,
+	input clk, 				// 25MHz  para 60 hz de 640x480
+	input  [7:0] pixelIn, 	// entrada del valor de color  pixel 
+	
+	output  [7:0] pixelOut, // salida del valor pixel a la VGA 
+	output  Hsync_n,		// señal de sincronización en horizontal negada
+	output  Vsync_n,		// señal de sincronización en vertical negada 
+	output  [9:0] posX, 	// posicion en horizontal del pixel siguiente
+	output  [8:0] posY 		// posicion en vertical  del pixel siguiente
+);
+```
+
+ Se modificó y así quedó:
+
+ ```verilog
+ module VGA_Driver #(DW = 12) (
+	input rst,
+	input clk, 						// 25MHz  para 60 hz de 640x480
+	input  [DW - 1 : 0] pixelIn, 	// entrada del valor de color  pixel 
+	
+	output  [DW - 1 : 0] pixelOut, // salida del valor pixel a la VGA 
+	output  Hsync_n,		// señal de sincronización en horizontal negada
+	output  Vsync_n,		// señal de sincronización en vertical negada 
+	output  [9:0] posX, 	// posicion en horizontal del pixel siguiente
+	output  [9:0] posY 		// posicion en vertical  del pixel siguiente
+);
+ ```
+Se parametrizó el tamaño de pixelIn y pixelOut, dejándolo como 12 bits poe defecto. También, posY debe tener un tamaño tal que le permita llegar de 0 hasta TOTAL_SCREEN_X-1 (525-1), esto se logra con un registro de 10 bits en donde se puede almacenar de la posición 0 a la 1023.     
+
+* Cambio 2
+
+El registro `countY` estaba como: 
+
+```verilog
+reg  [8:0] countY;
+```
+
+Se cambió por:
+
+```verilog
+reg  [9:0] countY; // 10 bits
+```
+`countY` tiene un rango de [0,TOTAL_SCREEN_Y-1]=[0,525-1], el cual no se podía alcanzar con un registro de 9 bits ya que este permite almacenar únicamente de 0 hasta 2 potencia 9 menos 1 esto es de 0 a 511.
+
+* Cambio 3
+
+Se cambió,
+```verilog
+assign pixelOut = (countX<SCREEN_X) ? (pixelIn ) : (8'b00000000) ;
+```
+por,
+
+```verilog
+assign pixelOut = (countX<SCREEN_X) ? (pixelIn ) : (12'b0) ;
+```
+
+El tamaño del pixel que se requiere en nuestro caso es de 12 bits y es de color negro por eso se coloca `12'b0`. A pixelOut se le asigna `12'b0` cada vez que countX, cuyo rango es [0,799], es igual o mayor a SCREEN_X (SCREEN_X=640).
+
+* Cambio 4
+
+Cuando reset estaba activo, `countX` y `countY` se establecían en cero, generando así que la señal que permite sincronización se demora aproximadamente:
+
+![formula3](https://render.githubusercontent.com/render/math?math=t=\frac{\text{(TOTAL_SCREEN_X)(SCREEN_YmasFRONT_PORCH_Ymas1)}}{clk}=\frac{(800)(480mas10mas1)}{25MHz}\approx15.71ms)
+
+Esto se deduce a partír de:
+
+```verilog
+assign Hsync_n = ~((countX>=SCREEN_X+FRONT_PORCH_X) && (countX<SCREEN_X+SYNC_PULSE_X+FRONT_PORCH_X)); 
+assign Vsync_n = ~((countY>=SCREEN_Y+FRONT_PORCH_Y) && (countY<SCREEN_Y+FRONT_PORCH_Y+SYNC_PULSE_Y));
+```
+
+Cuando la sincronización vertical (`VGA_Vsync_n`) pasa de 1 a 0 y de 0 a 1, al igual que la sincronización horizontal (`VGA_Hsync_n`) en la última fila de la matriz , permite saber que el próximo pixel que se transmita se ubica en la posición 1 de la matriz que forma la imagen en de tamaño  TOTAL_SCREEN_XxTOTAL_SCREEN_Y=800x525. Ahora bién `VGA_Vsync_n`(que es la más demorada), empieza a general la sincronización cuando `countY>=SCREEN_Y+FRONT_PORCH_Y` y esto se empieza a cumplir cuando `countX` es mayor o igual que `(TOTAL_SCREEN_X-1)` un número `SCREEN_Y+FRONT_PORCH_Y` de veces, según se muestra en condicional que continua:
+
+```verilog
+
+if (countX >= (TOTAL_SCREEN_X-1)) begin
+			countX <= 0;
+			if (countY >= (TOTAL_SCREEN_Y-1)) begin
+				countY <= 0;
+			end 
+			else begin
+				countY <= countY + 1;
+			end
+		end 
+```
+
+Dado que se inicia a contar desde cero, hay que sumarle uno a cada cantidad antes mencionada y multiplicarla por el periodo del VGA_Driver, tal como se calculó.
+
+A raiz de la explicación realizada, se dedició inicializar `countX` y `countY` al estar activado `rst` tal como se indica a continuación: 
+
+```verilog
+if (rst) begin
+		countX <= (SCREEN_X+FRONT_PORCH_X-1);
+		countY <= (SCREEN_Y+FRONT_PORCH_Y-1);
+	end
+```
+Sin embargo, se hubiera podido optimizar aun más la simulación si `contX` iniciara en `TOTAL_SCREEN-1`. Se elegió que countY tomara ese valor en `rst=1` para que al inicio de la simulación se pudiera observar el cambio de 1 a 0 y de 0 a 1 de `VGA_Vsync_n`. Esto se ilustra en la Figura que continua:
+
+![exp_VGA](./figs/exp_VGA.png)
+
+En la siguiente Figura se sobresalta `VGA_Vsync_n` para observar los efectos explicados:
+
+![exp_VGA2](./figs/exp_VGA2.png)
+
+
+Las señal de sincronización `VGA_Vsync_n`  del `VGA_Driver` se puede asimilar a la Figura que continua en *Vertical timing*. Además, la señal de sincronización `VGA_Hsync_n` de las simulaciones mostradas podrían verse como la señal que aparece en la Figura llamada *Horizontal timing* repitiendose cada fila que compone la matriz de la imagen. 
+
+![vga_timing](./figs/vga_timing.png)
+
+*Tomado de [7].* 
 
 ## Implementación de los módulos
 
@@ -288,7 +413,7 @@ input wire [7:0] CAM_px_data// Datos de entrada simulados
 Ya que al simular se proporcionaba un bus de 8 bits.
 
 ### Instanciamiento módulo cam_read.v
-![Maquina de estados](./figs/diagramacam_read.png)
+
 
 Se instancea el módulo `cam_read.v` en el módulo `test_cam.v` como se indica a continuación:
 
@@ -800,17 +925,13 @@ Se verificó en cada estado que el valor que tomaran las señales de salida fuer
 
 #### Análisis en el módulo VGA_Driver
 
-Al simular 18.4 ms aproximadamente,se puede notar que la imagen azul en el formato VGA más los píxeles negros adicionales, se generan entre los intérvalo amarillos que muestran la Figura. La resta de los tiempos extremos es de 16.8 ms (17.926235-1.126235 [ms]), lo que coincide con los cálculos realizados.  
+Al simular 18.4 ms aproximadamente, se puede notar que la imagen azul en el formato VGA más los píxeles negros adicionales, se generan entre los intérvalo amarillos que muestran la Figura. La resta de los tiempos extremos es de 16.8 ms (17.926235-1.126235 [ms]), lo que coincide con los cálculos realizados.  
 
 ![exp_color_azul](./figs/exp_color_azul.png)
 
-Nótese que `CAM_vsync` ha cambiado 11 veces de 0 a 1 y de 1 a 0, lo que indica que `cam_read` ha registrado 10 imágenes en formato QQVGA, pero VGA_Driver solo forma una imagen. Por otra parte, las señales de sincronización del `VGA_Driver` se pueden asimilar a la Figura que continua.
-
-![vga_timing](./figs/vga_timing.png)
-
-*Tomado de [7].* 
+Nótese que `CAM_vsync` ha cambiado 11 veces de 0 a 1 y de 1 a 0, lo que indica que `cam_read` ha registrado 10 imágenes en formato QQVGA, pero VGA_Driver solo forma una imagen. 
  
- Las señales `VGA_Hsync_n` y `VGA_Vsync_n` permiten que halla la sincronización en la VGA. Despues que `VGA_Vsync_n` cambia de 1 a cero y de cero a 1, se indica que el siguiente pixel va a ocupar la posición 1 de la matriz VGA (640x480) más sus adiciones (800x525). Esto se indica en la siguiente Figura:
+ Las señales `VGA_Hsync_n` y `VGA_Vsync_n` permiten que halla la sincronización en la VGA. Despues que `VGA_Vsync_n` cambia de 1 a 0 y de 0 a 1, al igual que `VGA_Hsync_n` en la última fila, se indica que el siguiente pixel que va a ocupar la posición 1 de la matriz VGA (640x480) más sus adiciones (800x525). Esto se indica en la siguiente Figura:
 
 ![exp_color_azul2](./figs/exp_color_azul2.png)
 

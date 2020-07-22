@@ -42,14 +42,15 @@ localparam BACK_PORCH_Y = 33;
 localparam TOTAL_SCREEN_Y = SCREEN_Y+FRONT_PORCH_Y+SYNC_PULSE_Y+BACK_PORCH_Y; 	// total pixel pantalla en Vertical 
 
 
-reg  [9:0] countX;
-reg  [9:0] countY;
+reg  [9:0] countX; // tamaño de 10 bits
+reg  [9:0] countY; // tamaño de 10 bits
 
 assign posX    = countX;
 assign posY    = countY;
 
 assign pixelOut = (countX<SCREEN_X) ? (pixelIn ) : (12'b0) ;
 
+// señales de sincrinización de la VGA.
 assign Hsync_n = ~((countX>=SCREEN_X+FRONT_PORCH_X) && (countX<SCREEN_X+SYNC_PULSE_X+FRONT_PORCH_X)); 
 assign Vsync_n = ~((countY>=SCREEN_Y+FRONT_PORCH_Y) && (countY<SCREEN_Y+FRONT_PORCH_Y+SYNC_PULSE_Y));
 
