@@ -144,8 +144,6 @@ clk24_25_nexys4 clk25_24(
 Nótese que la salida *LOCKED* no fue instanceada.
 #### Asignación de las señales de control 
 
-![DiagramaFundamental](./figs/diagrama cam_read.png)
-
 Las señales de control son:
 * CAM_xclk: Frecuencia de la cámara
 * CAM_pwdn: Power down mode.
@@ -286,6 +284,7 @@ input wire [7:0] CAM_px_data// Datos de entrada simulados
 Ya que al simular se proporcionaba un bus de 8 bits.
 
 ### Instanciamiento módulo cam_read.v
+![Maquina de estados](./figs/diagrama cam_read.png)
 
 Se instancea el módulo `cam_read.v` en el módulo `test_cam.v` como se indica a continuación:
 
