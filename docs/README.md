@@ -144,6 +144,8 @@ clk24_25_nexys4 clk25_24(
 Nótese que la salida *LOCKED* no fue instanceada.
 #### Asignación de las señales de control 
 
+![DiagramaFundamental](./figs/diagrama cam_read.png)
+
 Las señales de control son:
 * CAM_xclk: Frecuencia de la cámara
 * CAM_pwdn: Power down mode.
