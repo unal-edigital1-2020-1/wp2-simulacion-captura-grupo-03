@@ -96,11 +96,13 @@ Finalmente, se presentan las señales de salida hacia el Buffer de Memoria.
 
 #### Diagrama Funcional
 
+En la Figura 8. se describe la funcionalidad principal del modulo cam_read.v. Una vez iniciado el proceso se cargan las diferentes entradas y salidas del módulo y posteriormente se le asigna el valor de 0 a las salidas.
 
-![DiagramaFuncional](./figs/diagramaFuncional.PNG)
+![DiagramaFuncional](./figs/diagramaFuncional.png)
 
+*Figura 8. Diagrama funcional*
 
-
+Sucesivamente, 
 
 #### Máquina de estados 
 
