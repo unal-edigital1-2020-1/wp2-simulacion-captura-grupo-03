@@ -36,17 +36,11 @@ module test_cam
 	 // Conexiones *****************************************
     
     //  Algunas conexiones de Driver_VGA.
-<<<<<<< HEAD
 
     
     output wire clk25M,                  // 25MHz VGA clock.
 	output wire [11:0] data_mem,         // Cable de DP_RAM a VGA 640X480.
 	output reg  [14:0] DP_RAM_addr_out,	 // Registro Captura de datos a DP_RAM Direccion en memoria. 
-=======
-    output wire clk25M, // 25MHz de la VGA
-	output wire [11:0] data_mem,           //Cable de DP_RAM a VGA 640X480
-	output reg  [14:0] DP_RAM_addr_out,	//Registro Captura de datos a DP_RAM Direcci贸n en memoria 
->>>>>>> parent of 3b18dfa... cambios
     
     // Salidas de cam_read.v
     
@@ -90,19 +84,11 @@ wire DP_RAM_regW;			// Enable escritura de dato en memoria .
 reg  [AW-1: 0] DP_RAM_addr_out;		//Registro de la direcci贸n de memoria. 
 
 // Conexion VGA Driver
-wire [DW-1:0] data_mem;	    		// Salida de dp_ram al driver VGA
-wire [DW-1:0] data_RGB444;  		// salida del driver VGA a la pantalla
-wire [9:0] VGA_posX;			// Determinar la posici贸n en X del pixel en la pantalla 
-wire [9:0] VGA_posY;			// Determinar la posici贸n de Y del pixel en la pantalla
-
-<<<<<<< HEAD
 
 wire [DW-1:0] data_mem;	    		// Salida de dp_ram al driver VGA.
 wire [DW-1:0] data_RGB444;  		// Salida del driver VGA a la pantalla.
 wire [9:0] VGA_posX;			    // Determinar la posicion en X del pixel en la pantalla.
 wire [9:0] VGA_posY;			    // Determinar la posicion de Y del pixel en la pantalla.
-=======
->>>>>>> parent of 3b18dfa... cambios
 
 /* ****************************************************************************
 Asignaci贸n de la informaci贸n de la salida del driver a la pantalla
@@ -139,7 +125,7 @@ clk24_25_nexys4 clk25_24(
 clk24_25_nexys4_0 clk25_24(
   .CLK_IN1(clk),				//Reloj de la FPGA.
   .CLK_OUT1(clk25M),			//Reloj de la VGA.
-  .CLK_OUT2(clk24M),			//Reloj de la c醡ara.
+  .CLK_OUT2(clk24M),			//Reloj de la c锟絤ara.
   .RESET(rst)					//Reset.
  );
 */
