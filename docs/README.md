@@ -108,8 +108,6 @@ En el caso de que el reset no se encuentre activo, se verifica que la entrada hr
 
 En el caso de que ambas condiciones hallan sido satisfechas, se prosigue a evaluar si el contador es igual a 0. De ser asi, se verifica que la direccion de memoria Addr sea igual a ImaSize, la direccion del ultimo pixel de la imagen capturada. Una nueva imagen debe empezar a capturarse una vez se capture toda la matriz de pixeles enviada por la camara. 
 
-![Maquina de estados](./figs/diagrama_funcional_cam_read.png)
-*Figura 8. Diagrama funcional*
 
 #### M√°quina de estados 
 
@@ -141,6 +139,7 @@ El estado NOTHING se pasa al estado BYTE2 se hace el paso a la siguiente posici√
 #### Diagrama estructural
 
 
+![Maquina de estados](./figs/diagrama_funcional_cam_read.png)
 *Figura 10. Diagrama estructural*
 
 
