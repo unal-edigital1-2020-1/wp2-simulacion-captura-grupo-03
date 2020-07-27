@@ -222,11 +222,7 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
             end
 		end
 	end
-	
-	
-	//genera color azul
-	
-	
+
 	
     
 	/*************************************************************************

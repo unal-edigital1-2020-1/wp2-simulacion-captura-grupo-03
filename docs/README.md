@@ -113,55 +113,137 @@ Finalmente, se presentan las señales de salida hacia el Buffer de Memoria.
 
 ### Módulo `clk24_25_nexys4.v` y señales de control (`Xclk/Reset/PWDN`)
 
-Se genero el modulo clk24_25_nexys4.v con ayuda de la ip clock wizard v6 disponible para vivado teniendo en cuenta los paramatros del proyecto, como apoyo se consulto la documentación del fabricante del Clock Wizard v6 [6]
+
+
+En principio se estaba utilizando el módulo `clk24_25_nexys4_0` proporcionado de manera generosa por el profesor Nestor de Laboratorio. Luego, se genero el modulo clk24_25_nexys4.v con ayuda de la ip clock wizard v6 disponible para vivado teniendo en cuenta los parámetros del proyecto, como apoyo se consulto la documentación del fabricante del Clock Wizard v6 [6] y el trabajo del grupo 5 del semestre anterior que está en este [link](https://github.com/unal-edigital1-2019-2/work04-proyectofinal-grupo-05-1/blob/master/docs/README.md).
+
+ En la parte izquierda del flujo de navegación se elige *IP Catalog*
 
 ![DIAGRAMA](./figs/clockw1.PNG)
-*Figura 11.*
+ 
+ Posteriormente, se busca *FPGA Features and Design>Clocking>Clocking Wizard*
 
 ![DIAGRAMA](./figs/clockw2.PNG)
 
-*Figura 12.*
+Se asigna el valor del reloj primario de acuerdo a la FPGA que trabajaremos, en este caso 100 MHz y por preferencia se le pone el nombre de *clk100M* 
 
-Se asigna el valor del reloj primario de acuerdo a la FPGA que trabajaremos, en este caso 100 MHz. 
+![DIAGRAMA](./figs/pll2.PNG)
 
-![DIAGRAMA](./figs/clockw3.PNG)
-*Figura 13.*
+Se cambia en Source a *Global buffer*.
 
-Luego se asignan los valores del reloj para cada unade las salidas 24 MHz y 25 MHz.
+![DIAGRAMA](./figs/pll3.PNG)
 
-![DIAGRAMA](./figs/clockw4.PNG)
+En la siguiente pestaña **Output Clocks**, se elige que una de las salidas tenga una frecuencia de 24 MHz con el nombre de *clk24M* y la otra tenga una frecuencia de 25 MHz con el nombre de *clk25M*
+
+![DIAGRAMA](./figs/pll4.PNG)
+
+En port **Port Renaming** no se hace nada.
+
+![DIAGRAMA](./figs/pll5.PNG)
+
+En *MMCM Setting* tampoco se modifica.
+
+![DIAGRAMA](./figs/pll6.PNG)
+
+En Summary se deja Igual. 
+
+![DIAGRAMA](./figs/pll7.PNG)
+
+
+Se guarda en la dirección que aparece en el recuadro.
+
+![DIAGRAMA](./figs/pll8.PNG)
+
+
+Se genera.
+
+![DIAGRAMA](./figs/pll9.PNG)
+
+Luego nos dirigimos a la dirección a donde se a ha guardado y los archivos *clk24_25_nexys4* y *clk24_25_nexys4_clk_wiz.v* son el PLL.
+
+![DIAGRAMA](./figs/pll101.PNG)
+
+Se borra la carpeta donde se generaron esos archivos y se remueve del proyecto.
+
+![DIAGRAMA](./figs/pll10.PNG)
 
 * La caja negra de `clk24_25_nexys4.v` queda como:
 
 ![clk24_25_nexys4](./figs/clk24_25_nexys4.png)
 
-En verilog se programa de la siguiente manera:
+En verilog sus entradas y salidas se representan como:
 
 ```verilog 
-module clk24_25_nexys4
- (// Clock in ports
-  input         CLK_IN1, // 100MHz
+module clk24_25_nexys4 
+ (
   // Clock out ports
-  output        CLK_OUT1, // 25MHz
-  output        CLK_OUT2, // 24MHz
+  output        clk24M,
+  output        clk25M,
   // Status and control signals
-  input         RESET,
-  output        LOCKED
+  input         reset,
+  output        locked,
+ // Clock in ports
+  input         clk100M
  );
-```
+ ```
 
-* Su instanciamiento en el módulo `test_cam.v` se muestra a continuación:
+* Su instanceamiento en el módulo `test_cam.v` se muestra a continuación:
 
 ```verilog
 clk24_25_nexys4 clk25_24(
-  .CLK_IN1(clk),				//Reloj de la FPGA.
-  .CLK_OUT1(clk25M),			//Reloj de la VGA.
-  .CLK_OUT2(clk24M),			//Reloj de la cámara.
-  .RESET(rst)					//Reset.
- );
+.clk24M(clk24M),
+.clk25M(clk25M),
+.reset(rst),
+.clk100M(clk)
+);
 ```
 
 Nótese que la salida *LOCKED* no fue instanciada.
+
+Un aspecto interesante es el comportamiento que muestra clk25M en clk24_25_nexys4_0, este se ilustra en la siguiente Figura
+
+![DIAGRAMA](./figs/pll11.PNG)
+
+clk25M dura en 0 por un tiempo de 475 ns, mientras que con el módulo clk24_25_nexys4 dura 1225 ns con esa misma característica.
+
+![DIAGRAMA](./figs/pll12.PNG)
+
+Se cree que esto se puede dar porque ambos módulos presentan 'Jitters' y errores de fase distintos tal como lo indican las tablas que se proporcionan al generarlos con *Clocking Wizard* 
+
+En el módulo  clk24_25_nexys4_0
+
+```verilog
+
+//----------------------------------------------------------------------------
+// "Output    Output      Phase     Duty      Pk-to-Pk        Phase"
+// "Clock    Freq (MHz) (degrees) Cycle (%) Jitter (ps)  Error (ps)"
+//----------------------------------------------------------------------------
+// CLK_OUT1____25.000______0.000______50.0______154.057_____87.180
+// CLK_OUT2____24.000______0.000______50.0______155.487_____87.180
+//
+//----------------------------------------------------------------------------
+// "Input Clock   Freq (MHz)    Input Jitter (UI)"
+//----------------------------------------------------------------------------
+// __primary_________100.000____________0.010
+
+```
+En el módulo clk24_25_nexys4 (El final del proyecto)
+
+```verilog
+//----------------------------------------------------------------------------
+//  Output     Output      Phase    Duty Cycle   Pk-to-Pk     Phase
+//   Clock     Freq (MHz)  (degrees)    (%)     Jitter (ps)  Error (ps)
+//----------------------------------------------------------------------------
+// __clk24M__24.00000______0.000______50.0______175.595_____99.281
+// __clk25M__25.00000______0.000______50.0______174.188_____99.281
+//
+//----------------------------------------------------------------------------
+// Input Clock   Freq (MHz)    Input Jitter (UI)
+//----------------------------------------------------------------------------
+// __primary_________100.000____________0.010
+```
+
+
 
 #### Asignación de las señales de control 
 
@@ -701,7 +783,7 @@ endmodule
 Esta parte, es el módulo `Convert addr` de la Figura 19.
 
 
-## Simulación
+## Simulación (Con el módulo clk24_25_nexys4_0)
 
 Con la modificación que se le hizo al módulo `test_cam_TB.v` y `VGA_Driver.v` solo es necesario simular aproximadamente 17 ms para generar una imagen. La siguiente fórmula explica el tiempo de simulación.
 
@@ -944,6 +1026,10 @@ Se verificó en cada estado que el valor que tomaran las señales de salida fuer
 Al simular 18.4 ms aproximadamente, se puede notar que la imagen azul en el formato VGA más los píxeles negros adicionales, se generan entre los intérvalo amarillos que muestran la Figura. La resta de los tiempos extremos es de 16.8 ms (17.926235-1.126235 [ms]), lo que coincide con los cálculos realizados.  
 
 ![exp_color_azul](./figs/exp_color_azul.png)
+
+Con el módulo final *clk24_25_nexys4* la imagen se genera en los mismos 16.8 ms, pero se empieza 750 us después.
+
+![exp_color_azul](./figs/pll13.png)
 
 Nótese que `CAM_vsync` ha cambiado 11 veces de 0 a 1 y de 1 a 0, lo que indica que `cam_read` ha registrado 10 imágenes en formato QQVGA, pero VGA_Driver solo forma una imagen. 
  

@@ -113,12 +113,22 @@ assign CAM_reset = 0;			// Reset cÃ¡mara.
 
 
 clk24_25_nexys4 clk25_24(
+.clk24M(clk24M),
+.clk25M(clk25M),
+.reset(rst),
+.clk100M(clk)
+);
+
+
+
+/*
+clk24_25_nexys4 clk25_24(
   .CLK_IN1(clk),				//Reloj de la FPGA.
-  .CLK_OUT1(clk25M),				//Reloj de la VGA.
-  .CLK_OUT2(clk24M),				//Reloj de la cÃ¡mara.
+  .CLK_OUT1(clk25M),			//Reloj de la VGA.
+  .CLK_OUT2(clk24M),			//Reloj de la c�mara.
   .RESET(rst)					//Reset.
  );
-
+*/
 /* ****************************************************************************
 Modulo de captura de datos /captura_de_datos_downsampler = cam_read
 **************************************************************************** */
