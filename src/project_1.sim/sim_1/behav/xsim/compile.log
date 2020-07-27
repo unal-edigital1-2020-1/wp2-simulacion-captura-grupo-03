@@ -6,16 +6,16 @@ INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/LucasTheKitten/Desktop/Cap
 INFO: [VRFC 10-311] analyzing module cam_read
 INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/PLL/clk24_25_nexys4.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module clk24_25_nexys4
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/PLL/clk24_25_nexys4_clk_wiz.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module clk24_25_nexys4_clk_wiz
 INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module test_cam
-WARNING: [VRFC 10-3676] redeclaration of ansi port 'clk25M' is not allowed [C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:77]
-WARNING: [VRFC 10-3676] redeclaration of ansi port 'DP_RAM_addr_in' is not allowed [C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:84]
-WARNING: [VRFC 10-3676] redeclaration of ansi port 'DP_RAM_data_in' is not allowed [C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:85]
-WARNING: [VRFC 10-3676] redeclaration of ansi port 'DP_RAM_regW' is not allowed [C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:86]
-WARNING: [VRFC 10-3676] redeclaration of ansi port 'DP_RAM_addr_out' is not allowed [C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:88]
-WARNING: [VRFC 10-3676] redeclaration of ansi port 'data_mem' is not allowed [C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:92]
-INFO: [VRFC 10-2458] undeclared symbol DPRAM_regW, assumed default net type wire [C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:162]
+WARNING: [VRFC 10-3676] redeclaration of ansi port 'clk25M' is not allowed [C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:72]
+WARNING: [VRFC 10-3676] redeclaration of ansi port 'DP_RAM_addr_in' is not allowed [C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:78]
+WARNING: [VRFC 10-3676] redeclaration of ansi port 'DP_RAM_data_in' is not allowed [C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:79]
+WARNING: [VRFC 10-3676] redeclaration of ansi port 'DP_RAM_regW' is not allowed [C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:80]
+WARNING: [VRFC 10-3676] redeclaration of ansi port 'DP_RAM_addr_out' is not allowed [C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:82]
+WARNING: [VRFC 10-3676] redeclaration of ansi port 'data_mem' is not allowed [C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:85]
+INFO: [VRFC 10-2458] undeclared symbol DPRAM_regW, assumed default net type wire [C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:157]
 INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/simulation/test_cam_TB.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module test_cam_TB
-INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/project_1.sim/sim_1/behav/xsim/glbl.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module glbl

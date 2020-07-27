@@ -4,9 +4,18 @@ Running: C:/Xilinx/Vivado/2019.2/bin/unwrapped/win64.o/xelab.exe -wto c9be66f33b
 Using 2 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
-ERROR: [VRFC 10-3180] cannot find port 'RESET' on this module [C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:124]
-ERROR: [VRFC 10-3180] cannot find port 'CLK_OUT2' on this module [C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:123]
-ERROR: [VRFC 10-3180] cannot find port 'CLK_OUT1' on this module [C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:122]
-ERROR: [VRFC 10-3180] cannot find port 'CLK_IN1' on this module [C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:121]
-ERROR: [VRFC 10-2063] Module <clk24_25_nexys4_clk_wiz> not found while processing module instance <inst> [C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/PLL/clk24_25_nexys4.v:83]
-ERROR: [XSIM 43-3322] Static elaboration of top level Verilog design unit(s) in library work failed.
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module unisims_ver.BUFG
+Compiling module unisims_ver.MMCME2_ADV(CLKFBOUT_MULT_F=9.75,...
+Compiling module xil_defaultlib.clk24_25_nexys4_clk_wiz
+Compiling module xil_defaultlib.clk24_25_nexys4
+Compiling module xil_defaultlib.cam_read
+Compiling module xil_defaultlib.buffer_ram_dp_default
+Compiling module xil_defaultlib.VGA_Driver_default
+Compiling module xil_defaultlib.test_cam_default
+Compiling module xil_defaultlib.test_cam_TB
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot test_cam_TB_behav

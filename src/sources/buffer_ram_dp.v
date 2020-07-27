@@ -30,7 +30,7 @@ module buffer_ram_dp#(
 	// Absolute address in Esteban's computer
 	//parameter imageFILE = "D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/imagen.men")
 	// Absolute address in Niko's computer
-	parameter imageFILE = "C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/imagen.meimagen.men")
+	parameter imageFILE = "C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/imagen.men")
 
 	(
 	input clk_w,     		 // Frecuencia de toma de datos de cada pixel.

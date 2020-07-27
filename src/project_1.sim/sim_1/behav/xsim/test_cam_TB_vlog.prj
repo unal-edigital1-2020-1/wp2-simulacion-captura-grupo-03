@@ -4,6 +4,7 @@ verilog xil_defaultlib  \
 "../../../../sources/buffer_ram_dp.v" \
 "../../../../sources/cam_read.v" \
 "../../../../sources/PLL/clk24_25_nexys4.v" \
+"../../../../sources/PLL/clk24_25_nexys4_clk_wiz.v" \
 "../../../../sources/test_cam.v" \
 "../../../../simulation/test_cam_TB.v" \
 
