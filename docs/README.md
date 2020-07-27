@@ -112,8 +112,6 @@ Si el contador no era 0, se debe cargar en la variable de salida datos, la infor
 
 En el caso de que href y vsync no se encuentren sincronizadas, se debe volver a verificar la existencia de un nuevo posedge. 
 
-![Maquina de estados](./figs/diagrama_funcional_cam_read.png)
-*Figura 8. Diagrama funcional*
 
 #### M√°quina de estados 
 
@@ -145,6 +143,7 @@ El estado NOTHING se pasa al estado BYTE2 se hace el paso a la siguiente posici√
 #### Diagrama estructural
 
 
+![Maquina de estados](./figs/diagrama_funcional_cam_read.png)
 *Figura 10. Diagrama estructural*
 
 
