@@ -1,6 +1,6 @@
 webtalk_init -webtalk_dir C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/project_1.sim/sim_1/behav/xsim/xsim.dir/test_cam_TB_behav/webtalk/
 webtalk_register_client -client project
-webtalk_add_data -client project -key date_generated -value "Mon Jul 27 10:25:42 2020" -context "software_version_and_target_device"
+webtalk_add_data -client project -key date_generated -value "Mon Jul 27 11:04:04 2020" -context "software_version_and_target_device"
 webtalk_add_data -client project -key product_version -value "XSIM v2019.2 (64-bit)" -context "software_version_and_target_device"
 webtalk_add_data -client project -key build_version -value "2708876" -context "software_version_and_target_device"
 webtalk_add_data -client project -key os_platform -value "WIN64" -context "software_version_and_target_device"
@@ -14,7 +14,7 @@ webtalk_add_data -client project -key target_package -value "not_applicable" -co
 webtalk_add_data -client project -key target_speed -value "not_applicable" -context "software_version_and_target_device"
 webtalk_add_data -client project -key random_id -value "1613c332-c2d2-44cd-a5a0-a10c36bed821" -context "software_version_and_target_device"
 webtalk_add_data -client project -key project_id -value "c9be66f33b86407ba8487a61a4f46e28" -context "software_version_and_target_device"
-webtalk_add_data -client project -key project_iteration -value "87" -context "software_version_and_target_device"
+webtalk_add_data -client project -key project_iteration -value "89" -context "software_version_and_target_device"
 webtalk_add_data -client project -key os_name -value "Windows Server 2016 or Windows 10" -context "user_environment"
 webtalk_add_data -client project -key os_release -value "major release  (build 9200)" -context "user_environment"
 webtalk_add_data -client project -key cpu_name -value "Intel(R) Core(TM) i5-6200U CPU @ 2.30GHz" -context "user_environment"
@@ -36,7 +36,7 @@ webtalk_add_data -client xsim -key Total_Nets -value "0" -context "xsim\\usage"
 webtalk_add_data -client xsim -key Total_Processes -value "268" -context "xsim\\usage"
 webtalk_add_data -client xsim -key Total_Instances -value "13" -context "xsim\\usage"
 webtalk_add_data -client xsim -key Xilinx_HDL_Libraries_Used -value "secureip unimacro_ver unisims_ver " -context "xsim\\usage"
-webtalk_add_data -client xsim -key Compiler_Time -value "4.33_sec" -context "xsim\\usage"
-webtalk_add_data -client xsim -key Compiler_Memory -value "125664_KB" -context "xsim\\usage"
-webtalk_transmit -clientid 365398331 -regid "" -xml C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/project_1.sim/sim_1/behav/xsim/xsim.dir/test_cam_TB_behav/webtalk/usage_statistics_ext_xsim.xml -html C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/project_1.sim/sim_1/behav/xsim/xsim.dir/test_cam_TB_behav/webtalk/usage_statistics_ext_xsim.html -wdm C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/project_1.sim/sim_1/behav/xsim/xsim.dir/test_cam_TB_behav/webtalk/usage_statistics_ext_xsim.wdm -intro "<H3>XSIM Usage Report</H3><BR>"
+webtalk_add_data -client xsim -key Compiler_Time -value "4.20_sec" -context "xsim\\usage"
+webtalk_add_data -client xsim -key Compiler_Memory -value "125484_KB" -context "xsim\\usage"
+webtalk_transmit -clientid 1300901521 -regid "" -xml C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/project_1.sim/sim_1/behav/xsim/xsim.dir/test_cam_TB_behav/webtalk/usage_statistics_ext_xsim.xml -html C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/project_1.sim/sim_1/behav/xsim/xsim.dir/test_cam_TB_behav/webtalk/usage_statistics_ext_xsim.html -wdm C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/project_1.sim/sim_1/behav/xsim/xsim.dir/test_cam_TB_behav/webtalk/usage_statistics_ext_xsim.wdm -intro "<H3>XSIM Usage Report</H3><BR>"
 webtalk_terminate
