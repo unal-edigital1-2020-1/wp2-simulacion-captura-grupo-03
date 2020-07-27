@@ -96,13 +96,17 @@ Finalmente, se presentan las señales de salida hacia el Buffer de Memoria.
 
 #### Diagrama Funcional
 
-En la Figura 8. se describe la funcionalidad principal del modulo cam_read.v. Una vez iniciado el proceso se cargan las diferentes entradas y salidas del módulo y posteriormente se le asigna el valor de 0 a las salidas.
+En la Figura 8. se describe la funcionalidad principal del modulo cam_read.v. Inicialmente se listan las diferentes entradas y salidas del módulo y posteriormente se le asigna el valor de 0 tanto a las salidas ya descritas Addr, datos y Write como al contador (cont).
 
 ![DiagramaFuncional](./figs/diagramaFuncional.png)
 
 *Figura 8. Diagrama funcional*
 
-Sucesivamente, 
+Sucesivamente, cada vez que exista un flanco de subidad del reloj pclk ,correspondiente a la camara, es decir, un posedge, se revisa si el reset (rst) se encuentra activado o no. En el caso de que el reset se encuentre activo, se le asigna el valor de 0 a las salidas y al contador, indicando entonces, que se empieza de nuevo el proceso de enviar la captura de una nueva imagen. Este procedimiento no se podra llevar acabo hasta que exista un posedge como puede observarse en el diagrama.
+
+En el caso de que el reset no se encuentre activo, se verifica que la entrada href sea igual a 1 y que la entrada vsync sea igual a 0. Si una de estas dos condiciones no se cumple, se vuelve a esperar la ocurrencia de un flanco de subida con el objetivo de realizar el mismo procedimiento descrito anteriormente. La sincronizacion de estas dos condiciones es vital a la hora de enviar los datos que corresponden a cada una de las filas de pixeles captadas por la camara.
+
+En el caso de que ambas condiciones hallan sido satisfechas, se prosigue a evaluar si el contador es igual a 0. De ser asi, se verifica que la direccion de memoria Addr sea igual a ImaSize, la direccion del ultimo pixel de la imagen capturada. Una nueva imagen debe empezar a capturarse una vez se capture toda la matriz de pixeles enviada por la camara. 
 
 #### Máquina de estados 
 
