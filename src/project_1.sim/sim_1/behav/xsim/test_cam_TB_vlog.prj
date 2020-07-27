@@ -1,6 +1,6 @@
 # compile verilog/system verilog design source files
 verilog xil_defaultlib  \
-"../../../../sources/VGA_Driver.v" \
+"../../../../sources/VGA_driver.v" \
 "../../../../sources/buffer_ram_dp.v" \
 "../../../../sources/cam_read.v" \
 "../../../../sources/PLL/clk24_25_nexys4.v" \
