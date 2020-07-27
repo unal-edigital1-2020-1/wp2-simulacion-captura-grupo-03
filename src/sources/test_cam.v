@@ -39,7 +39,7 @@ module test_cam
 // Conexiones *****************************************
     
     //  Algunas conexiones de Driver_VGA.
-<<<<<<< HEAD
+
     
     output wire clk25M,                  // 25MHz VGA clock.
 	output wire [11:0] data_mem,         // Cable de DP_RAM a VGA 640X480.
@@ -50,25 +50,10 @@ module test_cam
     output wire [14:0] DP_RAM_addr_in,   // Cable Captura de datos a DP_RAM Direccion de memoria lectura. 
 	output wire [11:0] DP_RAM_data_in,	 // Cable Captura de datos a DP_RAM Datos a guardar en la direccion de memoria.
     output wire DP_RAM_regW,             // Indica cuando un pixel esta completo.
-=======
-    output wire clk25M, // 25MHz de la VGA
-	output wire [11:0] data_mem,           //Cable de DP_RAM a VGA 640X480
-	output reg  [14:0] DP_RAM_addr_out,	//Registro Captura de datos a DP_RAM DirecciÃ³n en memoria 
-    
-    // Salidas de cam_read.v
-    
-    output wire [14:0] DP_RAM_addr_in,     //Cable Captura de datos a DP_RAM DirecciÃ³n de memoria lectura 
-	output wire [11:0] DP_RAM_data_in,	//Cable Captura de datos a DP_RAM Datos a guardar en la direcciÃ³n de memoria 	
-    output wire DP_RAM_regW, // Indica cuando un pixel esta completo.
->>>>>>> 7875790b30737d3428450b3a2e40f1d302025654
 
 //CAMARA input/output conexiones de la camara al modulo principal ********************************
 
-<<<<<<< HEAD
 	output wire CAM_xclk,		// System  clock input de la camara.
-=======
-	output wire CAM_xclk,		// System  clock input de la cÃ¯Â¿Â½mara.
->>>>>>> 7875790b30737d3428450b3a2e40f1d302025654
 	output wire CAM_pwdn,		// Power down mode.
 	output wire CAM_reset,		// Clear all registers of cam.
 	input wire CAM_pclk,		// Sennal PCLK de la camara. 
@@ -84,13 +69,8 @@ module test_cam
 parameter CAM_SCREEN_X = 160; 		// 640 / 4. Elegido por preferencia, menos memoria usada.
 parameter CAM_SCREEN_Y = 120;    	// 480 / 4.
 
-<<<<<<< HEAD
 localparam AW=15; // Se determina de acuerdo al tamano de de la direccion, de acuerdo al arreglo de pixeles dado por el formato en este caso Log(2)(160*120)=15.
 localparam DW=12; // Se determina de acuerdo al tamano de la data, formato RGB444 = 12 bits.
-=======
-localparam AW=15; // Se determina de acuerdo al tamaÃ±o de de la direcciÃ³n, de acuerdo a l arreglo de pixeles dado por el formato en este caso Log(2)(160*120)=15
-localparam DW=12; // Se determina de acuerdo al tamaÃ±o de la data, formaro RGB444 = 12 bites.
->>>>>>> 7875790b30737d3428450b3a2e40f1d302025654
 
 // conexiondes del Clk
 
@@ -99,33 +79,17 @@ wire clk25M;        // Para guardar el dato del reloj de la Pantalla (VGA 680X24
 wire clk24M;		// Para guardar el dato del reloj de la camara.
 
 // Conexion dual por ram
-<<<<<<< HEAD
 
 localparam imaSiz= CAM_SCREEN_X*CAM_SCREEN_Y; // Posicion n+1 del tamano del arreglo de pixeles de acuerdo al formato.
 
 wire [AW-1: 0] DP_RAM_addr_in;		// Conexion  Direccion entrada.
 wire [DW-1: 0] DP_RAM_data_in;      // Conexion Dato entrada.
 wire DP_RAM_regW;			        // Enable escritura de dato en memoria .
-=======
-localparam imaSiz= CAM_SCREEN_X*CAM_SCREEN_Y;// PosiciÃ³n n+1 del tamaÃ±p del arreglo de pixeles de acuerdo al formato.
-
-wire [AW-1: 0] DP_RAM_addr_in;		// ConexiÃ³n  Direccion entrada.
-wire [DW-1: 0] DP_RAM_data_in;      	// Conexion Dato entrada.
-wire DP_RAM_regW;			// Enable escritura de dato en memoria .
-
-reg  [AW-1: 0] DP_RAM_addr_out;		//Registro de la direcciÃ³n de memoria. 
->>>>>>> 7875790b30737d3428450b3a2e40f1d302025654
 
 reg  [AW-1: 0] DP_RAM_addr_out;		//Registro de la direccion de memoria. 
  
 // Conexion VGA Driver
-<<<<<<< HEAD
-=======
-wire [DW-1:0] data_mem;	    		// Salida de dp_ram al driver VGA
-wire [DW-1:0] data_RGB444;  		// salida del driver VGA a la pantalla
-wire [9:0] VGA_posX;			// Determinar la posiciÃ³n en X del pixel en la pantalla 
-wire [9:0] VGA_posY;			// Determinar la posiciÃ³n de Y del pixel en la pantalla
->>>>>>> 7875790b30737d3428450b3a2e40f1d302025654
+
 
 wire [DW-1:0] data_mem;	    		// Salida de dp_ram al driver VGA.
 wire [DW-1:0] data_RGB444;  		// Salida del driver VGA a la pantalla.
@@ -133,18 +97,9 @@ wire [9:0] VGA_posX;			    // Determinar la posicion en X del pixel en la pantal
 wire [9:0] VGA_posY;			    // Determinar la posicion de Y del pixel en la pantalla.
 
 /* ****************************************************************************
-<<<<<<< HEAD
 Asignacion de la informacion de la salida del driver a la pantalla
 del registro data_RGB444
 **************************************************************************** */
-=======
-AsignaciÃ³n de la informaciÃ³n de la salida del driver a la pantalla
-del regisro data_RGB444
-**************************************************************************** */
-assign VGA_R = data_RGB444[11:8]; 	//los 4 bites mÃ¡s significativos corresponden al color ROJO (RED) 
-assign VGA_G = data_RGB444[7:4];  	//los 4 bites siguientes son del color VERDE (GREEN)
-assign VGA_B = data_RGB444[3:0]; 	//los 4 bites menos significativos son del color AZUL(BLUE)
->>>>>>> 7875790b30737d3428450b3a2e40f1d302025654
 
 assign VGA_R = data_RGB444[11:8]; 	// Los 4 bits mas significativos corresponden al color ROJO (RED). 
 assign VGA_G = data_RGB444[7:4];  	// Los 4 bits siguientes son del color VERDE (GREEN).
@@ -154,15 +109,9 @@ assign VGA_B = data_RGB444[3:0]; 	// Los 4 bits menos significativos son del col
 Asignacion de las senales de control xclk pwdn y reset de la camara
 **************************************************************************** */
 
-<<<<<<< HEAD
 assign CAM_xclk = clk24M;		// Asignacion reloj camara.
 assign CAM_pwdn = 0;			// Power down mode.
 assign CAM_reset = 0;			// Reset camara.
-=======
-assign CAM_xclk = clk24M;		// AsignaciÃƒÂ³n reloj cÃƒÂ¡mara.
-assign CAM_pwdn = 0;			// Power down mode.
-assign CAM_reset = 0;			// Reset cÃƒÂ¡mara.
->>>>>>> 7875790b30737d3428450b3a2e40f1d302025654
 
 /* ****************************************************************************
   Mediante vivado acudiendo a la ruta: " Project manager > IP Catalog > FPGA Features and Desing > Clocking > Clocking Wizard " 
@@ -177,17 +126,11 @@ clk24_25_nexys4 clk25_24(
 .clk100M(clk)
 );
 
-
-
 /*
 clk24_25_nexys4_0 clk25_24(
   .CLK_IN1(clk),				//Reloj de la FPGA.
   .CLK_OUT1(clk25M),			//Reloj de la VGA.
-<<<<<<< HEAD
   .CLK_OUT2(clk24M),			//Reloj de la camara.
-=======
-  .CLK_OUT2(clk24M),			//Reloj de la cámara.
->>>>>>> 7875790b30737d3428450b3a2e40f1d302025654
   .RESET(rst)					//Reset.
  );
 */
@@ -205,7 +148,7 @@ cam_read #(AW,DW) cam_read
 		.rst(rst),
 
 	//outputs
-	.DP_RAM_regW(DP_RAM_regW), //enable
+	    .DP_RAM_regW(DP_RAM_regW), //enable
 		.DP_RAM_addr_in(DP_RAM_addr_in),
 		.DP_RAM_data_in(DP_RAM_data_in)
 
@@ -220,8 +163,8 @@ se recomiendia dejar DW a 8, con el fin de optimizar recursos  y hacer RGB 332
 buffer_ram_dp DP_RAM(
 		// Entradas.
 	.clk_w(CAM_pclk),				//Frecuencia de toma de datos de cada pixel.
-	.addr_in(DP_RAM_addr_in), 		// DirecciÃƒÂ³n entrada dada por el capturador.
-	.data_in(DP_RAM_data_in),		// Datos que entran de la cÃƒÂ¡mara.
+	.addr_in(DP_RAM_addr_in), 		// Direccion entrada dada por el capturador.
+	.data_in(DP_RAM_data_in),		// Datos que entran de la camara.
 	.regwrite(DP_RAM_regW), 		// Enable.
 	.clk_r(clk25M), 				// Reloj VGA.
 	.addr_out(DP_RAM_addr_out),		// Direccion salida dada por VGA.
@@ -242,7 +185,7 @@ VGA_Driver VGA_640x480 // Necesitamos otro driver.
 	.Hsync_n(VGA_Hsync_n),		// Sennal de sincronizacion en horizontal negada para la VGA.
 	.Vsync_n(VGA_Vsync_n),		// Sennal de sincronizacion en vertical negada  para la VGA.
 	.posX(VGA_posX), 			// Posicion en horizontal del pixel siguiente.
-	.posY(VGA_posY) 			// posicinn en vertical  del pixel siguiente.
+	.posY(VGA_posY) 			// Posicion en vertical  del pixel siguiente.
 
 );
 
