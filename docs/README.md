@@ -95,7 +95,7 @@ Finalmente, se presentan las señales de salida hacia el Buffer de Memoria.
 
 
 #### Diagrama Funcional
-![Maquina de estados](./figs/diagrama_funcional_cam_read.png)
+
 *Figura 8. Diagrama funcional*
 
 #### Máquina de estados 
