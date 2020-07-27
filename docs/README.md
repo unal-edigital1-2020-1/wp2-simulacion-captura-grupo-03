@@ -100,7 +100,7 @@ Finalmente, se presentan las señales de salida hacia el Buffer de Memoria.
 
 #### Máquina de estados 
 
-![Maquina de estados](./figs/diagramacam_read.png)
+![Maquina de estados](./figs/FSM.png)
 
 *Figura 9. Máquina de estados finitos*
 
