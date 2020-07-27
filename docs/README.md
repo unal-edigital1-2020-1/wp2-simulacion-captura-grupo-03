@@ -202,11 +202,11 @@ Nótese que la salida *LOCKED* no fue instanciada.
 
 Un aspecto interesante es el comportamiento que muestra clk25M en clk24_25_nexys4_0, este se ilustra en la siguiente Figura
 
-![DIAGRAMA](./figs/pll11.PNG)
+![DIAGRAMA](./figs/pll11.png)
 
 clk25M dura en 0 por un tiempo de 475 ns, mientras que con el módulo clk24_25_nexys4 dura 1225 ns con esa misma característica.
 
-![DIAGRAMA](./figs/pll12.PNG)
+![DIAGRAMA](./figs/pll12.png)
 
 Se cree que esto se puede dar porque ambos módulos presentan 'Jitters' y errores de fase distintos tal como lo indican las tablas que se proporcionan al generarlos con *Clocking Wizard* 
 
