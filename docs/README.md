@@ -147,6 +147,10 @@ El estado NOTHING se pasa al estado BYTE2 se hace el paso a la siguiente posici�
 *Figura 10. Diagrama estructural*
 
 
+Al módulo de la lectura de datos entran las señales de control y de sincronización además de la entrada de datos de la cámara, la entrada  CAM_px_data son los datos que proporciona la cámara, la señal CAM_pclk es la señal correspondiente al reloj de la cámara y la señal reset asigna valores conocidos para inicializar nuestra máquina de estados y como salida solo se entregan la salida que indica la dirección en memoria y los datos que van en dicha posición de memoria y el control de escritura que le dice al modula de la RAM cuando se pueden escribir esos datos en la memoria, para que puedan ser luego leídos por el driver de la pantalla. Y eventual mente la retroalimentación de la maquina de estados, que permite que se haga la captura de los datos de la cámara y se indique donde se almacenara 
+
+
+
 ### Módulo `clk24_25_nexys4.v` y señales de control (`Xclk/Reset/PWDN`)
 
 
