@@ -119,11 +119,11 @@ En principio se estaba utilizando el módulo `clk24_25_nexys4_0` proporcionado d
 
  En la parte izquierda del flujo de navegación se elige *IP Catalog*
 
-![clockw1](./figs/clockw1.png)
+![clockw1](./figs/clockw1.PNG)
  
  Posteriormente, se busca *FPGA Features and Design>Clocking>Clocking Wizard*
 
-![clockw2](./figs/clockw2.png)
+![clockw2](./figs/clockw2.PNG)
 
 Se asigna el valor del reloj primario de acuerdo a la FPGA que trabajaremos, en este caso 100 MHz y por preferencia se le pone el nombre de *clk100M* 
 
@@ -202,11 +202,11 @@ Nótese que la salida *LOCKED* no fue instanciada.
 
 Un aspecto interesante es el comportamiento que muestra clk25M en clk24_25_nexys4_0, este se ilustra en la siguiente Figura
 
-![DIAGRAMA](./figs/pll11.PNG)
+![DIAGRAMA](./figs/pll11.png)
 
 clk25M dura en 0 por un tiempo de 475 ns, mientras que con el módulo clk24_25_nexys4 dura 1225 ns con esa misma característica.
 
-![DIAGRAMA](./figs/pll12.PNG)
+![DIAGRAMA](./figs/pll12.png)
 
 Se cree que esto se puede dar porque ambos módulos presentan 'Jitters' y errores de fase distintos tal como lo indican las tablas que se proporcionan al generarlos con *Clocking Wizard* 
 
@@ -304,13 +304,13 @@ Se agregan 32 768 lineas de datos, donde cada dato se representa por tres númer
 
 El archivo **TB_ram** es modificado en primer lugar para que el flanco de subida del reloj (ckl) coincida con el flanco de subida del registro de escritura, de lectura y de asignación de direcciones lo que permite una sincronizacion adecuada para cada una de las operaciones a ejecutar. Esto se implemeta en el código de la Figura 16 y se puede evidenciar en la simulación.
 
-![DIAGRAMA3](./figs/codigo.png)
+![DIAGRAMA3](./figs/codigo.PNG)
 
 *Figura 16. Parte 1 de la prueba del módulo Buffer.*
 
 El registro de escritura **regwrite** es puesto en 1 luego de un delay de 10 ns, con esto se inicializan los registros y permite que se comience a escribir en el registro ram del archivo **buffer_ram_dp.v**. Lo sucede en paralelo  es que existe un delay de 2 seguntos para cada uno de los incrementos del ciclo for, en este además mediante el registro **cont** se están generando las direcciones de memoria de escritura, lo que corresponde a un delay de 20 ns que sumados a los 10 ns iniciales da como resultado 30 ns. Luego, el registro **regread** tarda 40 ns en cambiar su estado de 0 a 1 incluyendo el delay de la linea 78 de 10 ns razón por la cual _data_out_ se inicializa hasta ese valor. Esto se puede notar en la Figura 5. 
 
-![DIAGRAMA4](./figs/simulacion.png)
+![DIAGRAMA4](./figs/simulacion.PNG)
 
 *Figura 17. Simulación del Buffer.*
 
