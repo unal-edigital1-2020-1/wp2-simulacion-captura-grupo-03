@@ -119,53 +119,53 @@ En principio se estaba utilizando el módulo `clk24_25_nexys4_0` proporcionado d
 
  En la parte izquierda del flujo de navegación se elige *IP Catalog*
 
-![DIAGRAMA](./figs/clockw1.PNG)
+![clockw1](./figs/clockw1.PNG)
  
  Posteriormente, se busca *FPGA Features and Design>Clocking>Clocking Wizard*
 
-![DIAGRAMA](./figs/clockw2.PNG)
+![clockw2](./figs/clockw2.PNG)
 
 Se asigna el valor del reloj primario de acuerdo a la FPGA que trabajaremos, en este caso 100 MHz y por preferencia se le pone el nombre de *clk100M* 
 
-![DIAGRAMA](./figs/pll2.PNG)
+![pll2](./figs/pll2.PNG)
 
 Se cambia en Source a *Global buffer*.
 
-![DIAGRAMA](./figs/pll3.PNG)
+![pll3](./figs/pll3.PNG)
 
 En la siguiente pestaña **Output Clocks**, se elige que una de las salidas tenga una frecuencia de 24 MHz con el nombre de *clk24M* y la otra tenga una frecuencia de 25 MHz con el nombre de *clk25M*
 
-![DIAGRAMA](./figs/pll4.PNG)
+![pll4](./figs/pll4.PNG)
 
 En port **Port Renaming** no se hace nada.
 
-![DIAGRAMA](./figs/pll5.PNG)
+![pll5](./figs/pll5.PNG)
 
 En *MMCM Setting* tampoco se modifica.
 
-![DIAGRAMA](./figs/pll6.PNG)
+![pll6](./figs/pll6.PNG)
 
 En Summary se deja Igual. 
 
-![DIAGRAMA](./figs/pll7.PNG)
+![pll7](./figs/pll7.PNG)
 
 
 Se guarda en la dirección que aparece en el recuadro.
 
-![DIAGRAMA](./figs/pll8.PNG)
+![pll8](./figs/pll8.PNG)
 
 
 Se genera.
 
-![DIAGRAMA](./figs/pll9.PNG)
+![pll9](./figs/pll9.PNG)
 
 Luego nos dirigimos a la dirección a donde se a ha guardado y los archivos *clk24_25_nexys4* y *clk24_25_nexys4_clk_wiz.v* son el PLL.
 
-![DIAGRAMA](./figs/pll101.PNG)
+![pll101](./figs/pll101.PNG)
 
 Se borra la carpeta donde se generaron esos archivos y se remueve del proyecto.
 
-![DIAGRAMA](./figs/pll10.PNG)
+![pll10](./figs/pll10.PNG)
 
 * La caja negra de `clk24_25_nexys4.v` queda como:
 

@@ -122,7 +122,7 @@ clk24_25_nexys4 clk25_24(
 
 
 /*
-clk24_25_nexys4 clk25_24(
+clk24_25_nexys4_0 clk25_24(
   .CLK_IN1(clk),				//Reloj de la FPGA.
   .CLK_OUT1(clk25M),			//Reloj de la VGA.
   .CLK_OUT2(clk24M),			//Reloj de la cámara.
