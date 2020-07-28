@@ -2,11 +2,11 @@
 2019.2
 Nov  6 2019
 21:57:16
-C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/project_1.sim/sim_1/behav/xsim/glbl.v,1595858995,verilog,,,,glbl,,,,,,,,
-C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/simulation/test_cam_TB.v,1595835963,verilog,,,,test_cam_TB,,,,,,,,
-C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/PLL/clk24_25_nexys4.v,1595858996,verilog,,C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/PLL/clk24_25_nexys4_clk_wiz.v,,clk24_25_nexys4,,,,,,,,
-,,,,C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v,,clk24_25_nexys4_clk_wiz,,,,,,,,
-C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/VGA_driver.v,1595858996,verilog,,C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/buffer_ram_dp.v,,VGA_Driver,,,,,,,,
-C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/buffer_ram_dp.v,1595863506,verilog,,C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/cam_read.v,,buffer_ram_dp,,,,,,,,
-C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/cam_read.v,1595858996,verilog,,C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/PLL/clk24_25_nexys4.v,,cam_read,,,,,,,,
-C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v,1595857630,verilog,,C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/simulation/test_cam_TB.v,,test_cam,,,,,,,,
+C:/Users/Nikolai/Desktop/wp2-simulacion-captura-grupo-03/src/project_1.sim/sim_1/behav/xsim/glbl.v,1595955116,verilog,,,,glbl,,,,,,,,
+C:/Users/Nikolai/Desktop/wp2-simulacion-captura-grupo-03/src/simulation/test_cam_TB.v,1595955479,verilog,,,,test_cam_TB,,,,,,,,
+C:/Users/Nikolai/Desktop/wp2-simulacion-captura-grupo-03/src/sources/PLL/clk24_25_nexys4.v,1595955117,verilog,,C:/Users/Nikolai/Desktop/wp2-simulacion-captura-grupo-03/src/sources/PLL/clk24_25_nexys4_clk_wiz.v,,clk24_25_nexys4,,,,,,,,
+C:/Users/Nikolai/Desktop/wp2-simulacion-captura-grupo-03/src/sources/PLL/clk24_25_nexys4_clk_wiz.v,1595955117,verilog,,C:/Users/Nikolai/Desktop/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v,,clk24_25_nexys4_clk_wiz,,,,,,,,
+C:/Users/Nikolai/Desktop/wp2-simulacion-captura-grupo-03/src/sources/VGA_driver.v,1595955117,verilog,,C:/Users/Nikolai/Desktop/wp2-simulacion-captura-grupo-03/src/sources/buffer_ram_dp.v,,VGA_Driver,,,,,,,,
+C:/Users/Nikolai/Desktop/wp2-simulacion-captura-grupo-03/src/sources/buffer_ram_dp.v,1595955479,verilog,,C:/Users/Nikolai/Desktop/wp2-simulacion-captura-grupo-03/src/sources/cam_read.v,,buffer_ram_dp,,,,,,,,
+C:/Users/Nikolai/Desktop/wp2-simulacion-captura-grupo-03/src/sources/cam_read.v,1595955117,verilog,,C:/Users/Nikolai/Desktop/wp2-simulacion-captura-grupo-03/src/sources/PLL/clk24_25_nexys4.v,,cam_read,,,,,,,,
+C:/Users/Nikolai/Desktop/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v,1595955117,verilog,,C:/Users/Nikolai/Desktop/wp2-simulacion-captura-grupo-03/src/simulation/test_cam_TB.v,,test_cam,,,,,,,,

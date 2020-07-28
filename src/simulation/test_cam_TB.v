@@ -55,10 +55,11 @@ module test_cam_TB;
 
     // Senales de prueba ******************************
 // Absolute Address in Esteban's computer
-localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/test_vga.txt";
+//localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/test_vga.txt";
 // Absolute address in Niko's computer
 // localparam d="C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/test_vga.txt";	
-	
+// Absolute address in Niko's mac computer
+localparam d="C:/Users/Nikolai/Desktop/wp2-simulacion-captura-grupo-03/src/test_vga.txt";	
 	// Instantiate the Unit Under Test (UUT)
 	test_cam uut (
 		.clk(clk),
