@@ -143,7 +143,7 @@ El estado NOTHING se pasa al estado BYTE2 se hace el paso a la siguiente posici√
 #### Diagrama estructural
 
 
-![Maquina de estados](./figs/diagrama_funcional_cam_read.png)
+![Maquina de estados](./figs/DiagramaEstructural.png)
 *Figura 10. Diagrama estructural*
 
 
