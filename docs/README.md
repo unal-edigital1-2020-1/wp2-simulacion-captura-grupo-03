@@ -23,7 +23,7 @@ El presente trabajo describe el desarrollo de un sistema controlado por una matr
 
 El sensor de una cámara digital está formado por celdas fotosensibles llamadas píxeles, los cuales, mediante un fotodiodo dependiendo de la cantidad de luz apreciada envían electricidad. Además, estos incluyen otros componentes electrónicos que permiten leer la información de cada píxel cada vez que se captura una foto.[1]
 
-![Camara](./figs/sensor.png)
+![cámara](./figs/sensor.png)
 
 *Figura 1. Comportamiento sensor de cámara digital.*
 
@@ -54,13 +54,13 @@ Como se logra observar en el esquema general de la Figura 2, el diseño del sist
 
 Se van a describir las entradas y salidas del módulo de la Figura 3.
 
-* Href: Está sincronizado con PCLK ( Pixel  Clock Output)[5,pág 4] de tal manera que el t<sub>PHL</sub> (tiempo de propagación de alto a bajo) de PCLK coincide con el instante justo antes de que HREF cambie de su estado como lo muestra la Figura 4. Además, pasados un definido número de t<sub>PCLK</sub> ( Pixel Clock Output)[5, pág 4] el cambio de su estado High ocurre en otro  tPHL del PCLK. Row data hace referencia datos de una fila según el formato elegido.
+* Href: Está sincronizado con PCLK ( píxel  Clock Output)[5,pág 4] de tal manera que el t<sub>PHL</sub> (tiempo de propagación de alto a bajo) de PCLK coincide con el instante justo antes de que HREF cambie de su estado como lo muestra la Figura 4. Además, pasados un definido número de t<sub>PCLK</sub> ( píxel Clock Output)[5, pág 4] el cambio de su estado High ocurre en otro  tPHL del PCLK. Row data hace referencia datos de una fila según el formato elegido.
 
 ![RGB444](./figs/RGB444.png)
 
-*Figura 4. Sincronización de PCLK, HREF, D[7:0] y distribución de pixeles.*
+*Figura 4. Sincronización de PCLK, HREF, D[7:0] y distribución de píxeles.*
 
-* Datos [7:0]: En la Figura 4 se muestra que cuando HREF está en HIGH se generan los datos de una fila de la matriz según el tamaño predefinido para la imagen. En el caso del formato RGB 444, cada pixel tiene 2 bytes donde cada uno está compuesto por un vector de D[7:0] y son estables es cada posedge del PCLK. Los cuatro bits menos significativos del primer byte pertenecen al color rojo, en el segundo byte los cuatro bits más significativos son del color verde y los restantes del color azul. Finalmente, se infiere de la Figura 5 que los datos D[i] ingresan de manera paralela y por tanto se deben declarar ocho entradas en la implementación. 
+* Datos [7:0]: En la Figura 4 se muestra que cuando HREF está en HIGH se generan los datos de una fila de la matriz según el tamaño predefinido para la imagen. En el caso del formato RGB 444, cada píxel tiene 2 bytes donde cada uno está compuesto por un vector de D[7:0] y son estables es cada posedge del PCLK. Los cuatro bits menos significativos del primer byte pertenecen al color rojo, en el segundo byte los cuatro bits más significativos son del color verde y los restantes del color azul. Finalmente, se infiere de la Figura 5 que los datos D[i] ingresan de manera paralela y por tanto se deben declarar ocho entradas en la implementación. 
 
 ![RGB444](./figs/diagrama_de_pines.png)
 
@@ -80,35 +80,35 @@ Con el tamaño de Imagen de QQVGA (160x120, 160 columnas y 120 filas) HREF se co
 
 
 Analizando los tiempos que se presentan en la Figura 6 se tiene:
-  - tp=2*t<sub>PCLK</sub> (pixel clock output period) [1, pág 7]
+  - tp=2*t<sub>PCLK</sub> (píxel clock output period) [1, pág 7]
   - t<sub>LINE</sub>  => 640 tp + 144 tp= 784 tp= 1 568 t<sub>PCLK</sub>
   - 480xt<sub>LINE</sub> = 62720 +12544= 752 640 t<sub>PCLK</sub>
   - 510xt<sub>LINE</sub> (Periodo de la VSYNC) =>  (3+17+480+10)xt<sub>LINE</sub>= 799 680 t<sub>PCLK</sub>  
 
 Finalmente, se presentan las señales de salida hacia el Buffer de Memoria.
 
-* Addr: Dirección donde se va a guardar el pixel de tamaño AW bits.
+* Addr: Dirección donde se va a guardar el píxel de tamaño AW bits.
 
-* datos: El pixel extraído de la cámara de tamaño DW bits.
+* datos: El píxel extraído de la cámara de tamaño DW bits.
 
 * Write:  Habilita la escritura en el Buffer.
 
 
 #### Diagrama Funcional
 
-En la Figura 8. se describe la funcionalidad principal del modulo cam_read.v. Inicialmente se listan las diferentes entradas y salidas del módulo y posteriormente se le asigna el valor de 0 tanto a las salidas ya descritas Addr, datos y Write como al contador (cont).
+En la Figura 8. se describe la funcionalidad principal del módulo cam_read.v. Inicialmente se listan las diferentes entradas y salidas del módulo y posteriormente se le asigna el valor de 0 tanto a las salidas ya descritas Addr, datos y Write como al contador (cont).
 
 ![DiagramaFuncional](./figs/diagramaFuncional.png)
 
 *Figura 8. Diagrama funcional*
 
-Sucesivamente, cada vez que exista un flanco de subidad del reloj pclk ,correspondiente a la camara, es decir, un posedge, se revisa si el reset (rst) se encuentra activado o no. En el caso de que el reset se encuentre activo, se le asigna el valor de 0 a las salidas y al contador, indicando entonces, que se empieza de nuevo el proceso de enviar la captura de una nueva imagen. Este procedimiento no se podra llevar acabo hasta que exista un posedge como puede observarse en el diagrama.
+Sucesivamente, cada vez que exista un flanco de subidad del reloj pclk ,correspondiente a la cámara, es decir, un posedge, se revisa si el reset (rst) se encuentra activado o no. En el caso de que el reset se encuentre activo, se le asigna el valor de 0 a las salidas y al contador, indicando entonces, que se empieza de nuevo el proceso de enviar la captura de una nueva imagen. Este procedimiento no se podra llevar acabo hasta que exista un posedge como puede observarse en el diagrama.
 
-En el caso de que el reset no se encuentre activo, se verifica que la entrada href sea igual a 1 y que la entrada vsync sea igual a 0. Si una de estas dos condiciones no se cumple, se vuelve a esperar la ocurrencia de un flanco de subida con el objetivo de realizar el mismo procedimiento descrito anteriormente. La sincronizacion de estas dos condiciones es vital a la hora de enviar los datos que corresponden a cada una de las filas de pixeles captadas por la camara.
+En el caso de que el reset no se encuentre activo, se verifica que la entrada href sea igual a 1 y que la entrada vsync sea igual a 0. Si una de estas dos condiciones no se cumple, se vuelve a esperar la ocurrencia de un flanco de subida con el objetivo de realizar el mismo procedimiento descrito anteriormente. La sincronizacion de estas dos condiciones es vital a la hora de enviar los datos que corresponden a cada una de las filas de píxeles captadas por la cámara.
 
-En el caso de que ambas condiciones hallan sido satisfechas, se prosigue a evaluar si el contador es igual a 0. De ser asi, se verifica que la direccion de memoria Addr sea igual a ImaSize, la direccion del ultimo pixel de la imagen capturada. Una nueva imagen debe empezar a capturarse una vez se capture toda la matriz de pixeles enviada por la camara tal y como se aprecia en la Figura 8. Si aun no se ha llegado a la direccion del ultimo pixel de la camara, se debe cargar el dato correspondiente al byte 1, es decir, entre el bit(9) y el bit(12) de la salida data_in, se deben cargar los primeros 4 bit enviados por la camara a traves de px_data, los cuales corresponden al color rojo del pixel como tal y como se aprecia en la Figura 4. Debe tambien aumentar el contador y la direccion de memoria Addr en 1. 
+En el caso de que ambas condiciones hallan sido satisfechas, se prosigue a evaluar si el contador es igual a 0. De ser asi, se verifica que la direccion de memoria Addr sea igual a ImaSize, la direccion del ultimo píxel de la imagen capturada. Una nueva imagen debe empezar a capturarse una vez se capture toda la matriz de píxeles enviada por la cámara tal y como se aprecia en la Figura 8. Si aun no se ha llegado a la direccion del ultimo píxel de la cámara, se debe cargar el dato correspondiente al byte 1, es decir, entre el bit(9) y el bit(12) de la salida data_in, se deben cargar los primeros 4 bit enviados por la cámara a traves de px_data, los cuales corresponden al color rojo del píxel como tal y como se aprecia en la Figura 4. Debe tambien aumentar el contador y la direccion de memoria Addr en 1. 
 
-Si el contador no era 0, se debe cargar en la variable de salida datos, la informacion del color verde y azul del pixel, es decir, entre el bit(1) y el bit(8) de la salida data_in, se cargan todos los bits de px_data. Es necesario tambien, aumentar tanto el contador como la direccion de salida en 1. 
+Si el contador no era 0, se debe cargar en la variable de salida datos, la informacion del color verde y azul del píxel, es decir, entre el bit(1) y el bit(8) de la salida data_in, se cargan todos los bits de px_data. Es necesario tambien, aumentar tanto el contador como la direccion de salida en 1. 
 
 En el caso de que href y vsync no se encuentren sincronizadas, se debe volver a verificar la existencia de un nuevo posedge. 
 
@@ -128,7 +128,7 @@ En el estrado INIT que es el estado por defecto Si las señales de control CAM_v
 En caso de que las señales de control no sean 0 y 1, asignara/iniciara las salidas a la RAM con valores conocidos 0.
 
 
-Para el estado BYTE1, primero desactiva la escritura en memoria, luego si CAM_href es 1 evalúa si el recorrido de las posiciones en memoria ya llego a la última posición en memoria, de ser así devuelve DP_RAM_addr_in al inicio del recorrido. Si aún no se ha terminado el recorrido en memoria, salta a la siguiente dirección en memoria, luego asigna los 4 bits menos significativos de los datos de la cámara a los 4 bits más significativos de la data que sale a la RAM y pasa al estado BYTE2
+Para el estado BYTE1, primero desactiva la escritura en memoria, luego si CAM_href es 1 evalúa si el recorrido de las posiciónes en memoria ya llego a la última posición en memoria, de ser así devuelve DP_RAM_addr_in al inicio del recorrido. Si aún no se ha terminado el recorrido en memoria, salta a la siguiente dirección en memoria, luego asigna los 4 bits menos significativos de los datos de la cámara a los 4 bits más significativos de la data que sale a la RAM y pasa al estado BYTE2
 
 En el estado BYTE2 se asignan los bites faltantes de la cámara a la otra parte de la data que entra a la RAM, recordando que para el primer byte solo la mitad tiene la información de la cámara siendo la otra mitad ceros y que el segundo byte va la información completa de la cámara.
 
@@ -155,7 +155,7 @@ Al módulo de la lectura de datos entran las señales de control y de sincroniza
 
 
 
-En principio se estaba utilizando el módulo `clk24_25_nexys4_0` proporcionado de manera generosa por el profesor Nestor de Laboratorio. Luego, se genero el modulo clk24_25_nexys4.v con ayuda de la ip clock wizard v6 disponible para vivado teniendo en cuenta los parámetros del proyecto, como apoyo se consulto la documentación del fabricante del Clock Wizard v6 [6] y el trabajo del grupo 5 del semestre anterior que está en este [link](https://github.com/unal-edigital1-2019-2/work04-proyectofinal-grupo-05-1/blob/master/docs/README.md).
+En principio se estaba utilizando el módulo `clk24_25_nexys4_0` proporcionado de manera generosa por el profesor Nestor de Laboratorio. Luego, se genero el módulo clk24_25_nexys4.v con ayuda de la ip clock wizard v6 disponible para vivado teniendo en cuenta los parámetros del proyecto, como apoyo se consulto la documentación del fabricante del Clock Wizard v6 [6] y el trabajo del grupo 5 del semestre anterior que está en este [link](https://github.com/unal-edigital1-2019-2/work04-proyectofinal-grupo-05-1/blob/master/docs/README.md).
 
  En la parte izquierda del flujo de navegación se elige *IP Catalog*
 
@@ -313,17 +313,17 @@ Vale la pena aclarar que, tal y como se nos indica por el profesor, se busca que
 
 *Figura 15. Memoría utilizada según las resoluciones y el formato*
 
-Se elige en principio un formato RGB 444, ya que la pantalla a usar se encuentra configurada para este. Sucesivamente y teniendo en cuenta la tabla presentada anteriormente, lo que se hace es elegir el tamaño de imagen que menos memoria consume, es decir, el tamaño 160 x 120 pixeles.
+Se elige en principio un formato RGB 444, ya que la pantalla a usar se encuentra configurada para este. Sucesivamente y teniendo en cuenta la tabla presentada anteriormente, lo que se hace es elegir el tamaño de imagen que menos memoria consume, es decir, el tamaño 160 x 120 píxeles.
 
-Estos 160 x 120 pixeles, lo que equivale a 19200 pixeles, mediante una representacion binaria son representados por _2^n_ , donde _n_ corresponde al número de bit necesarios. Es posible hallar _n_ de la siguiente manera:
+Estos 160 x 120 píxeles, lo que equivale a 19200 píxeles, mediante una representacion binaria son representados por _2^n_ , donde _n_ corresponde al número de bit necesarios. Es posible hallar _n_ de la siguiente manera:
 
-![formula1](https://render.githubusercontent.com/render/math?math=log_2(pixeles)=n)
+![formula1](https://render.githubusercontent.com/render/math?math=log_2(píxeles)=n)
 
 ![formula2](https://render.githubusercontent.com/render/math?math=log_2(19200)=%2014.22)
 
 Entonces, se requiere de 15 bits como mínimo para representar con éxito la matriz de datos que provee la cámara, con los cuales es posible representar $2^n$ datos, lo que equivale a 32768 datos. En el programa diseñado con este _n_ hace referencia al parámetro AW (address width)  y representa la cantidad de bits de la dirección. Además, como cada uno de nuestros datos (píxeles) requiere 12 bits esto corresponde al parámetro DW (Data Width) utilizado en el código de programación. Por tanto, la memoria a diseñar debe tener la capacidad de almacenar _AW*DW_  bits (393 216 bits), lo que representa un _15.8%_ de la memoria que se permite usar en la FPGA.
 
-En el momento de codificar lo dicho anteriormente, se parte por crear el modulo buffer_ram_dp con los siguientes parametros, entradas y salidas:
+En el momento de codificar lo dicho anteriormente, se parte por crear el módulo buffer_ram_dp con los siguientes parámetros, entradas y salidas:
 
 ```verilog
 module buffer_ram_dp#(
@@ -332,9 +332,9 @@ module buffer_ram_dp#(
     // Absolute address in Esteban's computer
     parameter imageFILE = "D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/imagen.men")
     (
-    input clk_w,             // Frecuencia de toma de datos de cada pixel.
+    input clk_w,             // Frecuencia de toma de datos de cada píxel.
     input [AW-1: 0] addr_in, // Direccion entrada dada por el capturador.
-    input [DW-1: 0] data_in, // Datos que entran de la camara.
+    input [DW-1: 0] data_in, // Datos que entran de la cámara.
     input regwrite,          // Enable.
 
     input clk_r,                    // Reloj 25MHz VGA.
@@ -344,7 +344,7 @@ module buffer_ram_dp#(
     //input reset                   // De momento no se esta usando.
 
     );
-    // Calcular el numero de posiciones totales de memoria.
+    // Calcular el numero de posiciónes totales de memoria.
 localparam NPOS = 2 ** AW;          // Memoria.
 localparam imaSiz=160*120;
 ```
@@ -386,7 +386,7 @@ Se realiza una simulación para comprobar que la memoria RAM funcione correctame
 
 * Simulación (TestBench):
 
-En primer lugar se debe aclarar que el archivo **imagen.men** se encarga de suministrar los datos de entrada del archivo **buffer_ram_dp.v** (memoria Ram diseñada). Como se explica en el inciso 2 se sabe que, por un lado, para el formato RGB444 cada pixel (dato) requiere de 12 bits y que por otra parte, se deben representar 32 768 pixeles. Además, teniendo en cuenta que en el archivo **buffer_ram_dp.v** la lectura del archivo **image.men** se hace de manera hexadecimal (con la instrucción **$readmemh(imageFILE, ram)**, se modifica el archivo **imagen.men** de la siguiente manera:
+En primer lugar se debe aclarar que el archivo **imagen.men** se encarga de suministrar los datos de entrada del archivo **buffer_ram_dp.v** (memoria Ram diseñada). Como se explica en el inciso 2 se sabe que, por un lado, para el formato RGB444 cada píxel (dato) requiere de 12 bits y que por otra parte, se deben representar 32 768 píxeles. Además, teniendo en cuenta que en el archivo **buffer_ram_dp.v** la lectura del archivo **image.men** se hace de manera hexadecimal (con la instrucción **$readmemh(imageFILE, ram)**, se modifica el archivo **imagen.men** de la siguiente manera:
 
 Se agregan 32 768 lineas de datos, donde cada dato se representa por tres números hexadecimales consecutivos, cada uno de estos representando 4 bits. Por ejemplo, la primer linea del archivo contiene el siguiente dato: **f00** donde f representa que los cuatro bits del color "Red" estan en 1, es decir el número hexadecimal f en binario (1111); de la misma manera el 0 indica que los cuatro bits del color "Green" se encuentran en 0 y de manera similar con el color "Blue". Despues, se activa el Green (0f0) y todos los demás se desabilitan; finalmente se activa el Blue (00f). Se continua esta frecuencia por nueve filas y el resto se deja en _f00_.
 
@@ -420,13 +420,13 @@ Las entradas y salidas de este módulo estaban declaradas como:
 module VGA_Driver640x480 (
     input rst,
     input clk,              // 25MHz  para 60 hz de 640x480
-    input  [7:0] pixelIn,   // entrada del valor de color  pixel 
+    input  [7:0] píxelIn,   // entrada del valor de color  píxel 
     
-    output  [7:0] pixelOut, // salida del valor pixel a la VGA 
+    output  [7:0] píxelOut, // salida del valor píxel a la VGA 
     output  Hsync_n,        // señal de sincronización en horizontal negada
     output  Vsync_n,        // señal de sincronización en vertical negada 
-    output  [9:0] posX,     // posición en horizontal del pixel siguiente
-    output  [8:0] posY      // posicion en vertical  del pixel siguiente
+    output  [9:0] posX,     // posición en horizontal del píxel siguiente
+    output  [8:0] posY      // posición en vertical  del píxel siguiente
 );
 ```
 
@@ -436,16 +436,16 @@ module VGA_Driver640x480 (
  module VGA_Driver #(DW = 12) (
     input rst,
     input clk,                      // 25MHz  para 60 hz de 640x480
-    input  [DW - 1 : 0] pixelIn,    // entrada del valor de color  pixel 
+    input  [DW - 1 : 0] píxelIn,    // entrada del valor de color  píxel 
     
-    output  [DW - 1 : 0] pixelOut, // salida del valor pixel a la VGA 
+    output  [DW - 1 : 0] píxelOut, // salida del valor píxel a la VGA 
     output  Hsync_n,        // señal de sincronización en horizontal negada
     output  Vsync_n,        // señal de sincronización en vertical negada 
-    output  [9:0] posX,     // posición en horizontal del pixel siguiente
-    output  [9:0] posY      // posición en vertical  del pixel siguiente
+    output  [9:0] posX,     // posición en horizontal del píxel siguiente
+    output  [9:0] posY      // posición en vertical  del píxel siguiente
 );
  ```
-Se parametrizó el tamaño de pixelIn y pixelOut, dejándolo por defecto como 12 bits. También, posY debe tener un tamaño tal que le permita llegar de 0 hasta TOTAL_SCREEN_X-1 (525-1), esto se logra con un registro de 10 bits en donde se puede almacenar de la posición 0 a la 1023.     
+Se parametrizó el tamaño de píxelIn y píxelOut, dejándolo por defecto como 12 bits. También, posY debe tener un tamaño tal que le permita llegar de 0 hasta TOTAL_SCREEN_X-1 (525-1), esto se logra con un registro de 10 bits en donde se puede almacenar de la posición 0 a la 1023.     
 
 * Cambio 2
 
@@ -466,15 +466,15 @@ reg  [9:0] countY; // 10 bits
 
 Se cambió,
 ```verilog
-assign pixelOut = (countX<SCREEN_X) ? (pixelIn ) : (8'b00000000) ;
+assign píxelOut = (countX<SCREEN_X) ? (píxelIn ) : (8'b00000000) ;
 ```
 por,
 
 ```verilog
-assign pixelOut = (countX<SCREEN_X) ? (pixelIn ) : (12'b0) ;
+assign píxelOut = (countX<SCREEN_X) ? (píxelIn ) : (12'b0) ;
 ```
 
-El tamaño del pixel que se requiere en nuestro caso es de 12 bits y es de color negro, por eso se coloca `12'b0`. A pixelOut se le asigna `12'b0` cada vez que countX, cuyo rango es [0,799] (de 0 hasta TOTAL_SCREEN_X-1), es igual o mayor a SCREEN_X (SCREEN_X=640).
+El tamaño del píxel que se requiere en nuestro caso es de 12 bits y es de color negro, por eso se coloca `12'b0`. A píxelOut se le asigna `12'b0` cada vez que countX, cuyo rango es [0,799] (de 0 hasta TOTAL_SCREEN_X-1), es igual o mayor a SCREEN_X (SCREEN_X=640).
 
 * Cambio 4
 
@@ -489,7 +489,7 @@ assign Hsync_n = ~((countX>=SCREEN_X+FRONT_PORCH_X) && (countX<SCREEN_X+SYNC_PUL
 assign Vsync_n = ~((countY>=SCREEN_Y+FRONT_PORCH_Y) && (countY<SCREEN_Y+FRONT_PORCH_Y+SYNC_PULSE_Y));
 ```
 
-Cuando la sincronización vertical (`VGA_Vsync_n`) pasa de 1 a 0 y de 0 a 1, al igual que la sincronización horizontal (`VGA_Hsync_n`) en la última fila de la matriz , permite saber que el próximo pixel que se transmita se ubica en la posición 1 de la matriz que forma la imagen en de tamaño  TOTAL_SCREEN_XxTOTAL_SCREEN_Y=800x525. Ahora bién, `VGA_Vsync_n` (que es la más demorada), empieza a generar la sincronización cuando `countY>=SCREEN_Y+FRONT_PORCH_Y` y esto se empieza a cumplir cuando `countX` es mayor o igual que `(TOTAL_SCREEN_X-1)` un número `SCREEN_Y+FRONT_PORCH_Y` de veces, según se muestra en condicional que continua:
+Cuando la sincronización vertical (`VGA_Vsync_n`) pasa de 1 a 0 y de 0 a 1, al igual que la sincronización horizontal (`VGA_Hsync_n`) en la última fila de la matriz , permite saber que el próximo píxel que se transmita se ubica en la posición 1 de la matriz que forma la imagen en de tamaño  TOTAL_SCREEN_XxTOTAL_SCREEN_Y=800x525. Ahora bién, `VGA_Vsync_n` (que es la más demorada), empieza a generar la sincronización cuando `countY>=SCREEN_Y+FRONT_PORCH_Y` y esto se empieza a cumplir cuando `countX` es mayor o igual que `(TOTAL_SCREEN_X-1)` un número `SCREEN_Y+FRONT_PORCH_Y` de veces, según se muestra en condicional que continua:
 
 ```verilog
 
@@ -531,20 +531,20 @@ Las señal de sincronización `VGA_Vsync_n`  del `VGA_Driver` se puede asimilar 
 
 ## Implementación de los módulos
 
-La implementacion de todos los modulos desarrollados previamente (cam_read.v, clk24_25_nexys4.v, buffer_ram_dp.v y VGA_Driver.v que a su vez incluye el Módulo de convert addr) y, por consiguiente, del sistema en su totalidad se lleva a cabo con el desarrollo del modulo test_cam.v.
+La implementacion de todos los módulos desarrollados previamente (cam_read.v, clk24_25_nexys4.v, buffer_ram_dp.v y VGA_Driver.v que a su vez incluye el Módulo de convert addr) y del sistema en su totalidad se lleva a cabo con el desarrollo del módulo test_cam.v. 
 
 ### Análisis de Módulo `test_cam.v`
 
-### Análisis de Módulo `test_cam.v`
-
-Las señales amarillas de la Figura 2, se sustituyen por las señales rojas de la Figura 19, estas senales rojas emulan las proporcionadas por la camara. Este esquema de simulación nos permite evaluar que todos los módulos funcionen adecuadamente una vez se logre implementar todo el proyecto. 
+Las señales amarillas de la Figura 2, se sustituyen por las señales rojas de la Figura 19, estas señales rojas emulan las proporcionadas por la cámara. Este esquema de simulación nos permite evaluar que todos los módulos funcionen adecuadamente una vez se logre implementar todo el proyecto. 
 
 ![Diagrama_test](./figs/Esquema.png)
 
 *Figura 19. Diagrama de simulación*
 
-Dado que el modulo test_cam.v es proporcionado por el docente, a continuacion se  presentan todos los cambios que se desarrollan en el mismo con la finalidad de desarrollar el sistema del presente trabajo con exito. 
-#### Modulo `test_cam.v` proporcionado por el docente (modulo presente en el paquete de trabajo 2 _work2-capturaDatos_)
+Dado que el módulo test_cam.v es proporcionado por el docente, a continuacion se  presentan todos los cambios que se desarrollan en el mismo con la finalidad de desarrollar el sistema del presente trabajo con éxito. 
+
+#### módulo `test_cam.v` proporcionado por el docente (módulo presente en el paquete de trabajo 2 [_work2-capturaDatos_](https://github.com/unal-edigital1-2020-1/work2-capturaDatos) )
+
 ```verilog
 `timescale 1ns / 1ps
 module test_cam(
@@ -556,32 +556,32 @@ module test_cam(
     output wire [3:0] VGA_R,	// 4-bit VGA red output
     output wire [3:0] VGA_G,  // 4-bit VGA green output
     output wire [3:0] VGA_B,  // 4-bit VGA blue output
-	//CAMARA input/output
+	//cámara input/output
 	output wire CAM_xclk,		// System  clock imput
 	output wire CAM_pwdn,		// power down mode 
 	output wire CAM_reset,		// clear all registers of cam
-	// colocar aqui las entras  y salidas de la camara  que hace falta
+	// colocar aqui las entras  y salidas de la cámara  que hace falta
 	input wire CAM_pclk,
 	input wire CAM_vsync,
 	input wire CAM_href,
 	input wire [7:0] CAM_px_data
    /* **********************************************************************************
-   En una version antigua del modulo, version final proporcionada en semestres pasados
+   En una version antigua del módulo, version final proporcionada en semestres pasados
    se encontraba el siguiente segmento de codigo, este representa las señales reales 
-   proporcionados por la camara,esta senal compone lo que es la senal CAM_px_data
+   proporcionados por la cámara,esta senal compone lo que es la senal CAM_px_data
    ********************************************************************************** */
     /*
-    input CAM_D0,                   // Bit 0 de los datos del pixel
-    input CAM_D1,                   // Bit 1 de los datos del pixel
-    input CAM_D2,                   // Bit 2 de los datos del pixel
-    input CAM_D3,                   // Bit 3 de los datos del pixel
-    input CAM_D4,                   // Bit 4 de los datos del pixel
-    input CAM_D5,                   // Bit 5 de los datos del pixel
-    input CAM_D6,                   // Bit 6 de los datos del pixel
-    input CAM_D7                    // Bit 7 de los datos del pixel
+    input CAM_D0,                   // Bit 0 de los datos del píxel
+    input CAM_D1,                   // Bit 1 de los datos del píxel
+    input CAM_D2,                   // Bit 2 de los datos del píxel
+    input CAM_D3,                   // Bit 3 de los datos del píxel
+    input CAM_D4,                   // Bit 4 de los datos del píxel
+    input CAM_D5,                   // Bit 5 de los datos del píxel
+    input CAM_D6,                   // Bit 6 de los datos del píxel
+    input CAM_D7                    // Bit 7 de los datos del píxel
    */
 );
-// TAMAÑO DE ADQUISICIÓN DE LA CAMARA 
+// TAMAÑO DE ADQUISICIÓN DE LA cámara 
 parameter CAM_SCREEN_X = 160;
 parameter CAM_SCREEN_Y = 120;
 localparam AW = 15; // LOG2(CAM_SCREEN_X*CAM_SCREEN_Y)
@@ -612,7 +612,7 @@ por lo tanto, los bits menos significactivos deben ser cero
 	assign VGA_G = data_RGB332[7:4];
 	assign VGA_B = data_RGB332[3:0];
 /* ****************************************************************************
-Asignación de las señales de control xclk pwdn y reset de la camara 
+Asignación de las señales de control xclk pwdn y reset de la cámara 
 **************************************************************************** */
 assign CAM_xclk=  clk24M;
 assign CAM_pwdn=  0;			// power down mode 
@@ -622,7 +622,7 @@ assign CAM_reset=  0;
   fpga Spartan6 lx9 a 32MHz.
   usar "tools -> Core Generator ..."  y general el ip con Clocking Wizard
   el bloque genera un reloj de 25Mhz usado para el VGA  y un relo de 24 MHz
-  utilizado para la camara , a partir de una frecuencia de 32 Mhz
+  utilizado para la cámara , a partir de una frecuencia de 32 Mhz
 **************************************************************************** */
 //assign clk32M =clk;
 clk24_25_nexys4
@@ -654,17 +654,17 @@ VGA_Driver640x480 VGA640x480
 (
 	.rst(rst),
 	.clk(clk25M), 				// 25MHz  para 60 hz de 640x480
-	.pixelIn(data_mem), 		// entrada del valor de color  pixel RGB 332 
-	.pixelOut(data_RGB332), // salida del valor pixel a la VGA 
+	.píxelIn(data_mem), 		// entrada del valor de color  píxel RGB 332 
+	.píxelOut(data_RGB332), // salida del valor píxel a la VGA 
 	.Hsync_n(VGA_Hsync_n),	// señal de sincronizaciÓn en horizontal negada
 	.Vsync_n(VGA_Vsync_n),	// señal de sincronizaciÓn en vertical negada 
-	.posX(VGA_posX), 			// posición en horizontal del pixel siguiente
-	.posY(VGA_posY) 			// posición en vertical  del pixel siguiente
+	.posX(VGA_posX), 			// posición en horizontal del píxel siguiente
+	.posY(VGA_posY) 			// posición en vertical  del píxel siguiente
 );
 /* ****************************************************************************
-LÓgica para actualizar el pixel acorde con la buffer de memoria y el pixel de 
-VGA si la imagen de la camara es menor que el display  VGA, los pixeles 
-adicionales seran iguales al color del último pixel de memoria 
+LÓgica para actualizar el píxel acorde con la buffer de memoria y el píxel de 
+VGA si la imagen de la cámara es menor que el display  VGA, los píxeles 
+adicionales seran iguales al color del último píxel de memoria 
 **************************************************************************** */
 always @ (VGA_posX, VGA_posY) begin
 		if ((VGA_posX>CAM_SCREEN_X-1) || (VGA_posY>CAM_SCREEN_Y-1))
@@ -686,10 +686,10 @@ end
 		.px_wr(DP_RAM_regW)
    );
  /* *********************************************************************************************
-   En una version antigua del modulo, version final proporcionada en semestres pasados
+   En una version antigua del módulo, version final proporcionada en semestres pasados
    se encontraba el siguiente segmento de codigo, este representa el instanciamiento del
-   modulo cam_read en ese momento concido como captura_de_datos_downsampler 
-   donde la senal "D7-D0" es la senal de datos del color del pixel proporcionada por la camara.
+   módulo cam_read en ese momento concido como captura_de_datos_downsampler 
+   donde la senal "D7-D0" es la senal de datos del color del píxel proporcionada por la cámara.
  ********************************************************************************************* */
  //captura_de_datos_downsampler Capture_Downsampler(
 //	.PCLK(CAM_PCLK),
@@ -709,11 +709,11 @@ end
 //	);
 endmodule
 ```
-#### Modulo `test_cam.v` resultado final
+#### módulo `test_cam.v` resultado final
 ```verilog
 `timescale 10ns / 1ns		// Se puede cambiar por `timescale 1ns / 1ps.
 // test_cam Main del proyeco
-// se instanciaron los siguientes modulos: Captura de datos(cam_read), RAM,Divisor de freuencia PLL, driver_ VGA
+// se instanciaron los siguientes módulos: Captura de datos(cam_read), RAM,Divisor de freuencia PLL, driver_ VGA
 module test_cam
 (
 	//Entradas del test cam
@@ -733,28 +733,28 @@ module test_cam
     // Salidas de cam_read.v
     output wire [14:0] DP_RAM_addr_in,     //Cable Captura de datos a DP_RAM DirecciÃ³n de memoria lectura 
 	output wire [11:0] DP_RAM_data_in,	//Cable Captura de datos a DP_RAM Datos a guardar en la direcciÃ³n de memoria 	
-    output wire DP_RAM_regW, // Indica cuando un pixel esta completo.
-	//CAMARA input/output conexiones de la camara al modulo principal ********************************
+    output wire DP_RAM_regW, // Indica cuando un píxel esta completo.
+	//cámara input/output conexiones de la cámara al módulo principal ********************************
 	output wire CAM_xclk,		// System  clock input de la cÃ¯Â¿Â½mara.
 	output wire CAM_pwdn,		// Power down mode.
 	output wire CAM_reset,		// Clear all registers of cam.
-	input wire CAM_pclk,		// Sennal PCLK de la camara. 
-	input wire CAM_href,		// Sennal HREF de la camara. 
-	input wire CAM_vsync,		// Sennal VSYNC de la camara.
+	input wire CAM_pclk,		// Sennal PCLK de la cámara. 
+	input wire CAM_href,		// Sennal HREF de la cámara. 
+	input wire CAM_vsync,		// Sennal VSYNC de la cámara.
 	input wire [7:0] CAM_px_data// Datos de entrada simulados 
    );
-// TAMANO DE ADQUISICION DE LA CAMARA
+// TAMANO DE ADQUIsición DE LA cámara
 // Tamano de la imagne QQVGA
 parameter CAM_SCREEN_X = 160; 		// 640 / 4. Elegido por preferencia, menos memoria usada.
 parameter CAM_SCREEN_Y = 120;    	// 480 / 4.
-localparam AW=15; // Se determina de acuerdo al tamaÃ±o de de la direcciÃ³n, de acuerdo a l arreglo de pixeles dado por el formato en este caso Log(2)(160*120)=15
+localparam AW=15; // Se determina de acuerdo al tamaÃ±o de de la direcciÃ³n, de acuerdo a l arreglo de píxeles dado por el formato en este caso Log(2)(160*120)=15
 localparam DW=12; // Se determina de acuerdo al tamaÃ±o de la data, formaro RGB444 = 12 bites.
 // conexiondes del Clk
 wire clk100M;           // Reloj de un puerto de la Nexys 4 DDR entrada.
 wire clk25M;	// Para guardar el dato del reloj de la Pantalla (VGA 680X240 y DP_RAM).
-wire clk24M;		// Para guardar el dato del reloj de la camara.
+wire clk24M;		// Para guardar el dato del reloj de la cámara.
 // Conexion dual por ram
-localparam imaSiz= CAM_SCREEN_X*CAM_SCREEN_Y;// PosiciÃ³n n+1 del tamaÃ±p del arreglo de pixeles de acuerdo al formato.
+localparam imaSiz= CAM_SCREEN_X*CAM_SCREEN_Y;// PosiciÃ³n n+1 del tamaÃ±p del arreglo de píxeles de acuerdo al formato.
 wire [AW-1: 0] DP_RAM_addr_in;		// ConexiÃ³n  Direccion entrada.
 wire [DW-1: 0] DP_RAM_data_in;      	// Conexion Dato entrada.
 wire DP_RAM_regW;			// Enable escritura de dato en memoria .
@@ -762,8 +762,8 @@ reg  [AW-1: 0] DP_RAM_addr_out;		//Registro de la direcciÃ³n de memoria.
 // Conexion VGA Driver
 wire [DW-1:0] data_mem;	    		// Salida de dp_ram al driver VGA
 wire [DW-1:0] data_RGB444;  		// salida del driver VGA a la pantalla
-wire [9:0] VGA_posX;			// Determinar la posiciÃ³n en X del pixel en la pantalla 
-wire [9:0] VGA_posY;			// Determinar la posiciÃ³n de Y del pixel en la pantalla
+wire [9:0] VGA_posX;			// Determinar la posiciÃ³n en X del píxel en la pantalla 
+wire [9:0] VGA_posY;			// Determinar la posiciÃ³n de Y del píxel en la pantalla
 /* ****************************************************************************
 AsignaciÃ³n de la informaciÃ³n de la salida del driver a la pantalla
 del regisro data_RGB444
@@ -772,7 +772,7 @@ assign VGA_R = data_RGB444[11:8]; 	//los 4 bites mÃ¡s significativos correspon
 assign VGA_G = data_RGB444[7:4];  	//los 4 bites siguientes son del color VERDE (GREEN)
 assign VGA_B = data_RGB444[3:0]; 	//los 4 bites menos significativos son del color AZUL(BLUE)
 /* ****************************************************************************
-Asignacion de las seales de control xclk pwdn y reset de la camara
+Asignacion de las seales de control xclk pwdn y reset de la cámara
 **************************************************************************** */
 assign CAM_xclk = clk24M;		// AsignaciÃƒÂ³n reloj cÃƒÂ¡mara.
 assign CAM_pwdn = 0;			// Power down mode.
@@ -780,7 +780,7 @@ assign CAM_reset = 0;			// Reset cÃƒÂ¡mara.
 /* ****************************************************************************
    Se uso "IP Catalog >FPGA Features and Desing > Clocking > Clocking Wizard"  y general el ip con Clocking Wizard
   el bloque genera un reloj de 25Mhz usado para el VGA  y un reloj de 24 MHz
-  utilizado para la camara , a partir de una frecuencia de 100 Mhz que corresponde a la Nexys 4
+  utilizado para la cámara , a partir de una frecuencia de 100 Mhz que corresponde a la Nexys 4
 **************************************************************************** */
 clk24_25_nexys4 clk25_24(
   .clk100M(clk),				//Reloj de la FPGA.
@@ -789,7 +789,7 @@ clk24_25_nexys4 clk25_24(
   .reset(rst)					//Reset.
  );
 /* ****************************************************************************
-Modulo de captura de datos /captura_de_datos_downsampler = cam_read
+módulo de captura de datos /captura_de_datos_downsampler = cam_read
 **************************************************************************** */
 cam_read #(AW,DW) cam_read(
 	// Inputs 
@@ -810,10 +810,10 @@ se recomiendia dejar DW a 8, con el fin de optimizar recursos  y hacer RGB 332
 **************************************************************************** */
 buffer_ram_dp DP_RAM(
 	// Entradas.
-	.clk_w(CAM_pclk),				// Frecuencia de toma de datos de cada pixel.
+	.clk_w(CAM_pclk),				// Frecuencia de toma de datos de cada píxel.
 	.addr_in(DP_RAM_addr_in), 		// Direccion entrada dada por el capturador.
-	.data_in(DP_RAM_data_in),		// Datos que entran de la camara.
-	.regwrite(DPRAM_regW), 	       	// Enable.
+	.data_in(DP_RAM_data_in),		// Datos que entran de la cámara.
+	.regwrite(DP_RAM_regW), 	       	// Enable.
 	.clk_r(clk25M), 				// Reloj VGA.
 	.addr_out(DP_RAM_addr_out),		// Direccion salida dada por VGA.
 	// Salida.
@@ -827,47 +827,47 @@ VGA_Driver640x480
 VGA_Driver VGA_640x480(
 	.rst(rst),
 	.clk(clk25M), 				// 25MHz  para 60 hz de 160x120.
-	.pixelIn(data_mem), 		// Entrada del valor de color  pixel RGB 444.
-	.pixelOut(data_RGB444),		// Salida de datos a la VGA. (Pixeles). 
+	.píxelIn(data_mem), 		// Entrada del valor de color  píxel RGB 444.
+	.píxelOut(data_RGB444),		// Salida de datos a la VGA. (píxeles). 
 	.Hsync_n(VGA_Hsync_n),		// Sennal de sincronizacion en horizontal negada para la VGA.
 	.Vsync_n(VGA_Vsync_n),		// Sennal de sincronizacion en vertical negada  para la VGA.
-	.posX(VGA_posX), 			// Posicion en horizontal del pixel siguiente.
-	.posY(VGA_posY) 			// posicinn en vertical  del pixel siguiente.
+	.posX(VGA_posX), 			// Posición en horizontal del píxel siguiente.
+	.posY(VGA_posY) 			// posicinn en vertical  del píxel siguiente.
 );
 /* ****************************************************************************
-Logica para actualizar el pixel acorde con la buffer de memoria y el pixel de
-VGA si la imagen de la camara es menor que el display VGA, los pixeles
-adicionales seran iguales al color del ultimo pixel de memoria.
+Logica para actualizar el píxel acorde con la buffer de memoria y el píxel de
+VGA si la imagen de la cámara es menor que el display VGA, los píxeles
+adicionales seran iguales al color del ultimo píxel de memoria.
 **************************************************************************** */
 always @ (VGA_posX, VGA_posY) begin
 		if ((VGA_posX>CAM_SCREEN_X-1)|(VGA_posY>CAM_SCREEN_Y-1))
-			//Posicion n+1(160*120), en buffer_ram_dp.v se le asigna el color negro.
+			//Posición n+1(160*120), en buffer_ram_dp.v se le asigna el color negro.
 			DP_RAM_addr_out = imaSiz;
 		else
-			DP_RAM_addr_out = VGA_posX + VGA_posY * CAM_SCREEN_X;// Calcula posicion.
+			DP_RAM_addr_out = VGA_posX + VGA_posY * CAM_SCREEN_X;// Calcula posición.
 end
 endmodule
 ```
-#### Analisis de los cambios, adiciones y eliminaciones  
-Para poder usar el modulo test_cam.v era necesario hacer cambios al modulo proporcionado por el docente en el _Work2-caprutaDatos_
-estos cambios incluyen:
+#### Análisis de los cambios, adiciones y eliminaciones  
+Para poder usar el módulo test_cam.v era necesario hacer cambios al módulo proporcionado por el docente en el _Work2-caprutaDatos_ estos cambios incluyen:
 
-* Declaracion de senales faltantes
+* Declaración de señales faltantes
 
-* Instanciamiento del modulo cam_read.v(el cual no estaba instanciado dado a que era el modulo a diseñar).
+* Instanciamiento del módulo cam_read.v (el cual no estaba instanciado dado a que era el módulo a diseñar).
 
-* Modificacion de parametros
-##### Señales de de entrada y salida
-Estas son las senales que ingresan en el modulo y las senales  que salen del modulo gracias al control interno de las señales de entrada
-###### Señales de entrada 
+* Modificación de parámetros
+
+#### Señales de de entrada y salida
+Estas son las señales que ingresan en el módulo y las señales  que salen del módulo gracias al control interno de las señales de entrada
+##### Señales de entrada 
 ```verilog
 //Entradas del test cam
     input wire clk,           	// Board clock: 100 MHz Nexys4DDR.
     input wire rst,	 	// Reset button. Externo
 ```
-La declaracion de estas señales no fue modificada en el codigo sin embargo la señal del reloj (clk) es necesario tenerla encuenta ya que esta depende de la FPGA a trabajar (en este proyecto se trabajo con una `Nexys4DDR` el cual posee un reloj interno de 100Mhz).
+La declaración de estas señales no fue modificada en el código, sin embargo, la señal del reloj (clk) es necesario tenerla encuenta ya que esta depende de la FPGA a trabajar (en este proyecto se trabajo con una `Nexys4DDR` el cual posee un reloj interno de 100 MHz).
 
-###### Señales de salida
+##### Señales de salida
 ```verilog
     output wire VGA_Hsync_n,  // Horizontal sync output.
     output wire VGA_Vsync_n,  // Vertical sync output.
@@ -875,102 +875,114 @@ La declaracion de estas señales no fue modificada en el codigo sin embargo la s
     output wire [3:0] VGA_G,  // 4-bit VGA green output.
     output wire [3:0] VGA_B,  // 4-bit VGA blue output.
 ```
-Estas son las senales que salen del Modulo, las senales VGA_R,VGA_G,VGA_B
-se pueden apreciar en la Figura 19. como las senales que salen del bloque RGB_444
-el cual es un bloque interno del modulo `test_cam.v`.
-Aunque las señales VGA_Hsync_n,VGA_Vsync_n salen del modulo`Driver_VAGA.v`(Figura 19.) a su vez salen del modulo `test_cam.v` por lo tanto se definen como señales de salida de este modulo.
-###### Conexiones internas, señales de control y registros
-Estas conexiones son las conexiones escenciales entre los modulos internos que componen el modulo `test_cam.v`.
+Estas son las señales que salen del Módulo, las señales VGA_R,VGA_G,VGA_B
+se pueden apreciar en la Figura 19. como las señales que salen del bloque RGB_444
+el cual es un bloque interno del módulo `test_cam.v`.
+Aunque las señales VGA_Hsync_n,VGA_Vsync_n son salidas del módulo `Driver_VAGA.v` (Figura 19.) a su vez salen del módulo `test_cam.v` por lo tanto se definen como señales de salida de este módulo.
 
-* Conexiones del modulo `Driver_VGA`
+#### Conexiones internas, señales de control y registros
+
+Estas conexiones son  esenciales entre los módulos internos que componen el módulo `test_cam.v`.
+
+* Conexiones del módulo `Driver_VGA`
+
+Las siguientes salidas sirven para comprobar el funcionamiento del módulo `Driver_VGA`.
 
 ```verilog
     output wire clk25M, // 25MHz de la VGA
     output wire [11:0] data_mem,           //Cable de DP_RAM a VGA 640X480
     output reg  [14:0] DP_RAM_addr_out,	//Registro Captura de datos a DP_RAM Direccion en memoria 
 ``` 
-Como se puede apreciar en la Figura 19. el modulo `Driver_VGA.v` intercambia dos senales con el modulo `buffer_ram_dp.v` las culaes son data_mem el cual es una señal la cual lleva el registro de color de los pixeles en la memoria, y DP_RAM_addr_out, que como se puede apreciar en la Figura 19 esta señal sale del bloque `convert addr`(ese es un segmento de codigo interno en el modulo `test_cam.v`) y esta señal lleva con sigo el dato de la posicion del pixel al cual se le assigna un color.
+Como se puede apreciar en la Figura 19, el módulo `Driver_VGA.v` intercambia dos señales con el módulo `buffer_ram_dp.v` las cuales son data_mem el cual es una señal que lleva el registro de color de los píxeles en la memoria y DP_RAM_addr_out, que como se puede apreciar en la Figura 19, esta señal sale del bloque `convert addr` (es un segmento de código interno en el módulo `test_cam.v`) y esta señal lleva el dato de la posición del píxel donde se encuentra guardado en buffer_ram_dp.
 
-* Conexiones del modulo `cam_read.v`
+* Conexiones del módulo `cam_read.v`
 
+Estas conexiones permiten verificar el funcionamiento adecuado de `cam_read.v`.
 ```verilog
  output wire [14:0] DP_RAM_addr_in,     //Cable Captura de datos a DP_RAM DirecciÃ³n de memoria lectura 
 	output wire [11:0] DP_RAM_data_in,	//Cable Captura de datos a DP_RAM Datos a guardar en la direcciÃ³n de memoria 	
-    output wire DP_RAM_regW, // Indica cuando un pixel esta completo.
+    output wire DP_RAM_regW, // Indica cuando un píxel esta completo.
 ```
-Estas señales son las que llevan los datos originales del pixel en la imagen(su color y su posicion) y la señal de control que informa cuando los datos de un pixel se han transferido completamente.
+Estas señales son las que llevan los datos originales del píxel de la imagen (su color y su posición) y la señal de control que informa cuando los datos de un píxel se han transferido completamente.
 
-* Conexiones de la camara ya sea fisica o simulada
+* Conexiones de la cámara ya sea física o simulada
 ```verilog
     output wire CAM_xclk,		// System  clock input de la cÃ¯Â¿Â½mara.
 	output wire CAM_pwdn,		// Power down mode.
 	output wire CAM_reset,		// Clear all registers of cam.
-	input wire CAM_pclk,		// Sennal PCLK de la camara. 
-	input wire CAM_href,		// Sennal HREF de la camara. 
-	input wire CAM_vsync,		// Sennal VSYNC de la camara.
+	input wire CAM_pclk,		// Sennal PCLK de la cámara. 
+	input wire CAM_href,		// Sennal HREF de la cámara. 
+	input wire CAM_vsync,		// Sennal VSYNC de la cámara.
 	input wire [7:0] CAM_px_data// Datos de entrada simulados 
 ```
-Estos datos son proporcionados por la camara e informan los valores originales generados por la camara para cada pixel como lo es su referencia horizontal(posicion horizontal) su sincronizacion vertical (informa del cambio en la posicion vertival de una linea de pixeles) su dato de pixel(bus de datos que representa un color para un pixel).
-Posee tres señales que entran en la camara y salen del modulo `test_cam.v` y se pueden apreciar en la Figura 19, como el bloque interno `xclk/pwdn/reset`
-los cuales se encargan de suministrar una señal para la camara 
+Estos datos son proporcionados por la cámara e informan los valores originales generados por la cámara para cada píxel como lo es su referencia horizontal (posición horizontal representado por `CAM_href`) su sincronización vertical (informa del cambio en la posición vertical de una linea de píxeles representada por `CAM_vsync`) su dato de píxel (bus de datos que representa un color para un píxel y es la señal `CAM_px_data` ).
 
-Power down mode : es una señal la cual al acivarse hace que la camara disminuya las tensiones internas de esta exceptuando el reloj interno, gracias a esto la cmara no puede refrescar su memoria interna. Este modo es un modo de ahorro de energia/ bloqueo en el refresh de la memoria.
 
-Reset: es una señal la cual indica a la camara regresar a sus valores por defecto.
+Posee tres señales que entran en la cámara y salen del módulo `test_cam.v` y se pueden apreciar en la Figura 19, como el bloque interno `xclk/pwdn/reset`
+los cuales se encargan de suministrar una señal para la cámara. 
 
-XCLK:reloj de la camara de 24Mhz.
+Power down mode : es una señal la cual al acivarse hace que la cámara disminuya las tensiones internas exceptuando el reloj interno, gracias a esto la cámara no puede refrescar su memoria interna. Este modo es un modo de ahorro de energía bloqueo en el refresh de la memoria.
 
-###### Registros, parametros y señales internas del Módulo `test_cam.v`
 
-En esta segccion del codigo se hace el tratamiento a las señales de entrada al modulo para transformarlas en las señales de salida, con ayuda de unos parameros locales los cuales son definidos segun las caracteristicas de la imagen.
+Reset: es una señal la cual indica a la cámara regresar a sus valores por defecto.
 
-* Parametrosy parametros locales
-```verlog
+XCLK: reloj de la cámara de 24Mhz.
+
+##### Registros, parámetros y señales internas del Módulo `test_cam.v`
+
+En esta segccion del codigo se hace el tratamiento a las señales de entrada al módulo para transformarlas en las señales de salida, con ayuda de unos parameros locales los cuales son definidos segun las caracteristicas de la imagen.
+
+* parámetrosy parámetros locales
+
+```verilog
 parameter CAM_SCREEN_X = 160; 		// 640 / 4. Elegido por preferencia, menos memoria usada.
 parameter CAM_SCREEN_Y = 120;    	// 480 / 4.
 
-localparam AW=15; // Se determina de acuerdo al tamaÃ±o de de la direcciÃ³n, de acuerdo a l arreglo de pixeles dado por el formato en este caso Log(2)(160*120)=15
+localparam AW=15; // Se determina de acuerdo al tamaÃ±o de de la direcciÃ³n, de acuerdo a l arreglo de píxeles dado por el formato en este caso Log(2)(160*120)=15
 localparam DW=12; // Se determina de acuerdo al tamaÃ±o de la data, formaro RGB444 = 12 bites.
 
-localparam imaSiz= CAM_SCREEN_X*CAM_SCREEN_Y;// PosiciÃ³n n+1 del tamaÃ±p del arreglo de pixeles de acuerdo al formato.
+localparam imaSiz= CAM_SCREEN_X*CAM_SCREEN_Y;// PosiciÃ³n n+1 del tamaÃ±p del arreglo de píxeles de acuerdo al formato.
 ```
-Los parametros CAM_SCREEN representan los valores de tamaño de la imagen capturada por la camara(160X120)
+Los parámetros CAM_SCREEN representan los valores de tamaño de la imagen capturada por la cámara en formato QQVGA (160X120)
 
-El parametro AW representa la cantidad de bits necesarios para representar las posciones de un pixel en la resolucion de 160x120=19.200 y la cantidad de bits necesarios para representar este numero =15
+El parámetro AW representa la cantidad de bits necesarios para representar las posiciones de un píxel en la resolucion de 160x120=19.200 y la cantidad de bits necesarios para representar este numero =15
 
-El parametro DW representa el tamaño del color del pixel como el color es RGB444 osea 4bits en rojo,4 en verde y cuatro en azul se necesitan 12 bits para representar este espectro e color.
+El parámetro DW representa el tamaño del color del píxel como el color es RGB444; es decir, 4bits en rojo,4 en verde y cuatro en azul se necesitan 12 bits para representar este espectro de color.
 
-El parametro imaSiz representa el final de el arreglo de dos dimensiones de 160x120 el cual va del 0 al 19.199 para un total de 19.200 posiciones, imaSiz es la posicion 19.200 del arreglo usada para almacenar aquellas posiciones encontradas despues de que todo el arreglo de bits este completo.
+El parámetro imaSiz representa el final de el arreglo de dos dimensiones de 160x120 el cual va del 0 al 19.199 para un total de 19.200 posiciónes, imaSiz es la posición 19.200 del arreglo usada para almacenar aquellas posiciónes encontradas despues de que todo el arreglo de bits este completo.
 
 * Señales
-relojes:son los relojes de la FPGA(100MHZ),la camara(24MHZ) y la pantalla VGA(25MHZ)
+
+relojes: son los relojes de la FPGA(100MHZ), la cámara(24MHZ) y la pantalla VGA(25MHZ)
 ```verilog
 wire clk100M;           // Reloj de un puerto de la Nexys 4 DDR entrada.
 wire clk25M;	// Para guardar el dato del reloj de la Pantalla (VGA 680X240 y DP_RAM).
-wire clk24M;		// Para guardar el dato del reloj de la camara.
+wire clk24M;		// Para guardar el dato del reloj de la cámara.
 ```
-Valores del pixel: como se menciona anterior mente representan la posicion y el tamaño de un pixel y la señal que representa que este pixel esta teminado.
+Valores del píxel: como se menciona anteriormente representan la posición, el tamaño de un píxel y la señal que representa que este píxel esta teminado.
+
 ```verilog
 wire [AW-1: 0] DP_RAM_addr_in;		// ConexiÃ³n  Direccion entrada.
 wire [DW-1: 0] DP_RAM_data_in;      	// Conexion Dato entrada.
 wire DP_RAM_regW;
 ```
-Conexiones a la pantalla VGA: son las señales del modulo `VGA_Driver`
+Conexiones a la pantalla VGA: son las señales del módulo `VGA_Driver`
 ```verilog
 wire [DW-1:0] data_mem;	    		// Salida de dp_ram al driver VGA
 wire [DW-1:0] data_RGB444;  		// salida del driver VGA a la pantalla
-wire [9:0] VGA_posX;			// Determinar la posiciÃ³n en X del pixel en la pantalla 
-wire [9:0] VGA_posY;			// Determinar la posiciÃ³n de Y del pixel en la pantalla
+wire [9:0] VGA_posX;			// Determinar la posiciÃ³n en X del píxel en la pantalla 
+wire [9:0] VGA_posY;			// Determinar la posiciÃ³n de Y del píxel en la pantalla
 ```
 estos valores se encargan de enviar la informacion a la pantalla VGA 
 
-El data_mem es el valor de color del pixel
+El data_mem es el valor de color del píxel
 
 El data_RGB444 es el valor de color que se va a transferir a la pantalla
 
-Los valores posX y posY son la posicion del pixel en la pantalla VGA
+Los valores posX y posY son la posición del píxel en la pantalla VGA
 
-* assignaciones : son asiganciones de valores que se ejecutan constatntemente.
+* assignaciones : son asignaciones de valores que se ejecutan constantemente.
+
 ```verilog
 assign VGA_R = data_RGB444[11:8]; 	//los 4 bites mÃ¡s significativos corresponden al color ROJO (RED) 
 assign VGA_G = data_RGB444[7:4];  	//los 4 bites siguientes son del color VERDE (GREEN)
@@ -979,30 +991,32 @@ assign CAM_xclk = clk24M;		// AsignaciÃƒÂ³n reloj cÃƒÂ¡mara.
 assign CAM_pwdn = 0;			// Power down mode.
 assign CAM_reset = 0;			// Reset cÃƒÂ¡mara.
 ```
-Estos valores son igualdades que se ejecutan constantemente
 
 Data_RGB444 es asignado a los colores de la pantalla VGA
 
-CAM_xclk es el reloj de 24MHZ del modulo `clk25_24`
+CAM_xclk es el reloj de 24MHZ del módulo `clk25_24`
 
 Las señales CAM_pwdn y CAM_reset se mantienen en ceros debido a que no son necesarias 
 
-##### Actualizacion del pixel
+##### Actualizacion del píxel
 ```verilog
 always @ (VGA_posX, VGA_posY) begin
 		if ((VGA_posX>CAM_SCREEN_X-1)|(VGA_posY>CAM_SCREEN_Y-1))
-			//Posicion n+1(160*120), en buffer_ram_dp.v se le asigna el color negro.
+			//Posición n+1(160*120), en buffer_ram_dp.v se le asigna el color negro.
 			DP_RAM_addr_out = imaSiz;
 		else
-			DP_RAM_addr_out = VGA_posX + VGA_posY * CAM_SCREEN_X;// Calcula posicion.
+			DP_RAM_addr_out = VGA_posX + VGA_posY * CAM_SCREEN_X;// Calcula posición.
 end
 endmodule
 ```
-La actualizacion del pixel es el segmento de codigo que se encarga de calcular la posicion de salida del pixel.
+La actualizacion del píxel es el segmento de codigo que se encarga de calcular la posición de salida del píxel.
 
-###### Instanciamiento de modulos 
-En esta seccion se
-* clk25_24: Instanciamiento del modulo del reloj diseñado memoria Clocking Wizard
+#### Instanceamiento de módulos 
+
+En esta sección se describe el instanceamiento de los módulos
+
+* clk25_24: Instanceamiento del módulo del reloj diseñado memoria Clocking Wizard que permite a partir de la frecuencia de 100 MHz obtener 24 MHz y 25 MHz. 
+
 ```verilog
 clk24_25_nexys4 clk25_24(
   .clk100M(clk),				//Reloj de la FPGA.
@@ -1011,7 +1025,7 @@ clk24_25_nexys4 clk25_24(
   .reset(rst)					//Reset.
  );
  ```
-* Módulo cam_read.v: Modulo que lee los valores de la camara de color de la camara
+* Módulo cam_read.v: módulo que lee los valores de la cámara y los guarda en buffer_ram_dp.
 ```verilog
 cam_read #(AW,DW) cam_read
 (
@@ -1028,13 +1042,13 @@ cam_read #(AW,DW) cam_read
 	);
 ```
 
-* Módulo buffer_ram_dp.v : Modulo del buffer de memoria que almacena los valores del pixel de la imagen capurada por la camara
+* Módulo buffer_ram_dp.v : módulo del buffer de memoria que almacena los valores del píxel de la imagen capurada por la cámara
 ```verilog
 buffer_ram_dp DP_RAM(
 	// Entradas.
-	.clk_w(CAM_pclk),				// Frecuencia de toma de datos de cada pixel.
+	.clk_w(CAM_pclk),				// Frecuencia de toma de datos de cada píxel.
 	.addr_in(DP_RAM_addr_in), 		// Direccion entrada dada por el capturador.
-	.data_in(DP_RAM_data_in),		// Datos que entran de la camara.
+	.data_in(DP_RAM_data_in),		// Datos que entran de la cámara.
 	.regwrite(DP_RAM_regW), 	       	// Enable.
 	.clk_r(clk25M), 				// Reloj VGA.
 	.addr_out(DP_RAM_addr_out),		// Direccion salida dada por VGA.
@@ -1049,12 +1063,12 @@ VGA_Driver VGA_640x480 // Necesitamos otro driver.
 (
 	.rst(rst),
 	.clk(clk25M), 				// 25MHz  para 60 hz de 160x120.
-	.pixelIn(data_mem), 		// Entrada del valor de color  pixel RGB 444.
-	.pixelOut(data_RGB444),		// Salida de datos a la VGA. (Pixeles). 
+	.píxelIn(data_mem), 		// Entrada del valor de color  píxel RGB 444.
+	.píxelOut(data_RGB444),		// Salida de datos a la VGA. (píxeles). 
 	.Hsync_n(VGA_Hsync_n),		// Sennal de sincronizacion en horizontal negada para la VGA.
 	.Vsync_n(VGA_Vsync_n),		// Sennal de sincronizacion en vertical negada  para la VGA.
-	.posX(VGA_posX), 			// Posicion en horizontal del pixel siguiente.
-	.posY(VGA_posY) 			// posicinn en vertical  del pixel siguiente.
+	.posX(VGA_posX), 			// Posición en horizontal del píxel siguiente.
+	.posY(VGA_posY) 			// posicinn en vertical  del píxel siguiente.
 
 );
 ```
@@ -1071,9 +1085,9 @@ Líneas de código usadas para simular en el Módulo `test_cam_TB.v`:
 ```verilog
  //registros de simulacion del color
         reg cont=0;
-        parameter[3:0]R=4'b0000; //rojo del pixel RRRR
-        parameter[3:0]G=4'b1111; //verde del pixel GGGG
-        parameter[3:0]B=4'b0000; //azul del pixel BBBB
+        parameter[3:0]R=4'b0000; //rojo del píxel RRRR
+        parameter[3:0]G=4'b1111; //verde del píxel GGGG
+        parameter[3:0]B=4'b0000; //azul del píxel BBBB
         reg [11:0]colorRGB444= {R[3:0],G[3:0],B[3:0]}; //color RRRR GGGG BBBB,first byte= XXXX RRRR, second byte= GGGG BBBB
     //asignacion del color
     always @(posedge pclk) begin
@@ -1090,11 +1104,11 @@ Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeast
 
 ![colorVerde](./figs/simulacion%20verde.jpg)
 ### Imagen 2. Verde y Rosado
-Líneas de código para intercalar el color según la línea en donde se encuentre el pixel
+Líneas de código para intercalar el color según la línea en donde se encuentre el píxel
 ```verilog
 //(seccion de codigo para generar las lineas intercaladas)
  always @(posedge pclk) begin
-    if (row_cnt<15)begin //para tener media seccion al principio se cuentan 15 posiciones verticales
+    if (row_cnt<15)begin //para tener media seccion al principio se cuentan 15 posiciónes verticales
     colorRGB444=12'b111100001111; //color rosa
     end
     else if (row_cnt<45)begin //cuando se superan las 15 lineas pero esta por debajo de las 45 (una seccion de 30 depues de la media de 15)
@@ -1117,10 +1131,10 @@ Líneas de código usadas para simular en el Módulo `test_cam_TB.v`:
  //registros de simulacion del color
         reg cont=0;
     //dado que la seccion de codigo para generar las lineas intercaladas modifica el registro del color(colorRGB444)
-    //el color generado en los parametros R,G,B; se pierde(se sobreescribe)
-        parameter[3:0]R=4'b0000; //rojo del pixel RRRR
-        parameter[3:0]G=4'b1111; //verde del pixel GGGG
-        parameter[3:0]B=4'b0000; //azul del pixel BBBB
+    //el color generado en los parámetros R,G,B; se pierde(se sobreescribe)
+        parameter[3:0]R=4'b0000; //rojo del píxel RRRR
+        parameter[3:0]G=4'b1111; //verde del píxel GGGG
+        parameter[3:0]B=4'b0000; //azul del píxel BBBB
         reg [11:0]colorRGB444= {R[3:0],G[3:0],B[3:0]}; //color RRRR GGGG BBBB,first byte= XXXX RRRR, second byte= GGGG BBBB 
     //asignacion del color
     always @(posedge pclk) begin
@@ -1143,11 +1157,11 @@ Para verificar que la combinación de `R=4'hf` y `B=4'hf` fuera una especie de r
 ![expRojoYVerde](./figs/expRojoYVerde.png)
 
 
-### Imagen 3. Azul y verde cada dos pixeles.
+### Imagen 3. Azul y verde cada dos píxeles.
 En el módulo test_cam_TB se programa de la siguiente manera:
 
 ```verilog
-// Azul y verde cada dos pixeles.
+// Azul y verde cada dos píxeles.
 	reg [2:0]cont=0;   
 
     initial forever  begin
@@ -1226,7 +1240,7 @@ A los *52.04* us `CAM_href` cambia de 0 a 1, esto significa que el estado actual
 
 * De **INIT** a estado **BYTE2**
 
-En la siguiente Figura, se Ilustra el paso de estado **INIT** a estado **BYTE2** ya que `CAM_vsync=0` y `CAM_href=1` en un posedge de *pclk*. EL registro `DP_RAM_regW` está en cero, ya que solo se tiene el color rojo del pixel. Dado que `CAM_px_data=8'h0`, la componete roja es `4'h0`. Además, `DP_RAM_data_in` y `DP_RAM_addr_in` permanecen en cero tal como se espera.    
+En la siguiente Figura, se Ilustra el paso de estado **INIT** a estado **BYTE2** ya que `CAM_vsync=0` y `CAM_href=1` en un posedge de *pclk*. EL registro `DP_RAM_regW` está en cero, ya que solo se tiene el color rojo del píxel. Dado que `CAM_px_data=8'h0`, la componete roja es `4'h0`. Además, `DP_RAM_data_in` y `DP_RAM_addr_in` permanecen en cero tal como se espera.    
 
 ![exp_cam_read2](./figs/exp_cam_read2.png)
 
@@ -1237,7 +1251,7 @@ En la siguiente Figura, se Ilustra el paso de estado **INIT** a estado **BYTE2**
 
 * En estado **BYTE2**
 
-`CAM_vsync=0` y `CAM_href=1` permiten pasar al estado **BYTE2** donde se completa el GB del pixel. `CAM_px_data=8'h0f`, lo que implica que `G=4'h0` y `B=4'hf`. Esto, da como resultado que `DP_RAM_regW=1` indicando que el pixel ya está completo y que en la posición `DP_RAM_addr_in=0` se guarde el dato `DP_RAM_data_in=12'h00f` que corresponde a un pixel azul. En Figura que se muestra a continuación se aprecia lo descrito.
+`CAM_vsync=0` y `CAM_href=1` permiten pasar al estado **BYTE2** donde se completa el GB del píxel. `CAM_px_data=8'h0f`, lo que implica que `G=4'h0` y `B=4'hf`. Esto, da como resultado que `DP_RAM_regW=1` indicando que el píxel ya está completo y que en la posición `DP_RAM_addr_in=0` se guarde el dato `DP_RAM_data_in=12'h00f` que corresponde a un píxel azul. En Figura que se muestra a continuación se aprecia lo descrito.
 
 ![exp_cam_read4](./figs/exp_cam_read4.png)
 
@@ -1283,7 +1297,7 @@ Según la Figura que continúa.
 
 ![exp_cam_read7](./figs/exp_cam_read7.png)
 
-El estado `NOTHING` comprende el intervalo que se encuentra comprendido entre los cursores amarillos. Se resalta que la posición `DP_RAM_addr_in` permanece en 159 antes que el estado siguiente sea `BYTE2`, esta es la última posición de la primera fila de la matriz 160X120 (160 columnas y 120 filas). Dado que las direcciones se empiezan a  asignar desde 0, cuando se llega a 159 hay 160 posiciones (número de posiciones=final-inicio+1). 
+El estado `NOTHING` comprende el intervalo que se encuentra comprendido entre los cursores amarillos. Se resalta que la posición `DP_RAM_addr_in` permanece en 159 antes que el estado siguiente sea `BYTE2`, esta es la última posición de la primera fila de la matriz 160X120 (160 columnas y 120 filas). Dado que las direcciones se empiezan a  asignar desde 0, cuando se llega a 159 hay 160 posiciónes (número de posiciónes=final-inicio+1). 
 
 ![exp_cam_read8](./figs/exp_cam_read8.png)
 
@@ -1342,13 +1356,13 @@ Con el módulo final *clk24_25_nexys4* la imagen se genera en los mismos 16.8 ms
 
 Nótese que `CAM_vsync` ha cambiado 11 veces de 0 a 1 y de 1 a 0, lo que indica que `cam_read` ha registrado 10 imágenes en formato QQVGA, pero VGA_Driver solo forma una imagen. 
  
- Las señales `VGA_Hsync_n` y `VGA_Vsync_n` permiten que halla la sincronización en la VGA. Después que `VGA_Vsync_n` cambia de 1 a 0 y de 0 a 1, al igual que `VGA_Hsync_n` en la última fila, se indica que el siguiente pixel que va a ocupar la posición 1 de la matriz VGA (640x480) más sus adiciones (800x525). La trasnsición de 1 a 0 y de 0 a 1 de `VGA_Hsync_n` se muestra en la Figura que continua 
+ Las señales `VGA_Hsync_n` y `VGA_Vsync_n` permiten que halla la sincronización en la VGA. Después que `VGA_Vsync_n` cambia de 1 a 0 y de 0 a 1, al igual que `VGA_Hsync_n` en la última fila, se indica que el siguiente píxel que va a ocupar la posición 1 de la matriz VGA (640x480) más sus adiciones (800x525). La trasnsición de 1 a 0 y de 0 a 1 de `VGA_Hsync_n` se muestra en la Figura que continua 
 
 ![exp_color_azul2](./figs/exp_color_azul2.png)
 
 
 
-Se procece con el  análisis  más detallado de la interacción de `VGA_Driver` con `buffer_ram_dp`. A partir de una dirrección que el módulo `VGA_Driver` envía a `buffer_ram_dp` representada por la señal `DP_RAM_addr_out`, este último módulo debe enviar por medio de `data_mem` el pixel almacenado en dicha dirrección. El módulo `cam_read`, es el encargado de almacenar en el `buffer_ram_dp` los datos capturados por la cámara. Entonces, las señales de salida del módulo `cam_read` de dirrección y de datos ( `DP_RAM_addr_in` y `DP_RAM_data_in`) deben coincidir con las señales de dirección y datos de VGA_Driver (`DP_RAM_addr_out` y `data_mem`) en simulación. Esto se nota en la siguiente Figura.
+Se procece con el  análisis  más detallado de la interacción de `VGA_Driver` con `buffer_ram_dp`. A partir de una dirrección que el módulo `VGA_Driver` envía a `buffer_ram_dp` representada por la señal `DP_RAM_addr_out`, este último módulo debe enviar por medio de `data_mem` el píxel almacenado en dicha dirrección. El módulo `cam_read`, es el encargado de almacenar en el `buffer_ram_dp` los datos capturados por la cámara. Entonces, las señales de salida del módulo `cam_read` de dirrección y de datos ( `DP_RAM_addr_in` y `DP_RAM_data_in`) deben coincidir con las señales de dirección y datos de VGA_Driver (`DP_RAM_addr_out` y `data_mem`) en simulación. Esto se nota en la siguiente Figura.
 
 ![exp_color_azul3](./figs/exp_color_azul3.png)
 
@@ -1423,9 +1437,9 @@ Al culminar los hitos anteriores deben:
 
 ## Referencias
 
-[1]Dischner. Z. Cómo funciona el sensor de una cámara digital. Available [Online] https://quecamarareflex.com/como-funciona-el-sensor-de-una-camara-digital/
+[1]Dischner. Z. Cómo funciona el sensor de una cámara digital. Available [Online] https://quecámarareflex.com/como-funciona-el-sensor-de-una-cámara-digital/
 
-[2] GeekFactory. Cámara OV7670. Available [Online] https://www.geekfactory.mx/tienda/sensores/camara-ov7670/
+[2] GeekFactory. Cámara OV7670. Available [Online] https://www.geekfactory.mx/tienda/sensores/cámara-ov7670/
 
 [3] OmniVision. OV7670/OV7171 CMOS VGA. Available [Online] https://datasheetspdf.com/pdf-file/555220/OmniVisionTechnologies/OV7670/1
 
