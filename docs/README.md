@@ -887,7 +887,40 @@ Para verificar que la combinación de `R=4'hf` y `B=4'hf` fuera una especie de r
 
 ![expRojoYVerde](./figs/expRojoYVerde.png)
 
-### Imagen 3. Color Azul
+
+### Imagen 3. Azul y verde cada dos pixeles.
+En el módulo test_cam_TB se programa de la siguiente manera:
+
+```verilog
+// Azul y verde cada dos pixeles.
+	reg [2:0]cont=0;   
+
+    initial forever  begin
+		@(negedge pclk) begin
+            if(~CAM_href) cont=0;
+            
+            if(cont==0|cont==2) begin 
+                CAM_px_data<=8'h0;
+            end
+            else if(cont==1|cont==3) begin
+                CAM_px_data<=8'h0f;
+            end
+            else if(cont==4|cont==6) begin
+                CAM_px_data<=8'h00;
+            end
+            else if(cont==5|cont==7) begin
+                CAM_px_data<=8'hf0;
+            end
+			cont=cont+1;
+         end
+	end
+```
+
+El resultado en la en el [simulador](https://ericeastwood.com/lab/vga-simulator/) es:
+
+![colorAzul](./figs/azulYVerde.png)
+
+### Imagen 4. Color Azul
 
 Las líneas de código que se utilizan en el`test_cam_TB.v` son:
 

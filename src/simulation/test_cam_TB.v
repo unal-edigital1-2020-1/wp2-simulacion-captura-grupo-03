@@ -55,10 +55,10 @@ module test_cam_TB;
 
     // Senales de prueba ******************************
 // Absolute Address in Esteban's computer
-//localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/test_vga.txt";
-	// Absolute address in Niko's computer
-localparam d="C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/test_vga.txt";
-
+localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/test_vga.txt";
+// Absolute address in Niko's computer
+// localparam d="C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/test_vga.txt";	
+	
 	// Instantiate the Unit Under Test (UUT)
 	test_cam uut (
 		.clk(clk),
@@ -161,7 +161,7 @@ localparam d="C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-gru
 	end
 	*/
 	// Color azul
-	reg cont=0;   
+/*	reg cont=0;   
 
     initial forever  begin
 		@(negedge pclk) begin
@@ -174,8 +174,31 @@ localparam d="C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-gru
 			cont=cont+1;
          end
 	end
- 
+ */
 
+// Azul y verde cada dos pixeles.
+	reg [2:0]cont=0;   
+
+    initial forever  begin
+		@(negedge pclk) begin
+            if(~CAM_href) cont=0;
+            
+            if(cont==0|cont==2) begin 
+                CAM_px_data<=8'h0;
+            end
+            else if(cont==1|cont==3) begin
+                CAM_px_data<=8'h0f;
+            end
+            else if(cont==4|cont==6) begin
+                CAM_px_data<=8'h00;
+            end
+            else if(cont==5|cont==7) begin
+                CAM_px_data<=8'hf0;
+            end
+			cont=cont+1;
+         end
+	end
+	
 	
 	
 	

@@ -113,12 +113,22 @@ assign CAM_reset = 0;			// Reset cÃ¡mara.
 
 
 clk24_25_nexys4 clk25_24(
-  .clk100M(clk),				//Reloj de la FPGA.
-  .clk25M(clk25M),			//Reloj de la VGA.
-  .clk24M(clk24M),			//Reloj de la c�mara.
-  .reset(rst)					//Reset.
- );
+.clk24M(clk24M),
+.clk25M(clk25M),
+.reset(rst),
+.clk100M(clk)
+);
 
+
+
+/*
+clk24_25_nexys4_0 clk25_24(
+  .CLK_IN1(clk),				//Reloj de la FPGA.
+  .CLK_OUT1(clk25M),			//Reloj de la VGA.
+  .CLK_OUT2(clk24M),			//Reloj de la c�mara.
+  .RESET(rst)					//Reset.
+ );
+*/
 /* ****************************************************************************
 Modulo de captura de datos /captura_de_datos_downsampler = cam_read
 **************************************************************************** */
@@ -138,6 +148,7 @@ cam_read #(AW,DW) cam_read
 		.DP_RAM_regW(DP_RAM_regW),        //enable
 		.DP_RAM_addr_in(DP_RAM_addr_in),
 		.DP_RAM_data_in(DP_RAM_data_in)
+
 	);
 
 
@@ -148,17 +159,15 @@ se recomiendia dejar DW a 8, con el fin de optimizar recursos  y hacer RGB 332
 **************************************************************************** */
 
 buffer_ram_dp DP_RAM(
-
 	// Entradas.
 	
 	.clk_w(CAM_pclk),				// Frecuencia de toma de datos de cada pixel.
 	.addr_in(DP_RAM_addr_in), 		// Direccion entrada dada por el capturador.
 	.data_in(DP_RAM_data_in),		// Datos que entran de la camara.
-	.regwrite(DPRAM_regW), 	       	// Enable.
+	.regwrite(DP_RAM_regW), 	       	// Enable.
 	.clk_r(clk25M), 				// Reloj VGA.
 	.addr_out(DP_RAM_addr_out),		// Direccion salida dada por VGA.
-	
-	// Salida.
+		// Salida.
 		
 	.data_out(data_mem)			    // Datos enviados a la VGA.
 	//.reset(rst)                   //(Sin usar)
@@ -193,4 +202,5 @@ always @ (VGA_posX, VGA_posY) begin
 		else
 			DP_RAM_addr_out = VGA_posX + VGA_posY * CAM_SCREEN_X;// Calcula posicion.
 end
+
 endmodule

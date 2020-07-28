@@ -52,35 +52,35 @@ reg [1:0]status=0;
 
 always @(posedge CAM_pclk)begin
     if(rst)begin
-    status<=0;
-     DP_RAM_data_in<=0;
-     DP_RAM_addr_in<=0;
-     DP_RAM_regW<=0;
+        status<=0;
+        DP_RAM_data_in<=0;
+        DP_RAM_addr_in<=0;
+        DP_RAM_regW<=0;
     end
     else begin
 	    
      case (status)
          INIT:begin 
-		 	if(~CAM_vsync&CAM_href)begin // Cuando la señal vsync es 0 y href 1, se empieza con la escritura de los datos en memoria.
-                	status<=BYTE2;
-			 		DP_RAM_data_in[11:8]<=CAM_px_data[3:0]; // Se asignan los 4 bits menos significativos de la información que da la camara a los 4 bits mas significativos del dato a escribir
-            end
-         	else begin
-                	DP_RAM_data_in<=0;
-                	DP_RAM_addr_in<=0;
-                	DP_RAM_regW<=0; 
-         	end 
-        end
+             if(~CAM_vsync&CAM_href)begin // cuando la señal vsync negada y href son, se empieza con la escritura de los datos en memoria.
+                 status<=BYTE2;
+                 DP_RAM_data_in[11:8]<=CAM_px_data[3:0]; //se asignan los 4 bits menos significativos de la información que da la camara a los 4 bits mas significativos del dato a escribir
+             end
+             else begin
+                 DP_RAM_data_in<=0;
+                 DP_RAM_addr_in<=0;
+                 DP_RAM_regW<=0;
+             end 
+         end
          
          BYTE1:begin
-		 DP_RAM_regW<=0; 					//Desactiva la escritura en memoria 
-		 if(CAM_href)begin					//si la señal Href esta arriva, evalua si ya llego a la ultima posicion en memoria
-                	if(DP_RAM_addr_in==imaSiz) 	DP_RAM_addr_in<=0;			//Si ya llego al final, reinicia la posición en memoria. 
-                	else DP_RAM_addr_in<=DP_RAM_addr_in+1;	//Si aun no ha llegado a la ultima posición sigue recorriendo los espacios en memoria y luego escribe en ellos cuan do pasa al estado Byte2
-                DP_RAM_data_in[11:8]<=CAM_px_data[3:0];
-                status<=BYTE2;
-         end
-         else status<=NOTHING;   
+             DP_RAM_regW<=0; 					//Desactiva la escritura en memoria 
+             if(CAM_href)begin					//si la señal Href esta arriva, evalua si ya llego a la ultima posicion en memoria
+                     if(DP_RAM_addr_in==imaSiz) DP_RAM_addr_in<=0;			//Si ya llego al final, reinicia la posición en memoria. 
+                     else DP_RAM_addr_in<=DP_RAM_addr_in+1;	//Si aun no ha llegado a la ultima posición sigue recorriendo los espacios en memoria y luego escribe en ellos cuan do pasa al estado Byte2
+                 DP_RAM_data_in[11:8]<=CAM_px_data[3:0];
+                 status<=BYTE2;
+             end
+             else status<=NOTHING;   
          end
          
          BYTE2:begin							//En este estado se habilita la escritura en memoria
@@ -89,17 +89,16 @@ always @(posedge CAM_pclk)begin
              	status<=BYTE1;
          end
          
-         NOTHING:begin						// es un estado de trnsición 	
-             
-			if(CAM_href)begin					// verifica la señal href y se asigna los 4 bits mas significativos y se mueve una posición en memoria
-					status<=BYTE2;
-					DP_RAM_data_in[11:8]<=CAM_px_data[3:0];
-					DP_RAM_addr_in<=DP_RAM_addr_in+1;
-			end
-			else if (CAM_vsync) status<=INIT;		// Si vsync esta arriba inicializa la maquina de estados   
+         NOTHING:begin						// es un estado de trnsición    
+             if(CAM_href)begin					// verifica la señal href y se asigna los 4 bits mas significativos y se mueve una posición en memoria
+                 status<=BYTE2;
+                 DP_RAM_data_in[11:8]<=CAM_px_data[3:0];
+                 DP_RAM_addr_in<=DP_RAM_addr_in+1;
+             end
+             else if (CAM_vsync) status<=INIT;		// Si vsync esta arriba inicializa la maquina de estados    
          end
          
-		 default: status<=INIT;
+         default: status<=INIT;
     endcase
  end
 end

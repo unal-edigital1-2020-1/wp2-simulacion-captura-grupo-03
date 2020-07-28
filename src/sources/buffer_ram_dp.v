@@ -28,10 +28,10 @@ module buffer_ram_dp#(
 	parameter AW = 15,		 // Cantidad de bits  de la direccion.
 	parameter DW = 12,		 // Cantidad de Bits de los datos.
 	// Absolute address in Esteban's computer
-	//parameter imageFILE = "D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/imagen.men")
+	parameter imageFILE = "D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/imagen.men")
 	// Absolute address in Niko's computer
-	parameter imageFILE = "C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/imagen.men")
-
+	// parameter imageFILE = "C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/sources/imagen.men")
+	
 	(
 	input clk_w,     		 // Frecuencia de toma de datos de cada pixel.
 	input [AW-1: 0] addr_in, // DirecciÃ³n entrada dada por el capturador.
