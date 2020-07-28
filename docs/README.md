@@ -122,17 +122,17 @@ En el caso de que href y vsync no se encuentren sincronizadas, se debe volver a 
 
 La máquina de estados finitos consta de 4 estados INIT, BYTE2, BYTE1 y NOTHING. cuyas señales de control son en esencia CAM_href y CAM_vsync.
 
-Primero se inicializa las salidas que van a la memoria RAM la dirección en memoria DP_RAM_data_in, los datos a que van a la RAM DP_RAM_addr_in y la señal de control de escritura.
+Primero se inicializan las salidas que van a la memoria RAM la dirección en memoria DP_RAM_data_in, los datos a que van a la RAM (buffer_ram_dp), DP_RAM_addr_in y la señal de control de escritura (DP_RAM_regW).
 
-En el estrado INIT que es el estado por defecto Si las señales de control CAM_vsync y CAM_href son 0 y 1 respectivamente, pasara del estado INIT al estado BYTE2 y asignara 4 bits menos significativos al espacio de los 4 bits más significativos que se escribirán en memoria DP_RAM_fata_in
+En el estado INIT que es el estado por defecto. Si las señales de control CAM_vsync y CAM_href son 0 y 1 respectivamente, pasara del estado INIT al estado BYTE2 y asignara 4 bits menos significativos de CAM_px_data al espacio de los 4 bits más significativos que se escribirán en memoria, este es DP_RAM_data_in.
 En caso de que las señales de control no sean 0 y 1, asignara/iniciara las salidas a la RAM con valores conocidos 0.
 
 
 Para el estado BYTE1, primero desactiva la escritura en memoria, luego si CAM_href es 1 evalúa si el recorrido de las posiciónes en memoria ya llego a la última posición en memoria, de ser así devuelve DP_RAM_addr_in al inicio del recorrido. Si aún no se ha terminado el recorrido en memoria, salta a la siguiente dirección en memoria, luego asigna los 4 bits menos significativos de los datos de la cámara a los 4 bits más significativos de la data que sale a la RAM y pasa al estado BYTE2
 
-En el estado BYTE2 se asignan los bites faltantes de la cámara a la otra parte de la data que entra a la RAM, recordando que para el primer byte solo la mitad tiene la información de la cámara siendo la otra mitad ceros y que el segundo byte va la información completa de la cámara.
+En el estado BYTE2 se asignan los bytes faltantes de la cámara a la otra parte de los datos que entra a la RAM, recordando que para el primer byte solo la mitad en posiciones menos significativas tiene la información de la cámara del color rojo siendo la otra mitad ceros y que el segundo byte va la información completa de la cámara del color verde y azul.
 
-El estado NOTHING se pasa al estado BYTE2 se hace el paso a la siguiente posición de memoria y se asigna la información que va al primer byte de la data que entra a la RAM, si la señal CAM_href es 1 y si la señal CAM_vsync cambia al estado INIT.
+El estado NOTHING se pasa al estado BYTE2 si CAM_href es igual a 1, se hace el paso a la siguiente posición de memoria y se asigna la información que va al primer byte de los datos que entran a la RAM. Si la señal CAM_href es 0 y si la señal CAM_vsync es 1, cambia al estado INIT. Si no se cumple ninguno de los casos mencionados para las señales de control, se permanece en el estado NOTHING sin hacer nada (de ahí el nombre). 
 
 
 

@@ -19,7 +19,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module cam_read #(
-		parameter AW = 15,  // Cantidad de bits  de la dirección
+		parameter AW = 15,  // Cantidad de bits  de la direcciï¿½n
 		parameter DW = 12 
 		)
 		(
@@ -93,7 +93,7 @@ reg [1:0] cont = 1'b0;  // Contador inicializado en 0.
 /********************************************************************************
 
 Por favor colocar en este archivo el desarrollo realizado por el grupo para la 
-captura de datos de la camara 
+captura de datos de la cÃ¡mara 
 
 debe tener en cuenta el nombre de las entradas  y salidad propuestas 
 

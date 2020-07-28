@@ -3,13 +3,13 @@
 
 
 ## Introducción
-El sistema de captura de datos de la cámara debe adquirir la información de los pixeles y almacenarlos en el buffer de memoria, analizado en el trabajo anterior.
+El sistema de captura de datos de la cámara debe adquirir la información de los píxeles y almacenarlos en el buffer de memoria, analizado en el trabajo anterior.
 Se propone el siguiente esquema de trabajo, donde el estudiante puede testear el funcionamiento del driver de la cámara diseñado
 
 ![DIAGRAMA](./figs/test_cam.png)
 
 
-En este paquete de trabajo los estudiantes deben, en primera instancia, diseñar e implementar la captura datos de la cámara según la configuración seleccionada en el WP! y, adaptar los datos para que se almacene en memoria el pixel con el formato RGB444.
+En este paquete de trabajo los estudiantes deben, en primera instancia, diseñar e implementar la captura datos de la cámara según la configuración seleccionada en el WP! y, adaptar los datos para que se almacene en memoria el píxel con el formato RGB444.
 
 Luego de tener el diseño "captura_datos_downsampler" deben instanciar el bloque HDL en el test_cam.v. y probar la funcionalidad del diseño. Para ello, debe analizar el proyecto propuesto **test_cam.xise** junto con el siguiente figura:
 
@@ -48,8 +48,8 @@ Para lo cual, la captura de datos debe ser acorde al funcionamiento de la cámar
 ![CAPTURADATOS](./figs/cajacapturadatos2.PNG)
 
 
-1. Diseñar el sistema digital de captura de los pixeles de la cámara. No es necesario incluir las señales de control  Xclk, pwdn y reset, estas están descritas en el top del proyecto.
-2. Diseñar el downsampler y transmitir la información al buffer de memoria. Recuerde la memoria se ha diseñado para almacenar el pixel en formato RGB332, y almacenar 3 bit para el color Rojo y Verde y 2 bit para el color Azul. Si usted, por ejemplo, selecciona el formato RGB565 de la cámara debe convertir los 5 bit de rojo en 3 bit.
+1. Diseñar el sistema digital de captura de los píxeles de la cámara. No es necesario incluir las señales de control  Xclk, pwdn y reset, estas están descritas en el top del proyecto.
+2. Diseñar el downsampler y transmitir la información al buffer de memoria. Recuerde la memoria se ha diseñado para almacenar el píxel en formato RGB332, y almacenar 3 bit para el color Rojo y Verde y 2 bit para el color Azul. Si usted, por ejemplo, selecciona el formato RGB565 de la cámara debe convertir los 5 bit de rojo en 3 bit.
 
 ***RECUEDE: Es necesario documentar el módulo diseñado con los respectivos diagramas funcionales y estructurales y registrar la información en README.md ***
 
@@ -72,8 +72,8 @@ Para este hito se recomienda generar un nuevo PLL con `Clocking Wizard`. en el I
 Como se ha explicado en la reuniòn es un entorno de simulación completo de la càmara y la pantalla VGA.
 
 A la plantilla de proyecto se adicionan los siguientes archivos:
-1. ***cam_read.v*** fichero que contiene la declaraciòn de la caja negra, con las respectivas entradas  y salidas. Este archivo debe se utilizado para realiza la descripción funcional de la captura de datos de la camara en formato RGB565
-2. ***test_cam_TB.v*** fichero que contiene la simulación de las señales  de la camara y almacena la salida VGA en un archivo de texto plano.  
+1. ***cam_read.v*** fichero que contiene la declaraciòn de la caja negra, con las respectivas entradas  y salidas. Este archivo debe se utilizado para realiza la descripción funcional de la captura de datos de la cámara en formato RGB565
+2. ***test_cam_TB.v*** fichero que contiene la simulación de las señales  de la cámara y almacena la salida VGA en un archivo de texto plano.  
 
 ***RECUEDE: Es necesario documentar el módulo diseñado con los respectivos diagramas funcionales y estructurales y registrar la información en README.md ***
 
