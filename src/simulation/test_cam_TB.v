@@ -24,7 +24,7 @@
 
 module test_cam_TB;
 
-	// Inputs
+	// Inputs. Declare as reg because are in left part of initial statemet.
 	reg clk;
 	reg rst;
 	reg pclk;
@@ -55,10 +55,11 @@ module test_cam_TB;
 
     // Senales de prueba ******************************
 // Absolute Address in Esteban's computer
-localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/test_vga.txt";
+//localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/test_vga.txt";
 // Absolute address in Niko's computer
 // localparam d="C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/test_vga.txt";	
-	
+// Absolute address in Niko's mac computer
+localparam d="C:/Users/Nikolai/Desktop/wp2-simulacion-captura-grupo-03/src/test_vga.txt";	
 	// Instantiate the Unit Under Test (UUT)
 	test_cam uut (
 		.clk(clk),
@@ -92,29 +93,29 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
 		.CAM_px_data(CAM_px_data)
 	);
 	reg img_generate=0;
-	initial begin
+	initial begin // Do at start of test. 
 		// Initialize Inputs
 		clk = 0;
-		rst = 1;
+		rst = 1;				// Press rst.
 		pclk = 0;
-		CAM_vsync = 1;
-		CAM_href = 0;
-		CAM_px_data = 8'h0f;
+		CAM_vsync = 1;			// Empieza la imagen.
+		CAM_href = 0;			// Empieza la imagen.
+		CAM_px_data = 8'h0f;	// Red
    	// Wait 100 ns for global reset to finish
 		#20;
-		rst = 0; // registros en f�sico para que reinicialicen.
-		// #1_000_000;         // se puede quitar en simulacion, estoy esperando que la memoria se llene.
-		img_generate=1; // Estaban pegados
+		rst = 0; 				// registros en fisico para que reinicialicen.
+		// #1_000_000;			// se puede quitar en simulacion, estoy esperando que la memoria se llene.
+		img_generate=1;			// Estaban pegados
 	end
 
-	always #0.5 clk  = ~clk;
+	always #0.5 clk  = ~clk; // Cada 0.5 unidades de tiempo, cambia a su estado opuesto, reloj.
  	always #2 pclk  = ~pclk;
 
 
 	reg [8:0]line_cnt=0;   //2^9-1=511, TAM_LINE+BLACK_TAM_LINE=324  
 	reg [6:0]row_cnt=0;    //2^7-1= 127, TAM_ROW+BLACK_TAM_ROW=124 
 
-	parameter TAM_LINE=320;	// es 160x2 debido a que son dos pixeles de RGB
+	parameter TAM_LINE=320;	// 160x2 debido a que son dos pixeles de RGB
 	parameter TAM_ROW=120;
 	parameter BLACK_TAM_LINE=4;
 	parameter BLACK_TAM_ROW=4;
@@ -176,43 +177,70 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
 	end
  */
 
+// Color rojo.
+
+reg cont=0;   
+
+    initial forever  begin
+		@(negedge pclk) begin
+            if(cont==0) begin 
+                CAM_px_data<=8'h0f;		// First byte red.
+            end
+            else begin
+                CAM_px_data<=8'h00;		// Second byte 
+            end
+			cont=cont+1;
+         end
+	end
+
+/*
 // Azul y verde cada dos pixeles.
 	reg [2:0]cont=0;   
 
     initial forever  begin
 		@(negedge pclk) begin
-            if(~CAM_href) cont=0;
-            
-            if(cont==0|cont==2) begin 
+            if(~CAM_href) cont=0;			// Cada vez que termina una fila Negro. 
+
+            if(cont==0|cont==2) begin		// First byte Black
                 CAM_px_data<=8'h0;
             end
-            else if(cont==1|cont==3) begin
+            else if(cont==1|cont==3) begin	// Second byte blue.
                 CAM_px_data<=8'h0f;
             end
-            else if(cont==4|cont==6) begin
+            else if(cont==4|cont==6) begin	// Black first byte.
                 CAM_px_data<=8'h00;
             end
-            else if(cont==5|cont==7) begin
+            else if(cont==5|cont==7) begin	// Green second byte.
                 CAM_px_data<=8'hf0;
             end
 			cont=cont+1;
          end
 	end
+	*/
 	
+	/* 
+	Recordar que:
+	reg [8:0]line_cnt=0;   //2^9-1=511, TAM_LINE+BLACK_TAM_LINE=324  
+	reg [6:0]row_cnt=0;    //2^7-1= 127, TAM_ROW+BLACK_TAM_ROW=124 
+
+	parameter TAM_LINE=320;	// 160x2 debido a que son dos pixeles de RGB
+	parameter TAM_ROW=120;
+	parameter BLACK_TAM_LINE=4;
+	parameter BLACK_TAM_ROW=4;
 	
+	*/
 	
-	
-	/*simulaci�n de contador de pixeles para  general Href y vsync*/
-	    initial forever  begin
+	/* Simulacion de contador de pixeles para generar Href y vsync. */
+	initial forever  begin
 	    //CAM_px_data=~CAM_px_data;
 		@(posedge pclk) begin
-		if (img_generate==1) begin
-			line_cnt=line_cnt+1;
-			if (line_cnt >TAM_LINE-1+BLACK_TAM_LINE) begin
-				line_cnt=0;
-				row_cnt=row_cnt+1;
-				if (row_cnt>TAM_ROW-1+BLACK_TAM_ROW) begin
-					row_cnt=0;
+		if (img_generate==1) begin	// Mientras se genere una imagen.
+			line_cnt=line_cnt+1;	// Cada pclk aumenta line_cnt.
+			if (line_cnt >TAM_LINE-1+BLACK_TAM_LINE) begin	// Termina una fila.
+				line_cnt=0;									// Reinicia contador.
+				row_cnt=row_cnt+1;							// Aumenta numero de fila.
+				if (row_cnt>TAM_ROW-1+BLACK_TAM_ROW) begin	// Termina de recorrer todas las filas.
+					row_cnt=0;								// Empieza de nuevo.
 				end
 			end
 		end
@@ -223,11 +251,11 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
 	initial forever  begin
 		@(posedge pclk) begin
             if (img_generate==1) begin
-                    if (row_cnt==0)begin
+                    if (row_cnt==0)begin	// Antes del delay previo a la primera fila, no comparte. 
                         CAM_vsync  = 1;
                     end
                 if (row_cnt==BLACK_TAM_ROW/2)begin
-                    CAM_vsync  = 0;
+                    CAM_vsync  = 0;			// row_cnt = 2, luego del delay, empieza a compartir.
                 end
             end
 		end
@@ -237,13 +265,13 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
 	initial forever  begin
 		@(negedge pclk) begin
             if (img_generate==1) begin
-                if (row_cnt>BLACK_TAM_ROW-1)begin
+                if (row_cnt>BLACK_TAM_ROW-1)begin // Como es negedge. Ya paso dos posedge, parte negra antes compartir href.
                     if (line_cnt==0)begin
-                        CAM_href  = 1;
+                        CAM_href  = 1;			  // Empieza fila.
                     end
                 end
                 if (line_cnt==TAM_LINE)begin
-                    CAM_href  = 0;
+                    CAM_href  = 0;				// debe empezar nueva fila.
                 end
             end
 		end
@@ -272,7 +300,7 @@ localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-0
 	/* ecsritura de log para cargar se cargados en https://ericeastwood.com/lab/vga-simulator/*/
 	initial forever begin
 	@(posedge clk_w)
-		$fwrite(f,"%0t ps: %b %b %b %b %b\n",$time,VGA_Hsync_n, VGA_Vsync_n, VGA_R[3:0],VGA_G[3:0],VGA_B[3:0]);
+		$fwrite(f,"%0t ps: %b %b %b %b %b\n",$time,VGA_Hsync_n, VGA_Vsync_n, VGA_R[3:0],VGA_G[3:0],VGA_B[3:0]); // En binario VGA sync and RGB.
 	end
 
 endmodule

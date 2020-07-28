@@ -889,7 +889,7 @@ Estas conexiones son  esenciales entre los módulos internos que componen el mó
 Las siguientes salidas sirven para comprobar el funcionamiento del módulo `Driver_VGA`.
 
 ```verilog
-    output wire clk25M, // 25MHz de la VGA
+    output wire clk25M, // 25MHz de la pantalla VGA
     output wire [11:0] data_mem,           //Cable de DP_RAM a VGA 640X480
     output reg  [14:0] DP_RAM_addr_out,	//Registro Captura de datos a DP_RAM Direccion en memoria 
 ``` 
@@ -950,6 +950,14 @@ El parámetro AW representa la cantidad de bits necesarios para representar las 
 El parámetro DW representa el tamaño del color del píxel como el color es RGB444; es decir, 4bits en rojo,4 en verde y cuatro en azul se necesitan 12 bits para representar este espectro de color.
 
 El parámetro imaSiz representa el final de el arreglo de dos dimensiones de 160x120 el cual va del 0 al 19.199 para un total de 19.200 posiciónes, imaSiz es la posición 19.200 del arreglo usada para almacenar aquellas posiciónes encontradas despues de que todo el arreglo de bits este completo.
+* Parametros eliminados
+```verilog
+// El color es RGB 332
+localparam RED_VGA =   8'b11100000;//rojo  3bits
+localparam GREEN_VGA = 8'b00011100;//verde 3bits
+localparam BLUE_VGA =  8'b00000011;//azul  3bits
+```
+Estos parametros fueron eliminados dado a que estos representan el color del semestre pasado RGB332 el usado actualmente es RGB444.
 
 * Señales
 
@@ -958,6 +966,10 @@ relojes: son los relojes de la FPGA(100MHZ), la cámara(24MHZ) y la pantalla VGA
 wire clk100M;           // Reloj de un puerto de la Nexys 4 DDR entrada.
 wire clk25M;	// Para guardar el dato del reloj de la Pantalla (VGA 680X240 y DP_RAM).
 wire clk24M;		// Para guardar el dato del reloj de la cámara.
+```
+Aqui se modifico el nombre del reloj de la FPGA el cual era diferente a la usada en este proyecto
+```verilog
+wire clk32M;           // Reloj de un puerto de la FPGA saprtan entrada.
 ```
 Valores del píxel: como se menciona anteriormente representan la posición, el tamaño de un píxel y la señal que representa que este píxel esta teminado.
 
@@ -973,13 +985,15 @@ wire [DW-1:0] data_RGB444;  		// salida del driver VGA a la pantalla
 wire [9:0] VGA_posX;			// Determinar la posiciÃ³n en X del píxel en la pantalla 
 wire [9:0] VGA_posY;			// Determinar la posiciÃ³n de Y del píxel en la pantalla
 ```
-estos valores se encargan de enviar la informacion a la pantalla VGA 
+Estos valores se encargan de enviar la informacion a la pantalla VGA  
 
 El data_mem es el valor de color del píxel
 
 El data_RGB444 es el valor de color que se va a transferir a la pantalla
 
 Los valores posX y posY son la posición del píxel en la pantalla VGA
+
+Aqui se modifico la señal VGA_posY, se le aumento el tamaño en un bit `[8:0] a [9:0]` para que concuerde el tamaño de la posicion en la pantalla.
 
 * assignaciones : son asignaciones de valores que se ejecutan constantemente.
 
@@ -993,6 +1007,8 @@ assign CAM_reset = 0;			// Reset cÃƒÂ¡mara.
 ```
 
 Data_RGB444 es asignado a los colores de la pantalla VGA
+
+Al colocar cambiar la configuracion del color a RGB444 se cambio el nombre del registro de color de `data_RGB332 a data_RGB444` sin embargo esta tiene el mismo tamaño dado a que la pantalla recibe siempre en dimension RGB444.
 
 CAM_xclk es el reloj de 24MHZ del módulo `clk25_24`
 
@@ -1009,6 +1025,15 @@ always @ (VGA_posX, VGA_posY) begin
 end
 endmodule
 ```
+Aqui se modifico el valor de la direccion de salida  
+```verilog
+DP_RAM_addr_out = 15b'111111111111111;
+```
+```verilog
+DP_RAM_addr_out = imaSiz;
+```
+la razon de modificarlo es que el valor de posicion de 15 bits (32.768) a la posicion n+1 del tamaño del arreglo (160x120=19.200) dado a que en 15bits se salta de la posicion 19.199(ultima posicion del arreglo) a la posicion (32.768) se llenan vacios los espacios de memoria entre estos valores de posicion.
+
 La actualizacion del píxel es el segmento de codigo que se encarga de calcular la posición de salida del píxel.
 
 #### Instanceamiento de módulos 
