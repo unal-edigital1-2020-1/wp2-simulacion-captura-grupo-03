@@ -43,23 +43,24 @@ module test_cam_TB;
 	wire CAM_pwdn;
 	wire CAM_reset;
 
-    // Senales de prueba ******************************
-    
-    wire clk25M;
-    wire [11:0] data_mem;
-	wire [14:0] DP_RAM_addr_out;
-    
-    wire DP_RAM_regW;
-    wire [14:0] DP_RAM_addr_in;
-	wire [11:0] DP_RAM_data_in;
+
+
+   wire CAM_D0;
+   wire CAM_D1;   
+   wire CAM_D2;   
+   wire CAM_D3;
+   wire CAM_D4;
+   wire CAM_D5;
+   wire CAM_D6;
+   wire CAM_D7;
 
     // Senales de prueba ******************************
 // Absolute Address in Esteban's computer
-//localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/test_vga.txt";
+localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/test_vga.txt";
 // Absolute address in Niko's computer
 // localparam d="C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/test_vga.txt";	
 // Absolute address in Niko's mac computer
-localparam d="C:/Users/Nikolai/Desktop/wp2-simulacion-captura-grupo-03/src/test_vga.txt";	
+// localparam d="C:/Users/Nikolai/Desktop/wp2-simulacion-captura-grupo-03/src/test_vga.txt";	
 	// Instantiate the Unit Under Test (UUT)
 	test_cam uut (
 		.clk(clk),
@@ -70,29 +71,33 @@ localparam d="C:/Users/Nikolai/Desktop/wp2-simulacion-captura-grupo-03/src/test_
 		.VGA_G(VGA_G),
 		.VGA_B(VGA_B),
 
-		// se�ales de prueba *******************************************
-	   
-	     //  Algunas conexiones de Driver_VGA.
-	   .clk25M(clk25M),
-	   .data_mem(data_mem),
-	   .DP_RAM_addr_out(DP_RAM_addr_out),
-       
-        // salidas de cam_read.v
-       .DP_RAM_regW(DP_RAM_regW), 
-       .DP_RAM_addr_in(DP_RAM_addr_in),
-	   .DP_RAM_data_in(DP_RAM_data_in),
-        
-		//Prueba *******************************************
-
 		.CAM_xclk(CAM_xclk),
 		.CAM_pwdn(CAM_pwdn),
 		.CAM_reset(CAM_reset),
 		.CAM_pclk(pclk),
 		.CAM_vsync(CAM_vsync),
 		.CAM_href(CAM_href),
-		.CAM_px_data(CAM_px_data)
-	);
+	
+		.CAM_D0(CAM_D0),
+        .CAM_D1(CAM_D1),   
+        .CAM_D2(CAM_D2),   
+        .CAM_D3(CAM_D3),
+        .CAM_D4(CAM_D4),
+        .CAM_D5(CAM_D5),
+        .CAM_D6(CAM_D6),
+        .CAM_D7(CAM_D7) 
+    );
 	reg img_generate=0;
+	
+	assign CAM_D0=CAM_px_data[0]; 
+	assign CAM_D1=CAM_px_data[1];
+	assign CAM_D2=CAM_px_data[2];
+	assign CAM_D3=CAM_px_data[3];
+	assign CAM_D4=CAM_px_data[4];
+	assign CAM_D5=CAM_px_data[5];
+	assign CAM_D6=CAM_px_data[6];
+	assign CAM_D7=CAM_px_data[7];
+	
 	initial begin // Do at start of test. 
 		// Initialize Inputs
 		clk = 0;
@@ -179,6 +184,7 @@ localparam d="C:/Users/Nikolai/Desktop/wp2-simulacion-captura-grupo-03/src/test_
 
 // Color rojo.
 
+/*
 reg cont=0;   
 
     initial forever  begin
@@ -192,8 +198,9 @@ reg cont=0;
 			cont=cont+1;
          end
 	end
+*/
 
-/*
+
 // Azul y verde cada dos pixeles.
 	reg [2:0]cont=0;   
 
@@ -216,7 +223,7 @@ reg cont=0;
 			cont=cont+1;
          end
 	end
-	*/
+
 	
 	/* 
 	Recordar que:

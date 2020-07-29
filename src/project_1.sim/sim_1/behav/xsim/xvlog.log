@@ -10,11 +10,5 @@ INFO: [VRFC 10-2263] Analyzing Verilog file "D:/UNAL/semester6/digitali/proyecto
 INFO: [VRFC 10-311] analyzing module clk24_25_nexys4_clk_wiz
 INFO: [VRFC 10-2263] Analyzing Verilog file "D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module test_cam
-WARNING: [VRFC 10-3676] redeclaration of ansi port 'clk25M' is not allowed [D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:72]
-WARNING: [VRFC 10-3676] redeclaration of ansi port 'DP_RAM_addr_in' is not allowed [D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:78]
-WARNING: [VRFC 10-3676] redeclaration of ansi port 'DP_RAM_data_in' is not allowed [D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:79]
-WARNING: [VRFC 10-3676] redeclaration of ansi port 'DP_RAM_regW' is not allowed [D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:80]
-WARNING: [VRFC 10-3676] redeclaration of ansi port 'DP_RAM_addr_out' is not allowed [D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:82]
-WARNING: [VRFC 10-3676] redeclaration of ansi port 'data_mem' is not allowed [D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/sources/test_cam.v:85]
 INFO: [VRFC 10-2263] Analyzing Verilog file "D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/simulation/test_cam_TB.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module test_cam_TB

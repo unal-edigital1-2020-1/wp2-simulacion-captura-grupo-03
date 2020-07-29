@@ -23,7 +23,7 @@ module cam_read #(
 		parameter DW = 12   //tamaÃ±o de la data 
 		)
 		(
-		CAM_px_data,  //estrada de los datos de la camara
+
 		CAM_pclk,     //reloj 
 		CAM_vsync,    //SeÃ±al Vsync para captura de datos
 		CAM_href,	// SeÃ±al Href para la captura de datos
@@ -31,23 +31,43 @@ module cam_read #(
 		
 		DP_RAM_regW, 	//Control de esctritura
 		DP_RAM_addr_in,	//DirecciÃ³n de memoria de entrada
-		DP_RAM_data_in	//Data de entrada a la RAM
+		DP_RAM_data_in,	//Data de entrada a la RAM
+		
+	    CAM_D0,                   // Bit 0 de los datos del píxel
+        CAM_D1,                   // Bit 1 de los datos del píxel
+        CAM_D2,                   // Bit 2 de los datos del píxel
+        CAM_D3,                   // Bit 3 de los datos del píxel
+        CAM_D4,                   // Bit 4 de los datos del píxel
+        CAM_D5,                   // Bit 5 de los datos del píxel
+        CAM_D6,                   // Bit 6 de los datos del píxel
+        CAM_D7                    // Bit 7 de los datos del píxel
    );
 	
-	input [7:0] CAM_px_data;	//Data RGB 444 de la camara
+	    input CAM_D0;                   // Bit 0 de los datos del píxel
+        input CAM_D1;                   // Bit 1 de los datos del píxel
+        input CAM_D2;                   // Bit 2 de los datos del píxel
+        input CAM_D3;                   // Bit 3 de los datos del píxel
+        input CAM_D4;                   // Bit 4 de los datos del píxel
+        input CAM_D5;                   // Bit 5 de los datos del píxel
+        input CAM_D6;                   // Bit 6 de los datos del píxel
+        input CAM_D7;                    // Bit 7 de los datos del píxel
+	
+	
+	    
 		input CAM_pclk;		//Reloj de la camara
 		input CAM_vsync;	//seÃ±al vsync de la camara
 		input CAM_href;		//seÃ±al href de la camara
 		input rst;		//reset de la camara 
 		
 		output reg DP_RAM_regW; 		//Registro del control de escritura 
-	output reg [AW-1:0] DP_RAM_addr_in;	// Registro de salida de la direcciÃ³n de memoria de entrada 
-	output reg [DW-1:0] DP_RAM_data_in;	// Registro de salida de la data a escribir en memoria
-
+	    output reg [AW-1:0] DP_RAM_addr_in;	// Registro de salida de la direcciÃ³n de memoria de entrada 
+	    output reg [DW-1:0] DP_RAM_data_in;	// Registro de salida de la data a escribir en memoria
+        
+        wire [7:0] CAM_px_data={CAM_D7,CAM_D6,CAM_D5,CAM_D4,CAM_D3,CAM_D2,CAM_D1,CAM_D0};
 
 //Maquina de estados	
 	
-parameter INIT=0,BYTE1=1,BYTE2=2,NOTHING=3,imaSiz=19199;
+localparam INIT=0,BYTE1=1,BYTE2=2,NOTHING=3,imaSiz=19199;
 reg [1:0]status=0;
 
 always @(posedge CAM_pclk)begin
