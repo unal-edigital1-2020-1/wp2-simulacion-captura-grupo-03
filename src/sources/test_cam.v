@@ -32,20 +32,7 @@ module test_cam
     output wire [3:0] VGA_R,  // 4-bit VGA red output.
     output wire [3:0] VGA_G,  // 4-bit VGA green output.
     output wire [3:0] VGA_B,  // 4-bit VGA blue output.
-
-	 // Conexiones *****************************************
     
-    //  Algunas conexiones de Driver_VGA.
-    output wire clk25M, // 25MHz de la VGA
-	output wire [11:0] data_mem,           //Cable de DP_RAM a VGA 640X480
-	output reg  [14:0] DP_RAM_addr_out,	//Registro Captura de datos a DP_RAM DirecciÃ³n en memoria 
-    
-    // Salidas de cam_read.v
-    
-    output wire [14:0] DP_RAM_addr_in,     //Cable Captura de datos a DP_RAM DirecciÃ³n de memoria lectura 
-	output wire [11:0] DP_RAM_data_in,	//Cable Captura de datos a DP_RAM Datos a guardar en la direcciÃ³n de memoria 	
-    output wire DP_RAM_regW, // Indica cuando un pixel esta completo.
-
 	//CAMARA input/output conexiones de la camara al modulo principal ********************************
 
 	output wire CAM_xclk,		// System  clock input de la cÃ¯Â¿Â½mara.
@@ -54,7 +41,17 @@ module test_cam
 	input wire CAM_pclk,		// Sennal PCLK de la camara. 
 	input wire CAM_href,		// Sennal HREF de la camara. 
 	input wire CAM_vsync,		// Sennal VSYNC de la camara.
-	input wire [7:0] CAM_px_data// Datos de entrada simulados 
+	
+	
+	input wire CAM_D0,                   // Bit 0 de los datos del píxel
+    input wire CAM_D1,                   // Bit 1 de los datos del píxel
+    input wire CAM_D2,                   // Bit 2 de los datos del píxel
+    input wire CAM_D3,                   // Bit 3 de los datos del píxel
+    input wire CAM_D4,                   // Bit 4 de los datos del píxel
+    input wire CAM_D5,                   // Bit 5 de los datos del píxel
+    input wire CAM_D6,                   // Bit 6 de los datos del píxel
+    input wire CAM_D7                    // Bit 7 de los datos del píxel
+	
 
    );
 
@@ -136,8 +133,14 @@ Modulo de captura de datos /captura_de_datos_downsampler = cam_read
 cam_read #(AW,DW) cam_read
 (
 	// Inputs 
-	
-		.CAM_px_data(CAM_px_data),
+	    .CAM_D0(CAM_D0),                   // Bit 0 de los datos del píxel
+        .CAM_D1(CAM_D1),                   // Bit 1 de los datos del píxel
+        .CAM_D2(CAM_D2),                   // Bit 2 de los datos del píxel
+        .CAM_D3(CAM_D3),                   // Bit 3 de los datos del píxel
+        .CAM_D4(CAM_D4),                   // Bit 4 de los datos del píxel
+        .CAM_D5(CAM_D5),                   // Bit 5 de los datos del píxel
+        .CAM_D6(CAM_D6),                   // Bit 6 de los datos del píxel
+        .CAM_D7(CAM_D7),                    // Bit 7 de los datos del píxel
 		.CAM_pclk(CAM_pclk),
 		.CAM_vsync(CAM_vsync),
 		.CAM_href(CAM_href),

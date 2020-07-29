@@ -57,7 +57,7 @@ always @(posedge clk_w) begin
 end
 
 // Lectura  de la memoria port 2.
-always @(*) begin
+always @(posedge clk_r) begin
 // Se leen los datos de las direcciones addr_out y se sacan en data_out.
 		data_out <= ram[addr_out];
 end
