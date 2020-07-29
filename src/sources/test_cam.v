@@ -43,14 +43,14 @@ module test_cam
 	input wire CAM_vsync,		// Sennal VSYNC de la camara.
 	
 	
-	input CAM_D0,                   // Bit 0 de los datos del píxel
-    input CAM_D1,                   // Bit 1 de los datos del píxel
-    input CAM_D2,                   // Bit 2 de los datos del píxel
-    input CAM_D3,                   // Bit 3 de los datos del píxel
-    input CAM_D4,                   // Bit 4 de los datos del píxel
-    input CAM_D5,                   // Bit 5 de los datos del píxel
-    input CAM_D6,                   // Bit 6 de los datos del píxel
-    input CAM_D7                    // Bit 7 de los datos del píxel
+	input wire CAM_D0,                   // Bit 0 de los datos del píxel
+    input wire CAM_D1,                   // Bit 1 de los datos del píxel
+    input wire CAM_D2,                   // Bit 2 de los datos del píxel
+    input wire CAM_D3,                   // Bit 3 de los datos del píxel
+    input wire CAM_D4,                   // Bit 4 de los datos del píxel
+    input wire CAM_D5,                   // Bit 5 de los datos del píxel
+    input wire CAM_D6,                   // Bit 6 de los datos del píxel
+    input wire CAM_D7                    // Bit 7 de los datos del píxel
 	
 
    );
