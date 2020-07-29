@@ -45,8 +45,8 @@ read_verilog -library xil_defaultlib {
 foreach dcp [get_files -quiet -all -filter file_type=="Design\ Checkpoint"] {
   set_property used_in_implementation false $dcp
 }
-read_xdc D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/implementation/Nexys-4-DDR-Master.xdc
-set_property used_in_implementation false [get_files D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/implementation/Nexys-4-DDR-Master.xdc]
+read_xdc D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/implementation/Nexys_4.xdc
+set_property used_in_implementation false [get_files D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/implementation/Nexys_4.xdc]
 
 set_param ips.enableIPCacheLiteLoad 1
 close [open __synthesis_is_running__ w]

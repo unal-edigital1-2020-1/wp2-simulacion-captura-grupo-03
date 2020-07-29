@@ -2,8 +2,8 @@
 # Vivado v2019.2 (64-bit)
 # SW Build 2708876 on Wed Nov  6 21:40:23 MST 2019
 # IP Build 2700528 on Thu Nov  7 00:09:20 MST 2019
-# Start of session at: Tue Jul 28 21:58:09 2020
-# Process ID: 14888
+# Start of session at: Wed Jul 29 13:50:43 2020
+# Process ID: 5880
 # Current directory: D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.runs/synth_1
 # Command line: vivado.exe -log test_cam.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source test_cam.tcl
 # Log file: D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.runs/synth_1/test_cam.vds
