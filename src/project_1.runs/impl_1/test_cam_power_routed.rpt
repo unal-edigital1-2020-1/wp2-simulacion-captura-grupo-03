@@ -1,7 +1,7 @@
 Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
-| Date             : Tue Jul 28 22:03:11 2020
+| Date             : Wed Jul 29 13:56:31 2020
 | Host             : LAPTOP-ALR57TB7 running 64-bit major release  (build 9200)
 | Command          : report_power -file test_cam_power_routed.rpt -pb test_cam_power_summary_routed.pb -rpx test_cam_power_routed.rpx
 | Design           : test_cam
@@ -59,7 +59,7 @@ Table of Contents
 |   BUFG         |    <0.001 |        1 |        32 |            3.13 |
 |   CARRY4       |    <0.001 |        4 |     15850 |            0.03 |
 |   Others       |     0.000 |       11 |       --- |             --- |
-| Signals        |    <0.001 |      162 |       --- |             --- |
+| Signals        |    <0.001 |      161 |       --- |             --- |
 | Block RAM      |     0.006 |       12 |       135 |            8.89 |
 | MMCM           |     0.120 |        1 |         6 |           16.67 |
 | DSPs           |    <0.001 |        1 |       240 |            0.42 |

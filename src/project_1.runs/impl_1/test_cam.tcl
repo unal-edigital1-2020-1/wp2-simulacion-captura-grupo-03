@@ -74,7 +74,7 @@ set rc [catch {
   set_property ip_output_repo D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.cache/ip [current_project]
   set_property ip_cache_permissions {read write} [current_project]
   add_files -quiet D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/project_1.runs/synth_1/test_cam.dcp
-  read_xdc D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/implementation/Nexys-4-DDR-Master.xdc
+  read_xdc D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/implementation/Nexys_4.xdc
   link_design -top test_cam -part xc7a100tcsg324-1
   close_msg_db -file init_design.pb
 } RESULT]
@@ -163,24 +163,6 @@ if {$rc} {
   return -code error $RESULT
 } else {
   end_step route_design
-  unset ACTIVE_STEP 
-}
-
-start_step write_bitstream
-set ACTIVE_STEP write_bitstream
-set rc [catch {
-  create_msg_db write_bitstream.pb
-  catch { write_mem_info -force test_cam.mmi }
-  write_bitstream -force test_cam.bit 
-  catch {write_debug_probes -quiet -force test_cam}
-  catch {file copy -force test_cam.ltx debug_nets.ltx}
-  close_msg_db -file write_bitstream.pb
-} RESULT]
-if {$rc} {
-  step_failed write_bitstream
-  return -code error $RESULT
-} else {
-  end_step write_bitstream
   unset ACTIVE_STEP 
 }
 
