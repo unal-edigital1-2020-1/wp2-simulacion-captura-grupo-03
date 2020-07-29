@@ -56,7 +56,7 @@ module test_cam_TB;
 
     // Senales de prueba ******************************
 // Absolute Address in Esteban's computer
-localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/test_vga.txt";
+localparam d="D:/UNAL/semester6/digitali/proyecto/wp2-simulacion-captura-grupo-03/src/imagen.men";
 // Absolute address in Niko's computer
 // localparam d="C:/Users/LucasTheKitten/Desktop/Captura/wp2-simulacion-captura-grupo-03/src/test_vga.txt";	
 // Absolute address in Niko's mac computer
@@ -307,7 +307,9 @@ reg cont=0;
 	/* ecsritura de log para cargar se cargados en https://ericeastwood.com/lab/vga-simulator/*/
 	initial forever begin
 	@(posedge clk_w)
-		$fwrite(f,"%0t ps: %b %b %b %b %b\n",$time,VGA_Hsync_n, VGA_Vsync_n, VGA_R[3:0],VGA_G[3:0],VGA_B[3:0]); // En binario VGA sync and RGB.
+		
+		if(VGA_R[3:0]|VGA_G[3:0]|VGA_B[3:0]) $fwrite(f,"%h%h%h\n",VGA_R[3:0],VGA_G[3:0],VGA_B[3:0]); // En binario VGA sync and RGB.
+		
 	end
 
 endmodule

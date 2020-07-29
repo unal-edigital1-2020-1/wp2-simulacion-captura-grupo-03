@@ -1,7 +1,7 @@
 Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
-| Date         : Wed Jul 29 13:55:50 2020
+| Date         : Wed Jul 29 17:33:20 2020
 | Host         : LAPTOP-ALR57TB7 running 64-bit major release  (build 9200)
 | Command      : report_control_sets -verbose -file test_cam_control_sets_placed.rpt
 | Design       : test_cam
@@ -58,12 +58,12 @@ Table of Contents
 +--------------+-----------------------+------------------------+-----------------+--------------+
 | Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
 +--------------+-----------------------+------------------------+-----------------+--------------+
-| No           | No                    | No                     |               3 |            2 |
+| No           | No                    | No                     |               3 |            1 |
 | No           | No                    | Yes                    |               0 |            0 |
 | No           | Yes                   | No                     |              10 |            4 |
 | Yes          | No                    | No                     |               0 |            0 |
 | Yes          | No                    | Yes                    |               0 |            0 |
-| Yes          | Yes                   | No                     |              37 |           13 |
+| Yes          | Yes                   | No                     |              37 |           16 |
 +--------------+-----------------------+------------------------+-----------------+--------------+
 
 
@@ -73,14 +73,14 @@ Table of Contents
 +-----------------------+-------------------------------------+-------------------------------+------------------+----------------+
 |      Clock Signal     |            Enable Signal            |        Set/Reset Signal       | Slice Load Count | Bel Load Count |
 +-----------------------+-------------------------------------+-------------------------------+------------------+----------------+
-|  CAM_pclk_IBUF_BUFG   |                                     |                               |                2 |              3 |
+|  CAM_pclk_IBUF_BUFG   |                                     |                               |                1 |              3 |
 |  clk25_24/inst/clk25M |                                     | VGA_640x480/countX[8]_i_1_n_0 |                2 |              4 |
-|  clk25_24/inst/clk25M | VGA_640x480/p_1_in                  | VGA_640x480/countY[9]_i_1_n_0 |                2 |              4 |
+|  clk25_24/inst/clk25M | VGA_640x480/p_1_in                  | VGA_640x480/countY[9]_i_1_n_0 |                3 |              4 |
 |  CAM_pclk_IBUF_BUFG   | cam_read/DP_RAM_data_in__0[11]      | rst_IBUF                      |                1 |              4 |
 |  clk25_24/inst/clk25M |                                     | rst_IBUF                      |                2 |              6 |
 |  clk25_24/inst/clk25M | VGA_640x480/countY[8]_i_1_n_0       | rst_IBUF                      |                2 |              6 |
-|  CAM_pclk_IBUF_BUFG   | cam_read/DP_RAM_data_in__0[7]       | rst_IBUF                      |                3 |              8 |
-|  CAM_pclk_IBUF_BUFG   | cam_read/DP_RAM_addr_in[14]_i_1_n_0 | rst_IBUF                      |                5 |             15 |
+|  CAM_pclk_IBUF_BUFG   | cam_read/DP_RAM_data_in__0[7]       | rst_IBUF                      |                4 |              8 |
+|  CAM_pclk_IBUF_BUFG   | cam_read/DP_RAM_addr_in[14]_i_1_n_0 | rst_IBUF                      |                6 |             15 |
 +-----------------------+-------------------------------------+-------------------------------+------------------+----------------+
 
 
