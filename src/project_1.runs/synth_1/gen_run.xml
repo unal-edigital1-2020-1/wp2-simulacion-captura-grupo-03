@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="synth_1" LaunchPart="xc7a100tcsg324-1" LaunchTime="1595989820">
+<GenRun Id="synth_1" LaunchPart="xc7a100tcsg324-1" LaunchTime="1595991476">
   <File Type="PA-TCL" Name="test_cam.tcl"/>
   <File Type="RDS-PROPCONSTRS" Name="test_cam_drc_synth.rpt"/>
   <File Type="REPORTS-TCL" Name="test_cam_reports.tcl"/>
