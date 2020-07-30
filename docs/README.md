@@ -1451,8 +1451,38 @@ la imagen muestra que se adquirió una foto de color rojo.
 
 Al culminar los hitos anteriores deben:
 
+#### Archivo XCD
 1. Crear el archivo UCF.
+
+#### Test de la pantalla
 2. Realizar el test de la pantalla. Programar la FPGA con el bitstream del proyecto y no conectar la cámara. ¿Qué espera visualizar?, ¿Es correcto este resultado ?
+
+Al no conectar la cámara se visualizará la imagen con extensión .men con la que se haya inicilializado la matriz `[DW-1: 0] ram [0: NPOS-1]` ([12-1:0] ram [0:2^15-1]) ubicada en el `buffer_ram_dp`.
+
+#####  Pasos a seguir para generar el bitstream
+
+
+##### Imágenes obtenidas.
+
+La imagen azul con verde que se había obtenido en la simulación se logró implementar en un archivo .men. Luego de general el bitstream y de programar la FPGA se obtuvo el siguiente resultado:
+
+![resultado2](./figs/imp_azul_verde.jpeg)
+
+Si se cuenta detalladamente hay 20 líneas azules y 20 líneas verdes, esto indicaría que por cada 4 píxeles se está generando un color respectivamente. Se verifica en el archivo _./src/sources/images/imagen_azul-verde.men_  que en efecto se está generando tal y como se visualiza.
+
+*Lineas de colores en el archivo imagen_azul-verde.men*
+```
+00f
+00f
+00f
+00f
+0f0
+0f0
+0f0
+0f0
+```
+
+
 3. Configure la cámara en test por medio del bus I2C con ayuda de Arduino. ¿Es correcto el resultado? ¿Cada cuánto se refresca el buffer de memoria ?
 4. ¿Qué falta implementar para tener el control de la toma de fotos ?
 
