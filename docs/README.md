@@ -2631,13 +2631,168 @@ test_cam uut (
 
 Al culminar los hitos anteriores deben:
 
-#### Archivo XCD
-1. Crear el archivo UCF.
+#### Archivo XDC
+
+Se siguieron las indicaciones del [grupo 5](https://github.com/unal-edigital1-2019-2/work04-proyectofinal-grupo-05-1/blob/master/docs/README.md) del semestre 2019-2, pero luego de intentar repetidas veces se encontró que ellos manejaron la *Nexys 4 DDR* y que nosotros teníamos la *Nexys 4*. Entonces se utizaron los archivos xdc dispuestos por Digilent para la [Nexys 4](https://github.com/Digilent/digilent-xdc/blob/master/Nexys-4-Master.xdc)  pero se utilizó el esquema de la [Nexys 4 DDR](https://github.com/Digilent/digilent-xdc/blob/master/Nexys-4-DDR-Master.xdc). El archivo de los constrains se hubica en *./src/implementation/Nexys_4.xdc*
+
+Por ejemplo en el archivo [Nexys 4](https://github.com/Digilent/digilent-xdc/blob/master/Nexys-4-Master.xdc) estaba programado el reloj como:
+```
+set_property PACKAGE_PIN E3 [get_ports clk]							
+	set_property IOSTANDARD LVCMOS33 [get_ports clk]
+	create_clock -add -name sys_clk_pin -period 10.00 -waveform {0 5} [get_ports clk]
+```
+Pero usado el archivo para la [Nexys 4 DDR](https://github.com/Digilent/digilent-xdc/blob/master/Nexys-4-DDR-Master.xdc) se organizó de esta manera:
+```
+set_property -dict { PACKAGE_PIN E3    IOSTANDARD LVCMOS33 } [get_ports {clk}]; #IO_L12P_T1_MRCC_35 Sch=clk100mhz
+create_clock -add -name sys_clk_pin -period 10.00 -waveform {0 5} [get_ports {clk}];
+```
+
+
+A pesar que con ambas maneras de asignar el reloj se genera el Bitstream, se continuó comparando los archivos y colocando los pines que aparecian el documento xdc para la Nexys 4 en el documento para la Nexys 4 DDR.
+
+Respecto a las conexiones del `clk`, el oscilador de cristal de 100MHz está conectado al pin E3 según el datasheet [8]. El pin E3 es una entrada MRCC(multi-region clock capable) que está sobre el bank 35 [8].  
+
+Paso seguido se colocaron las siguientes líneas de código ya que aparecian errores de la Figura al generar el bitstream.
+
+```
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets CAM_pclk]
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets CAM_href]
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets CAM_vsync]
+```
+
+![err_0](./figs/err_0.png)
+
+*Figura . Error CLOCK_DEDICATED_ROUTE*
+
+En los botones se declaró el pin R10 para el reset.
+```
+set_property -dict { PACKAGE_PIN R10   IOSTANDARD LVCMOS33 } [get_ports {rst}]; #IO_L10N_T1_D15_14 Sch=btnr
+```
+
+Al haber utilizado el archivo de Nexys 4, se intuye que se hubiera declarado como:
+```
+#Bank = 14, Pin name = IO_25_14,							Sch name = BTNR
+set_property PACKAGE_PIN R10 [get_ports rst]						
+	set_property IOSTANDARD LVCMOS33 [get_ports rst]
+```
+La conexión en la FPGA se visualiza como:
+
+![con_rst](./figs/con_rst.png)
+
+*Figura . Conexión del reset*
+
+En los Pmod (Peripheral Modules) se colocaron estos comandos
+```
+set_property SEVERITY {Warning} [get_drc_checks NSTD-1];
+set_property SEVERITY {Warning} [get_drc_checks UCIO-1];
+```
+Para quitar estos errores
+![err_1](./figs/err_1.jpeg)
+
+*Figura . Errores debido a la concatenación de los puertos de entrada* 
+
+Según lo explicado, esto se debe a que en el módulo cam_read se concatenan los ocho datos provenientes de cámara y esto genera unas entradas/salidas con conflictos porque no se sabe los pines con qué tensión van a estar. 
+
+Para los puertos donde la cámara va a enviar los datos CAM_D0,CAM_D1 hasta CAM_D7 se declararon los Pmod JC así:
+
+```
+set_property -dict { PACKAGE_PIN E7    IOSTANDARD LVCMOS33 } [get_ports {CAM_D2}]; #IO_L19N_T3_VREF_35 Sch=jc[2]
+set_property -dict { PACKAGE_PIN J3    IOSTANDARD LVCMOS33 } [get_ports {CAM_D4}]; #IO_L22N_T3_35 Sch=jc[3]
+set_property -dict { PACKAGE_PIN J4    IOSTANDARD LVCMOS33 } [get_ports {CAM_D6}]; #IO_L19P_T3_35 Sch=jc[4]
+set_property -dict { PACKAGE_PIN K1    IOSTANDARD LVCMOS33 } [get_ports {CAM_D1}]; #IO_L6P_T0_35 Sch=jc[7]
+set_property -dict { PACKAGE_PIN E6    IOSTANDARD LVCMOS33 } [get_ports {CAM_D3}]; #IO_L22P_T3_35 Sch=jc[8]
+set_property -dict { PACKAGE_PIN J2    IOSTANDARD LVCMOS33 } [get_ports {CAM_D5}]; #IO_L21P_T3_DQS_35 Sch=jc[9]
+set_property -dict { PACKAGE_PIN G6    IOSTANDARD LVCMOS33 } [get_ports {CAM_D7}]; #IO_L5P_T0_AD13P_35 Sch=jc[10]
+set_property -dict { PACKAGE_PIN K2    IOSTANDARD LVCMOS33 } [get_ports {CAM_D0}]; #IO_L23N_T3_35 Sch=jc[1]
+```
+El error antes mencionado volvía a aparecer pese a las correciones realizadas, entonces, se optó por colocar la asignación del dato de entrada CAM_D0 con el pin K2 en la última posición de ese segmento de asignaciones y el error desapareció. Para comprobar esa irregularidad, se colocó nuevamente el pin K2 en la posición superior y esta vez no salio ningún error, se supone que fueron problemas del programa. En próximas oportunidades, es preferible declarar un bus y se hacen corresponder los pines a cada bit que lo componen. Por ejemplo, se huviera podido tener un bus como `[7:0]CAM_data` para los datos de la cámara, de esta manera en el pin E7 se le asigna `CAM_data[2]`, en el pin J3 se le asigna `CAM_data[4]` y así sucesivamente.    
+
+Las conexiones físicas se realizan así:
+
+![con_JC](./figs/con_JC.png)
+
+*Figura .Conexiones al Pmod JC, adaptado de [8]*
+
+Las señales de salida CAM_xclk, CAM_pwdn y CAM_reset, junto con las señales de entrada CAM_pclk, CAM_href y CAM_vsync son asignadas en el JD Pmod como:
+
+```
+set_property -dict { PACKAGE_PIN H4    IOSTANDARD LVCMOS33 } [get_ports {CAM_xclk}]; #IO_L21N_T3_DQS_35 Sch=jd[1]
+set_property -dict { PACKAGE_PIN H1    IOSTANDARD LVCMOS33 } [get_ports {CAM_href}]; #IO_L17P_T2_35 Sch=jd[2]
+set_property -dict { PACKAGE_PIN G1    IOSTANDARD LVCMOS33 } [get_ports {CAM_pwdn}]; #IO_L17N_T2_35 Sch=jd[3]
+set_property -dict { PACKAGE_PIN G3    IOSTANDARD LVCMOS33 } [get_ports {CAM_reset}]; #IO_L20N_T3_35 Sch=jd[4]
+set_property -dict { PACKAGE_PIN H2    IOSTANDARD LVCMOS33 } [get_ports {CAM_pclk}]; #IO_L15P_T2_DQS_35 Sch=jd[7]
+set_property -dict { PACKAGE_PIN G4    IOSTANDARD LVCMOS33 } [get_ports {CAM_vsync}]; #IO_L20P_T3_35 Sch=jd[8]
+```
+
+Las conexiones se visualizan como:
+
+![con_JC](./figs/con_JD.png)
+
+*Figura .Conexiones den el Pmod JD*
+
+
+La asignación a las conexiones de la Pantalla VGA se realizaron como:
+
+```
+##VGA Connector 
+
+set_property -dict { PACKAGE_PIN A3    IOSTANDARD LVCMOS33 } [get_ports {VGA_R[0]}]; #IO_L8N_T1_AD14N_35 Sch=vga_r[0]
+set_property -dict { PACKAGE_PIN B4    IOSTANDARD LVCMOS33 } [get_ports {VGA_R[1]}]; #IO_L7N_T1_AD6N_35 Sch=vga_r[1]
+set_property -dict { PACKAGE_PIN C5    IOSTANDARD LVCMOS33 } [get_ports {VGA_R[2]}]; #IO_L1N_T0_AD4N_35 Sch=vga_r[2]
+set_property -dict { PACKAGE_PIN A4    IOSTANDARD LVCMOS33 } [get_ports {VGA_R[3]}]; #IO_L8P_T1_AD14P_35 Sch=vga_r[3]
+
+set_property -dict { PACKAGE_PIN C6    IOSTANDARD LVCMOS33 } [get_ports {VGA_G[0]}]; #IO_L1P_T0_AD4P_35 Sch=vga_g[0]
+set_property -dict { PACKAGE_PIN A5    IOSTANDARD LVCMOS33 } [get_ports {VGA_G[1]}]; #IO_L3N_T0_DQS_AD5N_35 Sch=vga_g[1]
+set_property -dict { PACKAGE_PIN B6    IOSTANDARD LVCMOS33 } [get_ports {VGA_G[2]}]; #IO_L2N_T0_AD12N_35 Sch=vga_g[2]
+set_property -dict { PACKAGE_PIN A6    IOSTANDARD LVCMOS33 } [get_ports {VGA_G[3]}]; #IO_L3P_T0_DQS_AD5P_35 Sch=vga_g[3]
+
+set_property -dict { PACKAGE_PIN B7    IOSTANDARD LVCMOS33 } [get_ports {VGA_B[0]}]; #IO_L2P_T0_AD12P_35 Sch=vga_b[0]
+set_property -dict { PACKAGE_PIN C7    IOSTANDARD LVCMOS33 } [get_ports {VGA_B[1]}]; #IO_L4N_T0_35 Sch=vga_b[1]
+set_property -dict { PACKAGE_PIN D7    IOSTANDARD LVCMOS33 } [get_ports {VGA_B[2]}]; #IO_L6N_T0_VREF_35 Sch=vga_b[2]
+set_property -dict { PACKAGE_PIN D8    IOSTANDARD LVCMOS33 } [get_ports {VGA_B[3]}]; #IO_L4P_T0_35 Sch=vga_b[3]
+
+set_property -dict { PACKAGE_PIN B11   IOSTANDARD LVCMOS33 } [get_ports {VGA_Hsync_n}]; #IO_L4P_T0_15 Sch=vga_hs
+set_property -dict { PACKAGE_PIN B12   IOSTANDARD LVCMOS33 } [get_ports {VGA_Vsync_n}]; #IO_L3N_T0_DQS_AD1N_15 Sch=vga_vs
+```
+
+En esta parte se tuvieron muchas dificultades, ya que en la FPGA estaban impresos los siguientes pines que en principio de pensó que eran los que se debían programar.
+
+![err_2](./figs/err_2.jpeg)
+
+*Figura .Pines impresos en la FPGA Nexys 4*
+
+Por ejemplo para el color Rojo de la VGA se pensaba que había que programar los pines R1, R2, R3 y R5 pero en realidad había que programar los pines A3, B4, C5 y A4 que aparecen en el Datasheet de la Nexys 4.
+
+![err_2](./figs/datShe_VGA.png)
+
+*Figura. Pinel del puerto VGA de la Nexys 4[8]*
+
+Esta confusión se generó porque los pines de los botones que aparecían impresos en la FPGA se relacionaban con T16, R10, F15, V10 y E16 que se ilustran a continuación, coincidian con los nombres del datasheet.
+
+![err_2](./figs/but.jpeg)
+
+*Figura .Pines de los botones impresos de la FPGA Nexys 4*
+
+![err_2](./figs/datShe_but.png)
+
+*Figura .Pines de los botones en el datasheet de la FPGA Nexys 4*
+
+Como moraleja se aprendió que **"por el datasheet se debe guiar y de lo impreso no se debe confiar"**
+
+Finalmente, los pines en la FPGA quedaron conectados como se muestra a continuación:
+
+![con_VGA](./figs/con_VGA.png)
+
+*Figura .Conexiones a la FPGA Nexys 4*
+
+
 
 #### Test de la pantalla
+
 2. Realizar el test de la pantalla. Programar la FPGA con el bitstream del proyecto y no conectar la cámara. ¿Qué espera visualizar?, ¿Es correcto este resultado ?
 
 Al no conectar la cámara se visualizará la imagen con extensión .men con la que se haya inicilializado la matriz `[DW-1: 0] ram [0: NPOS-1]` ([12-1:0] ram [0:2^15-1]) ubicada en el `buffer_ram_dp`.
+
 
 #####  Pasos a seguir para generar el bitstream
 
@@ -2661,6 +2816,16 @@ Si se cuenta detalladamente hay 20 líneas azules y 20 líneas verdes, esto indi
 0f0
 0f0
 ```
+
+##### Implementación del proyecto con la cámara OV7670
+
+El grupo 4 del presenta semestre nos implementó nuestro proyecto en su hardware. Se modificó el archivo de .xdc ya que ellos tenían la Nexys A7 100T y para sorpresa de todos funcionó. La soguiente Figura muestra una foto que se tomó:
+
+![resultado2](./figs/imp_tortuga.png)
+
+Dado que no se implementó un control de fotos, la imagen que se toma de la pantalla VGA puede quedar un poco distorsionada. Finalmente, se tomo un video del funcionamiento de la cámara que se muestra a continuación.
+
+[![ScreenShot](./figs/imp_tortuga.png)](linkdevideo)
 
 
 3. Configure la cámara en test por medio del bus I2C con ayuda de Arduino. ¿Es correcto el resultado? ¿Cada cuánto se refresca el buffer de memoria ?
@@ -2687,3 +2852,4 @@ sensor de imagen OV7670. Available [Online] https://repositorio.upct.es/bitstrea
 
 [7] Recuperado de https://www.avrfreaks.net/forum/vga-hsync-vsync
 
+[8] https://reference.digilentinc.com/reference/programmable-logic/nexys-4/reference-manual
