@@ -2917,10 +2917,10 @@ Dado que no se implementó un control de fotos, la imagen que se toma de la pant
 
 Ingresar a la web [vga-simulator](https://ericeastwood.com/lab/vga-simulator/)    
 
-![resultado2](./figs/imagenfba.png)
-![resultado2](./figs/blanco.png)
+![resultado](./figs/imagenfba.jpeg)
+![resultado](./figs/blanco.jpeg)
 
-![resultado2](./figs/franjasHorizontales.png)
+![resultado](./figs/franjasHorizontales.jpeg)
 
 
 
