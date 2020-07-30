@@ -2848,7 +2848,7 @@ Al no conectar la cámara se visualizará la imagen con extensión .men con la q
 
 ##### Imágenes obtenidas.
 
-La imagen azul con verde que se había obtenido en la simulación se logró implementar en un archivo .men. Luego de general el bitstream y de programar la FPGA se obtuvo el siguiente resultado:
+La imagen azul con verde que se había obtenido en la simulación se logró implementar en un archivo .men. Luego de generar el bitstream y de programar la FPGA se obtuvo el siguiente resultado:
 
 ![resultado2](./figs/imp_azul_verde.jpeg)
 
@@ -2858,6 +2858,7 @@ La imagen azul con verde que se había obtenido en la simulación se logró impl
 Si se cuenta detalladamente hay 20 líneas azules y 20 líneas verdes, esto indicaría que por cada 4 píxeles se está generando un color respectivamente. Se verifica en el archivo _./src/sources/images/imagen_azul-verde.men_  que en efecto se está generando tal y como se visualiza.
 
 *Lineas de colores en el archivo imagen_azul-verde.men*
+
 ```
 00f
 00f
@@ -2868,6 +2869,31 @@ Si se cuenta detalladamente hay 20 líneas azules y 20 líneas verdes, esto indi
 0f0
 0f0
 ```
+
+A continuación se presenta la imagen roja obtenida con el mismo procedimiento descrito.
+
+![ImplementacionRoja](./figs/implementacionRoja.jpeg)
+
+*Figura 76. Implementación imagen roja.*
+
+Esta imagen tiene una particularidad que es posible observar en la Figura 77, pues presenta en los primeros 10 pixeles la siguiente combinación de colores:
+
+```
+f00 // Rojo.
+0f0 // Verde.
+00f // Azul.
+f00 // Rojo.
+0f0 // Verde.
+00f // Azul.
+f00 // Rojo.
+0f0 // Verde.
+00f // Azul.
+f00 // Rojo.
+```
+![zoom1](./figs/zoom1.jpeg)
+
+*Figura 77. Zoom imagen roja.*
+
 
 ##### Implementación del proyecto con la cámara OV7670
 
@@ -2875,7 +2901,7 @@ El grupo 4 del presenta semestre nos implementó nuestro proyecto en su hardware
 
 ![resultado2](./figs/imp_tortuga.png)
 
-*Figura 76. Implementación del sistema en su totalidad.*
+*Figura 78. Implementación del sistema en su totalidad.*
 
 
 Dado que no se implementó un control de fotos, la imagen que se toma de la pantalla VGA puede quedar un poco distorsionada. Finalmente, se tomo un video del funcionamiento de la cámara que se muestra a continuación.
