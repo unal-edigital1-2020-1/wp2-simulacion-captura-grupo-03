@@ -1505,7 +1505,7 @@ Se procece con el  análisis  más detallado de la interacción de `VGA_Driver` 
 
 ![exp_color_azul3](./figs/exp_color_azul3.png)
 
-*Figura 60. Coincidencia direccioón de salida y archivo data_mem.*
+*Figura 60. Coincidencia dirección de salida y archivo data_mem.*
 
 En la posición 0 `cam_read` había escrito `00f` en `buffer_ram_dp` y en esa misma posición `VGA_Driver` lee el mismo dato. Además, `VGA_R=4'h0`, `VGA_G=4'h0` y `VGA_B=4'hf` indicando que el color capturado es el azul. 
 
@@ -1513,32 +1513,32 @@ Dado que la imagen que se guarda tiene un tamaño QQVGA(160x120), se necesita en
 
 ![exp_color_azul4](./figs/exp_color_azul4.png)
 
-*Figura 61. .*
+*Figura 61. Color negro de relleno en la captura del color azul.*
 
 
-Por ejemplo, en la posición 159 que la última de la primera fila se toma el dato `12'h00f`, en el siguiente posedge de clk25M se pasa a la posición 19200 donde está el dato `12'h000`. Esto se observa en la Figura de simulación: 
+Por ejemplo, en la posición 159 que la última de la primera fila se toma el dato `12'h00f`, en el siguiente posedge de clk25M se pasa a la posición 19200 donde está el dato `12'h000`. Esto se observa en la Figura 62 de simulación. 
 
 ![exp_color_azul5](./figs/exp_color_azul5.png)
 
-*Figura 62. .*
+*Figura 62. Ultima posición de memoria.*
 
 Después de terminar la primera línea vertical del tamaño 800x525, se regresa a la dirección 160. Este valor de `DP_RAM_addr_out` corresponde primera posición de la segunda fila almacenada del formato QQVGA por el módulo `cam_read`. Dicha dirección contiene el dato `12'h00f` que es expresado por medio de `data_mem`, como se nota en la Figura que continua.
 
 ![exp_color_azul6](./figs/exp_color_azul6.png)
 
-*Figura 63. .*
+*Figura 63. Dirección del primer elemento de la segunda fila de la imagen capturada.*
 
 Cuando `DP_RAM_addr_out` llega hasta la posición 19199 que corresponde a última que se ha almacenado en el formato QQVGA, en el siguiente posedge de `clk25M` toma el valor de 19200 que contiene el color negro. Luego, se asigna el color negro a `data_mem` hasta completar el tamaño 800x525.
 
 ![exp_color_azul7](./figs/exp_color_azul7.png)
 
-*Figura 64. .*
+*Figura 64. Posición 19199.*
 
 Para tomarse una nueva imagen, `DP_RAM_addr_out` toma el valor de 0 y se realiza el mismo proceso que se ha venido describiendo.
 
 ![exp_color_azul8](./figs/exp_color_azul8.png)
 
-*Figura 65. .*
+*Figura 65. Reinicio dirección de memoria.*
 
 ## Implementación
 Para lograr la implementación en la FPGA (Nexys 4) fue necesario modificar algunos módulos para poder leer los datos enviados por la cámara los cuales son 8 datos enviados en paralelo los cuales representan un Byte.
@@ -1832,7 +1832,7 @@ El cambio central de este modulo se dio en el hecho de que la camara no envia un
 
 * Seccion para los datos en la camara.
 
-Se eliminaron las siguientes señales de las entradas y salidas a dado a queestas ya no se van a simular.
+Se eliminaron las siguientes señales de las entradas y salidas a dado que estas ya no se van a simular.
 ```verilog
     output wire clk25M, // 25MHz de la VGA
     output wire [11:0] data_mem,           //Cable de DP_RAM a VGA 640X480
@@ -1891,7 +1891,7 @@ cam_read #(AW,DW) cam_read
 		.DP_RAM_addr_in(DP_RAM_addr_in),
 		.DP_RAM_data_in(DP_RAM_data_in)
 	);
-	```
+```
 #### cam_read
 ##### version de simulacion
 ```verilog
@@ -2176,7 +2176,7 @@ end
 endmodule
 ```
 ##### cambios
-En este modulo se cambio la sincroniacion en el momento en que los datos en la ram en la posicion `addr_out` se guardan en el `data_out`.
+En este modulo se cambio la sincronizacion en el momento en que los datos en la ram en la posicion `addr_out` se guardan en el `data_out`.
 
 Este se sincronizaba siempre que hubisese un cambio:
 ```verilog
@@ -2710,7 +2710,8 @@ set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets CAM_vsync]
 
 ![err_0](./figs/err_0.png)
 
-*Figura . Error CLOCK_DEDICATED_ROUTE*
+*Figura 66. Error CLOCK_DEDICATED_ROUTE*
+
 
 En los botones se declaró el pin R10 para el reset.
 ```
@@ -2727,7 +2728,7 @@ La conexión en la FPGA se visualiza como:
 
 ![con_rst](./figs/con_rst.png)
 
-*Figura . Conexión del reset*
+*Figura 67. Conexión del reset*
 
 En los Pmod (Peripheral Modules) se colocaron estos comandos
 ```
@@ -2737,7 +2738,7 @@ set_property SEVERITY {Warning} [get_drc_checks UCIO-1];
 Para quitar estos errores
 ![err_1](./figs/err_1.jpeg)
 
-*Figura . Errores debido a la concatenación de los puertos de entrada* 
+*Figura 68. Errores debido a la concatenación de los puertos de entrada* 
 
 Según lo explicado, esto se debe a que en el módulo cam_read se concatenan los ocho datos provenientes de cámara y esto genera unas entradas/salidas con conflictos porque no se sabe los pines con qué tensión van a estar. 
 
@@ -2759,7 +2760,7 @@ Las conexiones físicas se realizan así:
 
 ![con_JC](./figs/con_JC.png)
 
-*Figura .Conexiones al Pmod JC, adaptado de [8]*
+*Figura 69.Conexiones al Pmod JC, adaptado de [8]*
 
 Las señales de salida CAM_xclk, CAM_pwdn y CAM_reset, junto con las señales de entrada CAM_pclk, CAM_href y CAM_vsync son asignadas en el JD Pmod como:
 
@@ -2776,7 +2777,7 @@ Las conexiones se visualizan como:
 
 ![con_JC](./figs/con_JD.png)
 
-*Figura .Conexiones den el Pmod JD*
+*Figura 70.Conexiones den el Pmod JD*
 
 
 La asignación a las conexiones de la Pantalla VGA se realizaron como:
@@ -2807,7 +2808,7 @@ En esta parte se tuvieron muchas dificultades, ya que en la FPGA estaban impreso
 
 ![err_2](./figs/err_2.jpeg)
 
-*Figura .Pines impresos en la FPGA Nexys 4*
+*Figura 71.Pines impresos en la FPGA Nexys 4*
 
 Por ejemplo para el color Rojo de la VGA se pensaba que había que programar los pines R1, R2, R3 y R5 pero en realidad había que programar los pines A3, B4, C5 y A4 que aparecen en el Datasheet de la Nexys 4.
 
@@ -2819,11 +2820,11 @@ Esta confusión se generó porque los pines de los botones que aparecían impres
 
 ![err_2](./figs/but.jpeg)
 
-*Figura .Pines de los botones impresos de la FPGA Nexys 4*
+*Figura 72.Pines de los botones impresos de la FPGA Nexys 4*
 
 ![err_2](./figs/datShe_but.png)
 
-*Figura .Pines de los botones en el datasheet de la FPGA Nexys 4*
+*Figura 73.Pines de los botones en el datasheet de la FPGA Nexys 4*
 
 Como moraleja se aprendió que **"por el datasheet se debe guiar y de lo impreso no se debe confiar"**
 
@@ -2831,7 +2832,7 @@ Finalmente, los pines en la FPGA quedaron conectados como se muestra a continuac
 
 ![con_VGA](./figs/con_VGA.png)
 
-*Figura .Conexiones a la FPGA Nexys 4*
+*Figura 74.Conexiones a la FPGA Nexys 4*
 
 
 
@@ -2851,7 +2852,7 @@ La imagen azul con verde que se había obtenido en la simulación se logró impl
 
 ![resultado2](./figs/imp_azul_verde.jpeg)
 
-*Figura 66. .*
+*Figura 75. Implementación rayas verdes y azules.*
 
 
 Si se cuenta detalladamente hay 20 líneas azules y 20 líneas verdes, esto indicaría que por cada 4 píxeles se está generando un color respectivamente. Se verifica en el archivo _./src/sources/images/imagen_azul-verde.men_  que en efecto se está generando tal y como se visualiza.
@@ -2873,6 +2874,9 @@ Si se cuenta detalladamente hay 20 líneas azules y 20 líneas verdes, esto indi
 El grupo 4 del presenta semestre nos implementó nuestro proyecto en su hardware. Se modificó el archivo de .xdc ya que ellos tenían la Nexys A7 100T y para sorpresa de todos funcionó. La soguiente Figura muestra una foto que se tomó:
 
 ![resultado2](./figs/imp_tortuga.png)
+
+*Figura 76. Implementación del sistema en su totalidad.*
+
 
 Dado que no se implementó un control de fotos, la imagen que se toma de la pantalla VGA puede quedar un poco distorsionada. Finalmente, se tomo un video del funcionamiento de la cámara que se muestra a continuación.
 
