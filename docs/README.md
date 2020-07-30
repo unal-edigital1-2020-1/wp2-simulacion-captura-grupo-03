@@ -279,7 +279,7 @@ clk25M dura en 0 por un tiempo de 475 ns, mientras que con el módulo clk24_25_n
 
 ![DIAGRAMA](./figs/pll12.png)
 
-*Figura 27. Comportamiento clk25M.*
+*Figura 27. Comportamiento clk24_25_nexys4.*
 
 Se cree que esto se puede dar porque ambos módulos presentan 'Jitters' y errores de fase distintos tal como lo indican las tablas que se proporcionan al generarlos con *Clocking Wizard* 
 
@@ -327,6 +327,9 @@ Las señales de control son:
 
 ![control](./figs/control.png)
 
+*Figura 28. Señales de control módulo xclk/reset/PWDN.*
+
+
 En el módulo TOP `test_cam.v` se instancia como:
 
 ```verilog
@@ -335,29 +338,27 @@ En el módulo TOP `test_cam.v` se instancia como:
 113 assign CAM_reset = 0;           
 ```
 
-
-
 ### Módulo Buffer RAM (Tomado de **wp01-ram-grupo-03**)
 
-Para poder almacenar la información adquirida por la cámara , y teniendo en cuanta que la cámara usada no tiene memoria FIFO, se debe diseñar e implementar una memoria RAM  de doble puerto tal y como se observa en la figura 13.
+Para poder almacenar la información adquirida por la cámara , y teniendo en cuanta que la cámara usada no tiene memoria FIFO, se debe diseñar e implementar una memoria RAM  de doble puerto tal y como se observa en la figura 29.
 
 ![Buffer](./figs/cajaramdp.png)
 
-*Figura 13. Módulo Buffer*
+*Figura 29. Módulo Buffer.*
 
 El tamaño máximo de buffer de memoria que se puede crear esta limitado por la capacidad máxima de la FPGA a usar; entonces, se procede a analizar el datasheet de la FPGA Nexys 4 DDR del cual se obtienen las siguientes características:
 
 ![features](./figs/Features.png)
 
-*Figura 14. Espacio Nexys 4[1]*
+*Figura 30. Espacio Nexys 4[1].*
 
 Tal y como se puede apreciar, la FPGA Nexys 4 DDR tiene la capacidad de almacenamiento de 4 860 Kb lo que equivale a 607,5 KB. 
 
-Vale la pena aclarar que, tal y como se nos indica por el profesor, se busca que tanto el formato como la resolución se ajuste de una mejor manera al 50% del tamaño de la memoria calculada en el inciso anterior, es decir, 2 488 320 bits. A continuación, se muestra la tabla de la Figura 15 que relaciona cada uno de los formatos y resoluciones con el porcentaje de la cantidad de memoria a usar que estos requieren.
+Vale la pena aclarar que, tal y como se nos indica por el profesor, se busca que tanto el formato como la resolución se ajuste de una mejor manera al 50% del tamaño de la memoria calculada en el inciso anterior, es decir, 2 488 320 bits. A continuación, se muestra la tabla de la Figura 31 que relaciona cada uno de los formatos y resoluciones con el porcentaje de la cantidad de memoria a usar que estos requieren.
 
 ![DIAGRAMA2](./figs/formato.png)
 
-*Figura 15. Memoría utilizada según las resoluciones y el formato*
+*Figura 31. Memoría utilizada según las resoluciones y el formato.*
 
 Se elige en principio un formato RGB 444, ya que la pantalla a usar se encuentra configurada para este. Sucesivamente y teniendo en cuenta la tabla presentada anteriormente, lo que se hace es elegir el tamaño de imagen que menos memoria consume, es decir, el tamaño 160 x 120 píxeles.
 
@@ -440,19 +441,19 @@ El archivo **TB_ram** es modificado en primer lugar para que el flanco de subida
 
 ![DIAGRAMA3](./figs/codigo.PNG)
 
-*Figura 16. Parte 1 de la prueba del módulo Buffer.*
+*Figura 32. Parte 1 de la prueba del módulo Buffer.*
 
 El registro de escritura **regwrite** es puesto en 1 luego de un delay de 10 ns, con esto se inicializan los registros y permite que se comience a escribir en el registro ram del archivo **buffer_ram_dp.v**. Lo sucede en paralelo  es que existe un delay de 2 seguntos para cada uno de los incrementos del ciclo for, en este además mediante el registro **cont** se están generando las direcciones de memoria de escritura, lo que corresponde a un delay de 20 ns que sumados a los 10 ns iniciales da como resultado 30 ns. Luego, el registro **regread** tarda 40 ns en cambiar su estado de 0 a 1 incluyendo el delay de la linea 78 de 10 ns razón por la cual _data_out_ se inicializa hasta ese valor. Esto se puede notar en la Figura 5. 
 
 ![DIAGRAMA4](./figs/simulacion.PNG)
 
-*Figura 17. Simulación del Buffer.*
+*Figura 33. Simulación del Buffer.*
 
-En la simulacion de la Figura 17, una vez **regwrite** esta en 1 en **data_in** se van guardando los datos del archivo imagen.men,  en este caso solo se están escribiendo 10 datos comenzando por la dirreción 0 y se están cargador mediante la instrucción **$readmemh(file,inputData)** como se observa en la Figura 6. Pasados 20 ns, **regwrite** pasa a ser 0 y **regread** cambia su estado a 1 después de 10 ns, lo que da lugar a que se cargen las dirreciones de los datos de salida mediante representada por **addr_out** mediante el registro **cont** ubicado en el for de la linea 80 según el código de la Figura 4 y por consiguiente, se cargan los datos **data_out** ubicados en el módulo **buffer_ram_dp.v**. La instrucción **always #1 clk=~clk** genera el reloj.
+En la simulacion de la Figura 33, una vez **regwrite** esta en 1 en **data_in** se van guardando los datos del archivo imagen.men,  en este caso solo se están escribiendo 10 datos comenzando por la dirreción 0 y se están cargador mediante la instrucción **$readmemh(file,inputData)**. Pasados 20 ns, **regwrite** pasa a ser 0 y **regread** cambia su estado a 1 después de 10 ns, lo que da lugar a que se cargen las dirreciones de los datos de salida mediante representada por **addr_out** mediante el registro **cont** ubicado en el for de la linea 80 según el código de la Figura 4 y por consiguiente, se cargan los datos **data_out** ubicados en el módulo **buffer_ram_dp.v**. La instrucción **always #1 clk=~clk** genera el reloj.
  
 ![DIAGRAMA5](./figs/lastPart.png)
 
-*Figura 18. Parte 2 de la prueba del módulo Buffer.*
+*Figura 34. Parte 2 de la prueba del módulo Buffer.*
 
 Los resustados en general fueron satisfactorios, lo que genera mas incertidumbre fue encontrar la dirección relativa para colocar el archivo **imagen.men** por lo que se opta por colocar la dirección absoluta.
 
@@ -560,20 +561,24 @@ if (rst) begin
         countY <= (SCREEN_Y+FRONT_PORCH_Y-1);
     end
 ```
-Sin embargo, se hubiera podido optimizar aun más la simulación si `contX` iniciara en `TOTAL_SCREEN_X-1`. Se elegió que countY tomara ese valor en `rst=1` para que al inicio de la simulación se pudiera observar el cambio de 1 a 0 y de 0 a 1 de `VGA_Vsync_n`. Esto se ilustra en la Figura que continua:
+Sin embargo, se hubiera podido optimizar aun más la simulación si `contX` iniciara en `TOTAL_SCREEN_X-1`. Se elegió que countY tomara ese valor en `rst=1` para que al inicio de la simulación se pudiera observar el cambio de 1 a 0 y de 0 a 1 de `VGA_Vsync_n`. Esto se ilustra en la Figura 35.
 
 ![exp_VGA](./figs/exp_VGA.png)
+
+*Figura 35. Tiempo de cambio de 1 a 0 y de 0 a 1 por parte de Vsync.*
 
 En la siguiente Figura se sobresalta `VGA_Vsync_n` para observar los efectos explicados:
 
 ![exp_VGA2](./figs/exp_VGA2.png)
 
+*Figura 36. Simulación de un periodo de Vsync.*
 
-Las señal de sincronización `VGA_Vsync_n`  del `VGA_Driver` se puede asimilar a la Figura que continua en *Vertical timing*. Además, la señal de sincronización `VGA_Hsync_n` de las simulaciones mostradas, podría verse como la señal *Horizontal timing*, que está en la Figura que continua, repitiendose cada fila que compone la matriz de la imagen. 
+
+Las señal de sincronización `VGA_Vsync_n`  del `VGA_Driver` se puede asimilar a la Figura 37. en lo que respecta al *Vertical timing*. Además, la señal de sincronización `VGA_Hsync_n` de las simulaciones mostradas, podría verse como la señal *Horizontal timing* repitiendose cada fila que compone la matriz de la imagen. 
 
 ![vga_timing](./figs/vga_timing.png)
 
-*Tomado de [7].* 
+*Figura 37. Señales de sincroncización verticales y horizontales en el módulo VGA. Tomado de [7].* 
 
 ## Implementación de los módulos
 
@@ -581,11 +586,11 @@ La implementacion de todos los módulos desarrollados previamente (cam_read.v, c
 
 ### Análisis de Módulo `test_cam.v`
 
-Las señales amarillas de la Figura 2, se sustituyen por las señales rojas de la Figura 19, estas señales rojas emulan las proporcionadas por la cámara. Este esquema de simulación nos permite evaluar que todos los módulos funcionen adecuadamente una vez se logre implementar todo el proyecto. 
+Las señales amarillas de la Figura 2, se sustituyen por las señales rojas de la Figura 38, estas señales rojas emulan las proporcionadas por la cámara. Este esquema de simulación nos permite evaluar que todos los módulos funcionen adecuadamente una vez se logre implementar todo el proyecto. 
 
 ![Diagrama_test](./figs/Esquema.png)
 
-*Figura 19. Diagrama de simulación*
+*Figura 38. Diagrama de simulación*
 
 Dado que el módulo test_cam.v es proporcionado por el docente, a continuacion se  presentan todos los cambios que se desarrollan en el mismo con la finalidad de desarrollar el sistema del presente trabajo con éxito. 
 
@@ -1150,6 +1155,8 @@ Con la modificación que se le hizo al módulo `test_cam_TB.v` y `VGA_Driver.v` 
 
 ![tie_sim](./figs/tie_sim.png)
 
+*Figura 39. Tiempo de simulación.*
+
 ### Imagen 1. Color verde 
 
 Líneas de código usadas para simular en el Módulo `test_cam_TB.v`:
@@ -1174,6 +1181,9 @@ Líneas de código usadas para simular en el Módulo `test_cam_TB.v`:
 Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeastwood.com/lab/vga-simulator/):
 
 ![colorVerde](./figs/simulacion%20verde.jpg)
+
+*Figura 40. Simulación verde.*
+
 ### Imagen 2. Verde y Rosado
 Líneas de código para intercalar el color según la línea en donde se encuentre el píxel
 ```verilog
@@ -1223,12 +1233,19 @@ Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeast
 
 ![colorVerdeyros](./figs/lineasverdesyrosas.jpg)
 
+*Figura 41. Simulación lineas horizontales verdes y rosadas.*
+
+
 Para verificar que la combinación de `R=4'hf` y `B=4'hf` fuera una especie de rosado se recurre a este [link](https://htmlcolorcodes.com/es/).
 
 ![expRojoYVerde](./figs/expRojoYVerde.png)
 
+*Figura 42. Web verificación de colores.*
+
+
 
 ### Imagen 3. Azul y verde cada dos píxeles.
+
 En el módulo test_cam_TB se programa de la siguiente manera:
 
 ```verilog
@@ -1260,6 +1277,8 @@ El resultado en la en el [simulador](https://ericeastwood.com/lab/vga-simulator/
 
 ![colorAzul](./figs/azulYVerde.png)
 
+*Figura 43. Simulación lineas verticales azules y verdes.*
+
 ### Imagen 4. Color Azul
 
 Las líneas de código que se utilizan en el`test_cam_TB.v` son:
@@ -1282,15 +1301,18 @@ Al simular 17 ms y usar [vga-simulator](https://ericeastwood.com/lab/vga-simulat
 
 ![colorAzul](./figs/colorAzul.png)
 
+*Figura 44. Simulación color azul.*
 
 #### Análisis en el módulo `cam_read.v`
 
 
 * De Reset activo `rst=1` a `INIT`
 
-Cuando reset es desactivado, se pasa al funcionamiento de la máquina de estados. El cursor de la siguiente Figura lo ilustra.
+Cuando reset es desactivado, se pasa al funcionamiento de la máquina de estados. El cursor de la siguiente Figura 45 lo ilustra.
 
 ![exp_cam_read0](./figs/exp_cam_read0.png)
+
+*Figura 45. Inicio estado INIT.*
 
 |Estado actual|Estado siguiente|
 |:--|:--|
@@ -1307,6 +1329,8 @@ Debe permanecer en este estado si `rst=0` y no se cumple `if(~CAM_vsync&CAM_href
 
 ![colorAzul](./figs/exp_cam_read1.png)
 
+*Figura 46. Permanencia en estado INIT*
+
 A los *52.04* us `CAM_href` cambia de 0 a 1, esto significa que el estado actual es **INIT** y el estado siguiente es también es **INIT**. Como se observa `DP_RAM_data_in`, `DP_RAM_addr_in` y `DP_RAM_regW` permanecen en 0.
 
 * De **INIT** a estado **BYTE2**
@@ -1315,6 +1339,7 @@ En la siguiente Figura, se Ilustra el paso de estado **INIT** a estado **BYTE2**
 
 ![exp_cam_read2](./figs/exp_cam_read2.png)
 
+*Figura 47. Cambio a estado BYTE2.*
 
 |Estado actual| Estado Siguiente|
 |:----|:----|
@@ -1326,6 +1351,7 @@ En la siguiente Figura, se Ilustra el paso de estado **INIT** a estado **BYTE2**
 
 ![exp_cam_read4](./figs/exp_cam_read4.png)
 
+*Figura 48. Durante etado BYTE2.*
 
 |Estado actual| Estado Siguiente|
 |:----|:----|
@@ -1339,6 +1365,8 @@ Para capturar un dato de `CAM_px_data` se nos recomendo realizarlo en cada posed
 En el estado `BYTE1` se eligen los 4 bits menos significativos de `CAM_px_data` correspondientes al color rojo, que en este caso es *4'h0*. Además, con `DP_RAM_regW=0` se inabilita la escritura en `buffer_ram_dp.v`. También, se optó por aumentar `DP_RAM_addr_in` en este estado para que en el estado `BYTE2` se disminuya la probabilidad de asignar `DP_RAM_data_in` en la dirección anterior. Justo antes de esta simulación, se aumentaba la dirección en el estado `BYTE2`, sin embargo, se observo que cuando se habilitaba la escritura en el `buffer_ram_dp.v`, el aumento de dirección estaba en un punto intermedio. La simulación mostraba que `DP_RAM_data_in` alcanzaba a aumentar cuando estaba en la mitad del valor anterior y el valor siguiente, este último era el que se necesitaba, en este caso se corregió una posible falla de implementación a diferencia de `DP_RAM_addr_in`.
 
 ![exp_cam_read5](./figs/exp_cam_read5.png)
+
+*Figura 48. Cambio a estado BYTE 1.*
 
 |Estado actual| Estado Siguiente|
 |:----|:----|
