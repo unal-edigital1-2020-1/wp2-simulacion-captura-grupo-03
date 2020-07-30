@@ -2940,12 +2940,6 @@ Finalmente, se implementa el codigo modificado por el compañares le link
 Ingresar a la web [vga-simulator](https://ericeastwood.com/lab/vga-simulator/)    
 
 
-![resultado](./figs/blanco.jpeg)
-
-![resultado](./figs/franjasHorizontales.jpeg)
-
-
-
 ## Referencias
 
 [1]Dischner. Z. Cómo funciona el sensor de una cámara digital. Available [Online] https://quecámarareflex.com/como-funciona-el-sensor-de-una-cámara-digital/
