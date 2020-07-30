@@ -144,9 +144,15 @@ El estado NOTHING se pasa al estado BYTE2 si CAM_href es igual a 1, se hace el p
 
 
 ![Diagrama estructura](./figs/DiagramaEstructural.png)
+
 *Figura 10. Diagrama estructural*
 ![Diagrama estructura](./figs/estructurala.png)
+
+*Figura 11. Diagrama estructural*
+
 ![Diagrama estructura](./figs/estructurale.png)
+
+*Figura 12. Diagrama estructural*
 
 
 Al módulo de la lectura de datos entran las señales de control y de sincronización además de la entrada de datos de la cámara, la entrada  CAM_px_data son los datos que proporciona la cámara, la señal CAM_pclk es la señal correspondiente al reloj de la cámara y la señal reset asigna valores conocidos para inicializar nuestra máquina de estados y como salida solo se entregan la salida que indica la dirección en memoria y los datos que van en dicha posición de memoria y el control de escritura que le dice al modula de la RAM cuando se pueden escribir esos datos en la memoria, para que puedan ser luego leídos por el driver de la pantalla. Y eventual mente la retroalimentación de la maquina de estados, que permite que se haga la captura de los datos de la cámara y se indique donde se almacenara 
@@ -162,56 +168,85 @@ En principio se estaba utilizando el módulo `clk24_25_nexys4_0` proporcionado d
  En la parte izquierda del flujo de navegación se elige *IP Catalog*
 
 ![clockw1](./figs/clockw1.PNG)
+
+*Figura 13. Project Manager.*
+
  
  Posteriormente, se busca *FPGA Features and Design>Clocking>Clocking Wizard*
 
 ![clockw2](./figs/clockw2.PNG)
 
+*Figura 14. FPGA Features and Design.*
+
+
 Se asigna el valor del reloj primario de acuerdo a la FPGA que trabajaremos, en este caso 100 MHz y por preferencia se le pone el nombre de *clk100M* 
 
 ![pll2](./figs/pll2.png)
+
+*Figura 15. Input clock information.*
 
 Se cambia en Source a *Global buffer*.
 
 ![pll3](./figs/pll3.png)
 
+*Figura 16. Global buffer.*
+
+
 En la siguiente pestaña **Output Clocks**, se elige que una de las salidas tenga una frecuencia de 24 MHz con el nombre de *clk24M* y la otra tenga una frecuencia de 25 MHz con el nombre de *clk25M*
 
 ![pll4](./figs/pll4.png)
+
+*Figura 17. Output Clocks.*
 
 En port **Port Renaming** no se hace nada.
 
 ![pll5](./figs/pll5.png)
 
+*Figura 18. Port Renaming.*
+
 En *MMCM Setting* tampoco se modifica.
 
 ![pll6](./figs/pll6.png)
 
+*Figura 19. MMCM.*
+
 En Summary se deja Igual. 
 
 ![pll7](./figs/pll7.png)
+
+*Figura 20. Summary.*
 
 
 Se guarda en la dirección que aparece en el recuadro.
 
 ![pll8](./figs/pll8.png)
 
+*Figura 21. Directory.*
+
 
 Se genera.
 
 ![pll9](./figs/pll9.png)
 
+*Figura 22. Generate output products.*
+
 Luego nos dirigimos a la dirección a donde se a ha guardado y los archivos *clk24_25_nexys4* y *clk24_25_nexys4_clk_wiz.v* son el PLL.
 
 ![pll101](./figs/pll101.png)
+
+*Figura 23. PLL sources.*
 
 Se borra la carpeta donde se generaron esos archivos y se remueve del proyecto.
 
 ![pll10](./figs/pll10.png)
 
+*Figura 24. Remove file from project.*
+
 * La caja negra de `clk24_25_nexys4.v` queda como:
 
 ![clk24_25_nexys4](./figs/clk24_25_nexys4.png)
+
+*Figura 25. Diagrama estructural módulo clk24_25_nexys4.v.*
 
 En verilog sus entradas y salidas se representan como:
 
@@ -229,13 +264,17 @@ module clk24_25_nexys4
  );
  ```
 
-Un aspecto interesante es el comportamiento que muestra clk25M en clk24_25_nexys4_0, este se ilustra en la siguiente Figura
+Un aspecto interesante es el comportamiento que muestra clk25M en clk24_25_nexys4_0, este se ilustra en la siguiente Figura 26.
 
 ![DIAGRAMA](./figs/pll11.png)
+
+*Figura 26. Comportamiento clk25M.*
 
 clk25M dura en 0 por un tiempo de 475 ns, mientras que con el módulo clk24_25_nexys4 dura 1225 ns con esa misma característica.
 
 ![DIAGRAMA](./figs/pll12.png)
+
+*Figura 27. Comportamiento clk25M.*
 
 Se cree que esto se puede dar porque ambos módulos presentan 'Jitters' y errores de fase distintos tal como lo indican las tablas que se proporcionan al generarlos con *Clocking Wizard* 
 
