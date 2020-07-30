@@ -1184,7 +1184,33 @@ Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeast
 
 *Figura 40. Simulación verde.*
 
-### Imagen 2. Verde y Rosado
+### Imagen 2. Color Rojo
+
+Líneas de código usadas para simular en el Módulo `test_cam_TB.v`:
+
+```verilog
+// Color rojo.
+
+reg cont=0;   
+    initial forever  begin
+		@(negedge pclk) begin
+            if(cont==0) begin 
+                CAM_px_data<=8'h0f;		// First byte red.
+            end
+            else begin
+                CAM_px_data<=8'h00;		// Second byte 
+            end
+			cont=cont+1;
+         end
+	end
+```
+
+Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeastwood.com/lab/vga-simulator/).
+
+![colorRojo](./figs/imagenRoja.png)
+
+
+### Imagen 3. Verde y Rosado
 Líneas de código para intercalar el color según la línea en donde se encuentre el píxel
 ```verilog
 //(seccion de codigo para generar las lineas intercaladas)
@@ -1244,7 +1270,7 @@ Para verificar que la combinación de `R=4'hf` y `B=4'hf` fuera una especie de r
 
 
 
-### Imagen 3. Azul y verde cada dos píxeles.
+### Imagen 4. Azul y verde cada dos píxeles.
 
 En el módulo test_cam_TB se programa de la siguiente manera:
 
@@ -1279,7 +1305,7 @@ El resultado en la en el [simulador](https://ericeastwood.com/lab/vga-simulator/
 
 *Figura 43. Simulación lineas verticales azules y verdes.*
 
-### Imagen 4. Color Azul
+### Imagen 5. Color Azul
 
 Las líneas de código que se utilizan en el`test_cam_TB.v` son:
 
@@ -1486,38 +1512,6 @@ Cuando `DP_RAM_addr_out` llega hasta la posición 19199 que corresponde a últim
 Para tomarse una nueva imagen, `DP_RAM_addr_out` toma el valor de 0 y se realiza el mismo proceso que se ha venido describiendo.
 
 ![exp_color_azul8](./figs/exp_color_azul8.png)
-
-
-
-
-
-
-
-
-
-
-***
-
-
-3. Una vez terminada la simulaciòn revisar dentro del directorio `HW` que contenga el fichero ***test_vga.txt***
-4. ingresar a la web [vga-simulator](https://ericeastwood.com/lab/vga-simulator/)  y cargar el archivo ***test_vga.txt***, dejar los datos de configuraciòn tal cual como aparecen.
-5. ejecutar `submit`.
-6. Compruebe que el resultado en la web es la siguiente imagen
-
-![resultado1](./figs/resultado1.png)
-
-***Nota:*** Observe que en esta instancia usted no ha modificado el hardware del proyecto, por lo tanto, lo que observa en la pantalla VGA simulada, es la imagen almacenada en memoria por defecto.
-
-7. Una vez tenga listo el anterior entorno de trabajo, debe proceder a  modificar el fichero  ***cam_read.v***. Solamnte en este módulo debe trabajar  y describir el funcionamiento de la adquiciòn de los datos de la cámara.
-
-
-8. Al terminar de decribir la adquisión de la cámara repita los paso 2 a 6.  Si el resultado es el que se observa en la siguiente imagen, indica que el módulo cam_read es adecuado y por lo tanto, se dara por terminado este paquete de trabajo, de lo contrario  vuelva al punto 7.
-
-![resultado2](./figs/resultado2.png)
-
-la imagen muestra que se adquirió una foto de color rojo.
-
-***RECUEDE: Es necesario documentar la simulación y registrar la información en README.md, lo puede hacer con ayuda de imágenes o videos***
 
 
 ## Implementación
@@ -2695,6 +2689,11 @@ Si se cuenta detalladamente hay 20 líneas azules y 20 líneas verdes, esto indi
 4. ¿Qué falta implementar para tener el control de la toma de fotos ?
 
 ***RECUEDE: Es necesario documentar la implementación y registrar la información en README.md, lo puede hacer con ayuda de imágenes o videos***
+
+***
+
+
+Ingresar a la web [vga-simulator](https://ericeastwood.com/lab/vga-simulator/)    
 
 
 
