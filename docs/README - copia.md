@@ -12,16 +12,13 @@ Nikolái Alexander Cáceres
  
 Esteban Ladino Fajardo
 
-<span style="color:red">Consideraciones</span>
-- Recuerde, esta documentación debe ser tal que, cualquier compañero de futuros semestres comprenda sus anotaciones y la relación con los módulos diseñados.
-
 ## Abstract
 
 El presente trabajo describe el desarrollo de un sistema controlado por una matriz de puertas lógicas programable en campo​​ (FPGA) cuyas entradas son los datos proporcionados por la cámara digital (OV7670) y cuyas salidas son los diferentes datos requeridos por una pantalla estándar analógica de computadora (VGA) para la visualización de una imagen, sea esta producto de los estímulos captados por la cámara o del sistema mismo. En primer lugar, se desarrolla el módulo de captura de datos, por medio del cual, se adquiere la información enviada por la cámara OV7670. Se procede de la misma manera con los módulos PLL y XCLK. Posteriormente se muestra el proceso de diseño que se realiza  para  elaborar la memoria RAM y el módulo VGA para finalmente presentar el ensamble total del sistema en conjunto con sus respectivas simulaciones. La FPGA utilizada es la NEXYS 4 mientras que el lenguaje de descripción de hardware utilizado (HDL) es verilog, el cual es programado a través de la plataforma de Xilinx Vivado.
 
 ## Introducción
 
-El sensor de una cámara digital está formado por celdas fotosensibles llamadas píxeles, los cuales, mediante un fotodiodo dependiendo de la cantidad de luz apreciada envían electricidad. Además, estos incluyen otros componentes electrónicos que permiten leer la información de cada píxel cada vez que se captura una foto.[1]
+El sensor de una cámara digital está formado por celdas fotosensibles llamadas píxeles, los cuales, mediante un fotodiodo dependiendo de la intensídad con la que incida la luz envían electricidad. Además, estos incluyen otros componentes electrónicos que permiten leer la información de cada píxel cada vez que se captura una foto [1].
 
 ![cámara](./figs/sensor.png)
 
@@ -106,7 +103,7 @@ Sucesivamente, cada vez que exista un flanco de subidad del reloj pclk ,correspo
 
 En el caso de que el reset no se encuentre activo, se verifica que la entrada href sea igual a 1 y que la entrada vsync sea igual a 0. Si una de estas dos condiciones no se cumple, se vuelve a esperar la ocurrencia de un flanco de subida con el objetivo de realizar el mismo procedimiento descrito anteriormente. La sincronizacion de estas dos condiciones es vital a la hora de enviar los datos que corresponden a cada una de las filas de píxeles captadas por la cámara.
 
-En el caso de que ambas condiciones hallan sido satisfechas, se prosigue a evaluar si el contador es igual a 0. De ser asi, se verifica que la direccion de memoria Addr sea igual a ImaSize, la direccion del ultimo píxel de la imagen capturada. Una nueva imagen debe empezar a capturarse una vez se capture toda la matriz de píxeles enviada por la cámara tal y como se aprecia en la Figura 8. Si aun no se ha llegado a la direccion del ultimo píxel de la cámara, se debe cargar el dato correspondiente al byte 1, es decir, entre el bit(9) y el bit(12) de la salida data_in, se deben cargar los primeros 4 bit enviados por la cámara a traves de px_data, los cuales corresponden al color rojo del píxel como tal y como se aprecia en la Figura 4. Debe tambien aumentar el contador y la direccion de memoria Addr en 1 y hacerse 0 el regW. 
+En el caso de que ambas condiciones hallan sido satisfechas, se prosigue a evaluar si el contador es igual a 0. De ser asi, se verifica que la direccion de memoria Addr sea igual a ImaSize, la direccion del ultimo píxel de la imagen capturada. Una nueva imagen debe empezar a capturarse una vez se capture toda la matriz de píxeles enviada por la cámara tal y como se aprecia en la Figura 8. Si aun no se ha llegado a la direccion del ultimo píxel de la cámara, se debe cargar el dato correspondiente al byte 1, es decir, entre el bit(9) y el bit(12) de la salida data_in, se deben cargar los primeros 4 bit enviados por la cámara a traves de px_data, los cuales corresponden al color rojo del píxel como tal y como se aprecia en la Figura 4. Debe tambien aumentar el contador y la direccion de memoria Addr en 1. 
 
 Si el contador no era 0, se debe cargar en la variable de salida datos, la informacion del color verde y azul del píxel, es decir, entre el bit(1) y el bit(8) de la salida data_in, se cargan todos los bits de px_data. Es necesario tambien, aumentar tanto el contador como la direccion de salida en 1. 
 
@@ -1505,7 +1502,7 @@ Se procece con el  análisis  más detallado de la interacción de `VGA_Driver` 
 
 ![exp_color_azul3](./figs/exp_color_azul3.png)
 
-*Figura 60. Coincidencia dirección de salida y archivo data_mem.*
+*Figura 60. Coincidencia direccioón de salida y archivo data_mem.*
 
 En la posición 0 `cam_read` había escrito `00f` en `buffer_ram_dp` y en esa misma posición `VGA_Driver` lee el mismo dato. Además, `VGA_R=4'h0`, `VGA_G=4'h0` y `VGA_B=4'hf` indicando que el color capturado es el azul. 
 
@@ -1513,32 +1510,32 @@ Dado que la imagen que se guarda tiene un tamaño QQVGA(160x120), se necesita en
 
 ![exp_color_azul4](./figs/exp_color_azul4.png)
 
-*Figura 61. Color negro de relleno en la captura del color azul.*
+*Figura 61. .*
 
 
-Por ejemplo, en la posición 159 que la última de la primera fila se toma el dato `12'h00f`, en el siguiente posedge de clk25M se pasa a la posición 19200 donde está el dato `12'h000`. Esto se observa en la Figura 62 de simulación. 
+Por ejemplo, en la posición 159 que la última de la primera fila se toma el dato `12'h00f`, en el siguiente posedge de clk25M se pasa a la posición 19200 donde está el dato `12'h000`. Esto se observa en la Figura de simulación: 
 
 ![exp_color_azul5](./figs/exp_color_azul5.png)
 
-*Figura 62. Ultima posición de memoria.*
+*Figura 62. .*
 
 Después de terminar la primera línea vertical del tamaño 800x525, se regresa a la dirección 160. Este valor de `DP_RAM_addr_out` corresponde primera posición de la segunda fila almacenada del formato QQVGA por el módulo `cam_read`. Dicha dirección contiene el dato `12'h00f` que es expresado por medio de `data_mem`, como se nota en la Figura que continua.
 
 ![exp_color_azul6](./figs/exp_color_azul6.png)
 
-*Figura 63. Dirección del primer elemento de la segunda fila de la imagen capturada.*
+*Figura 63. .*
 
 Cuando `DP_RAM_addr_out` llega hasta la posición 19199 que corresponde a última que se ha almacenado en el formato QQVGA, en el siguiente posedge de `clk25M` toma el valor de 19200 que contiene el color negro. Luego, se asigna el color negro a `data_mem` hasta completar el tamaño 800x525.
 
 ![exp_color_azul7](./figs/exp_color_azul7.png)
 
-*Figura 64. Posición 19199.*
+*Figura 64. .*
 
 Para tomarse una nueva imagen, `DP_RAM_addr_out` toma el valor de 0 y se realiza el mismo proceso que se ha venido describiendo.
 
 ![exp_color_azul8](./figs/exp_color_azul8.png)
 
-*Figura 65. Reinicio dirección de memoria.*
+*Figura 65. .*
 
 ## Implementación
 Para lograr la implementación en la FPGA (Nexys 4) fue necesario modificar algunos módulos para poder leer los datos enviados por la cámara los cuales son 8 datos enviados en paralelo los cuales representan un Byte.
@@ -1832,7 +1829,7 @@ El cambio central de este modulo se dio en el hecho de que la camara no envia un
 
 * Seccion para los datos en la camara.
 
-Se eliminaron las siguientes señales de las entradas y salidas a dado que estas ya no se van a simular.
+Se eliminaron las siguientes señales de las entradas y salidas a dado a queestas ya no se van a simular.
 ```verilog
     output wire clk25M, // 25MHz de la VGA
     output wire [11:0] data_mem,           //Cable de DP_RAM a VGA 640X480
@@ -1891,7 +1888,7 @@ cam_read #(AW,DW) cam_read
 		.DP_RAM_addr_in(DP_RAM_addr_in),
 		.DP_RAM_data_in(DP_RAM_data_in)
 	);
-```
+	```
 #### cam_read
 ##### version de simulacion
 ```verilog
@@ -2176,7 +2173,7 @@ end
 endmodule
 ```
 ##### cambios
-En este modulo se cambio la sincronizacion en el momento en que los datos en la ram en la posicion `addr_out` se guardan en el `data_out`.
+En este modulo se cambio la sincroniacion en el momento en que los datos en la ram en la posicion `addr_out` se guardan en el `data_out`.
 
 Este se sincronizaba siempre que hubisese un cambio:
 ```verilog
@@ -2710,8 +2707,7 @@ set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets CAM_vsync]
 
 ![err_0](./figs/err_0.png)
 
-*Figura 66. Error CLOCK_DEDICATED_ROUTE*
-
+*Figura . Error CLOCK_DEDICATED_ROUTE*
 
 En los botones se declaró el pin R10 para el reset.
 ```
@@ -2728,7 +2724,7 @@ La conexión en la FPGA se visualiza como:
 
 ![con_rst](./figs/con_rst.png)
 
-*Figura 67. Conexión del reset*
+*Figura . Conexión del reset*
 
 En los Pmod (Peripheral Modules) se colocaron estos comandos
 ```
@@ -2738,7 +2734,7 @@ set_property SEVERITY {Warning} [get_drc_checks UCIO-1];
 Para quitar estos errores
 ![err_1](./figs/err_1.jpeg)
 
-*Figura 68. Errores debido a la concatenación de los puertos de entrada* 
+*Figura . Errores debido a la concatenación de los puertos de entrada* 
 
 Según lo explicado, esto se debe a que en el módulo cam_read se concatenan los ocho datos provenientes de cámara y esto genera unas entradas/salidas con conflictos porque no se sabe los pines con qué tensión van a estar. 
 
@@ -2760,7 +2756,7 @@ Las conexiones físicas se realizan así:
 
 ![con_JC](./figs/con_JC.png)
 
-*Figura 69.Conexiones al Pmod JC, adaptado de [8]*
+*Figura .Conexiones al Pmod JC, adaptado de [8]*
 
 Las señales de salida CAM_xclk, CAM_pwdn y CAM_reset, junto con las señales de entrada CAM_pclk, CAM_href y CAM_vsync son asignadas en el JD Pmod como:
 
@@ -2777,7 +2773,7 @@ Las conexiones se visualizan como:
 
 ![con_JC](./figs/con_JD.png)
 
-*Figura 70.Conexiones den el Pmod JD*
+*Figura .Conexiones den el Pmod JD*
 
 
 La asignación a las conexiones de la Pantalla VGA se realizaron como:
@@ -2808,7 +2804,7 @@ En esta parte se tuvieron muchas dificultades, ya que en la FPGA estaban impreso
 
 ![err_2](./figs/err_2.jpeg)
 
-*Figura 71.Pines impresos en la FPGA Nexys 4*
+*Figura .Pines impresos en la FPGA Nexys 4*
 
 Por ejemplo para el color Rojo de la VGA se pensaba que había que programar los pines R1, R2, R3 y R5 pero en realidad había que programar los pines A3, B4, C5 y A4 que aparecen en el Datasheet de la Nexys 4.
 
@@ -2820,11 +2816,11 @@ Esta confusión se generó porque los pines de los botones que aparecían impres
 
 ![err_2](./figs/but.jpeg)
 
-*Figura 72.Pines de los botones impresos de la FPGA Nexys 4*
+*Figura .Pines de los botones impresos de la FPGA Nexys 4*
 
 ![err_2](./figs/datShe_but.png)
 
-*Figura 73.Pines de los botones en el datasheet de la FPGA Nexys 4*
+*Figura .Pines de los botones en el datasheet de la FPGA Nexys 4*
 
 Como moraleja se aprendió que **"por el datasheet se debe guiar y de lo impreso no se debe confiar"**
 
@@ -2832,7 +2828,7 @@ Finalmente, los pines en la FPGA quedaron conectados como se muestra a continuac
 
 ![con_VGA](./figs/con_VGA.png)
 
-*Figura 74.Conexiones a la FPGA Nexys 4*
+*Figura .Conexiones a la FPGA Nexys 4*
 
 
 
@@ -2848,17 +2844,16 @@ Al no conectar la cámara se visualizará la imagen con extensión .men con la q
 
 ##### Imágenes obtenidas.
 
-La imagen azul con verde que se había obtenido en la simulación se logró implementar en un archivo .men. Luego de generar el bitstream y de programar la FPGA se obtuvo el siguiente resultado:
+La imagen azul con verde que se había obtenido en la simulación se logró implementar en un archivo .men. Luego de general el bitstream y de programar la FPGA se obtuvo el siguiente resultado:
 
 ![resultado2](./figs/imp_azul_verde.jpeg)
 
-*Figura 75. Implementación rayas verdes y azules.*
+*Figura 66. .*
 
 
 Si se cuenta detalladamente hay 20 líneas azules y 20 líneas verdes, esto indicaría que por cada 4 píxeles se está generando un color respectivamente. Se verifica en el archivo _./src/sources/images/imagen_azul-verde.men_  que en efecto se está generando tal y como se visualiza.
 
 *Lineas de colores en el archivo imagen_azul-verde.men*
-
 ```
 00f
 00f
@@ -2870,77 +2865,15 @@ Si se cuenta detalladamente hay 20 líneas azules y 20 líneas verdes, esto indi
 0f0
 ```
 
-A continuación se presenta la imagen roja obtenida con el mismo procedimiento descrito.
-
-![ImplementacionRoja](./figs/implementacionRoja1.jpeg)
-
-*Figura 76. Implementación imagen roja.*
-
-Esta imagen tiene una particularidad que es posible observar en la Figura 77, pues presenta en los primeros 10 pixeles la siguiente combinación de colores:
-
-```
-f00 // Rojo.
-0f0 // Verde.
-00f // Azul.
-f00 // Rojo.
-0f0 // Verde.
-00f // Azul.
-f00 // Rojo.
-0f0 // Verde.
-00f // Azul.
-f00 // Rojo.
-```
-![zoom1](./figs/zoom1.jpeg)
-
-*Figura 77. Zoom imagen roja.*
-
-Aqui se presenta la imagen de barras cruzadas azules y celestes obtenida con el mismo procedimiento descrito.
-Para esta siguiente imagen se visualizan los colores rosado y verde, en esta se ve la particularidad de que se llenan las posiciones de memoria con el color rosado, hasta determinada posición, en la cual se ve que a partir de esa posición se empieza a llenar la memoria con el color amarillo. La posición en memoria la podemos visualizar en el archivo .men con el que se genera la imagen. 
-![resultado](./figs/imagenfba.jpeg)
-
-*Figura 78 Imagen rosada y verde
-
-FAB // Rosado hasta la posición 16597 de la memoria. 
-783 // Amarillo desde la posicion 16598 hasta la ultima posición en memoria.
-
-![Implementacion0F-AA](./figs/0f-AA.png)
-
-*Figura 78. Implementación imagen roja.*
-
-Esta imagen prsenta secciones de azul y celeste horizontales en el archivo `.men` se presenta un cambio cada 3200 pixeles, cada 3200 pixeles cambia de color entre azul y celeste:
-
-```
-0F // Azul.
-AA // celeste
-```
-![zoom1](./figs/0F-AAzoom.png)
-
-*Figura 79. Zoom imagen roja.*
 ##### Implementación del proyecto con la cámara OV7670
 
 El grupo 4 del presenta semestre nos implementó nuestro proyecto en su hardware. Se modificó el archivo de .xdc ya que ellos tenían la Nexys A7 100T y para sorpresa de todos funcionó. La soguiente Figura muestra una foto que se tomó:
 
 ![resultado2](./figs/imp_tortuga.png)
 
-*Figura 80. Implementación del sistema en su totalidad.*
-
-
 Dado que no se implementó un control de fotos, la imagen que se toma de la pantalla VGA puede quedar un poco distorsionada. Finalmente, se tomo un video del funcionamiento de la cámara que se muestra a continuación.
 
-[![ScreenShot](https://raw.github.com/GabLeRoux/WebMole/master/ressources/WebMole_Youtube_Video.png)](https://youtu.be/QwoBd_p1Ghc)
-
-
-El compañero del grupo 4 realizo en primer lugar la conexión entre el arduino y la camara, de manera tal que coincidieran la alimentacion de 3V  y el puerto GRND y que mediante dos pines del arduino se hiciera la conexion con los puertos SIOC y SIOD. Es necesario poner una resistencia de mas de 3kohm entre la alimentacion y la conexion de cada uno de estos pines. Ya por ultimo debe conectarse el Reset de la camara a la alimentacion y el PWDN de la camara al ground de la FPGA.  
-
-Posteriormente se realiza la conexion entre la camara y la FPGA, de modo que coincidan los demas pines restantes con los declarados en el archivo xcd de la FPGA.
-
-El compañero acudio al link: [![ScreenShot](https://raw.github.com/GabLeRoux/WebMole/master/ressources/WebMole_Youtube_Video.png)](https://github.com/unal-edigital1-2020-1/wp2-simulacion-captura-grupo-04/blob/master/src/images/i2c_scan.ino) con el objetivo de verificar que la coneccion realizada este funcionando. Teniendo la Nexys encendida, programada y funcionando, se abre el programa en Arduino y se corre. Lo que hace el programa es darnos la direccion I2C de cualquier dispositivo conectado, la cual debe tenerse en cuenta posteriormente. 
-
-Finalmente, se implementa el codigo modificado por el compañares le link
-[codigo-arduino](https://github.com/unal-edigital1-2020-1/wp2-simulacion-captura-grupo-04/blob/master/src/camera/hdl/OV7670_config/OV7670_config.ino).     
-
-
-
+[![ScreenShot](./figs/imp_tortuga.png)](linkdevideo)
 
 
 3. Configure la cámara en test por medio del bus I2C con ayuda de Arduino. ¿Es correcto el resultado? ¿Cada cuánto se refresca el buffer de memoria ?
@@ -2952,6 +2885,7 @@ Finalmente, se implementa el codigo modificado por el compañares le link
 
 
 Ingresar a la web [vga-simulator](https://ericeastwood.com/lab/vga-simulator/)    
+
 
 
 ## Referencias
@@ -2971,4 +2905,4 @@ sensor de imagen OV7670. Available [Online] https://repositorio.upct.es/bitstrea
 
 [7] Recuperado de https://www.avrfreaks.net/forum/vga-hsync-vsync
 
-[8] Recuperado de https://reference.digilentinc.com/reference/programmable-logic/nexys-4/reference-manual
+[8] https://reference.digilentinc.com/reference/programmable-logic/nexys-4/reference-manual
