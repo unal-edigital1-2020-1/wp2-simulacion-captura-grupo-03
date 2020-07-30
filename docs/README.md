@@ -40,7 +40,7 @@ Como se logra observar en el esquema general de la Figura 2, el diseño del sist
 
 ![DiagramaFundamental](./figs/testcam.png)
 
-*Figura 2. Esquema general*
+*Figura 2. Esquema general.*
 
 
 ## Módulos
@@ -50,7 +50,7 @@ Como se logra observar en el esquema general de la Figura 2, el diseño del sist
 
 ![CAPTURADATOS](./figs/cajacapturadatos.png)
 
-*Figura 3.Módulo de captura de datos*
+*Figura 3. Módulo de captura de datos.*
 
 Se van a describir las entradas y salidas del módulo de la Figura 3.
 
@@ -100,7 +100,7 @@ En la Figura 8. se describe la funcionalidad principal del módulo cam_read.v. I
 
 ![DiagramaFuncional](./figs/diagramaFuncional.png)
 
-*Figura 8. Diagrama funcional*
+*Figura 8. Diagrama funcional.*
 
 Sucesivamente, cada vez que exista un flanco de subidad del reloj pclk ,correspondiente a la cámara, es decir, un posedge, se revisa si el reset (rst) se encuentra activado o no. En el caso de que el reset se encuentre activo, se le asigna el valor de 0 a las salidas y al contador, indicando entonces, que se empieza de nuevo el proceso de enviar la captura de una nueva imagen. Este procedimiento no se podra llevar acabo hasta que exista un posedge como puede observarse en el diagrama.
 
@@ -117,7 +117,7 @@ En el caso de que href y vsync no se encuentren sincronizadas, se debe volver a 
 
 ![Maquina de estados](./figs/FSM.png)
 
-*Figura 9. Máquina de estados finitos*
+*Figura 9. Máquina de estados finitos.*
 
 
 La máquina de estados finitos consta de 4 estados INIT, BYTE2, BYTE1 y NOTHING. cuyas señales de control son en esencia CAM_href y CAM_vsync.
@@ -145,19 +145,16 @@ El estado NOTHING se pasa al estado BYTE2 si CAM_href es igual a 1, se hace el p
 
 ![Diagrama estructura](./figs/DiagramaEstructural.png)
 
-*Figura 10. Diagrama estructural*
+*Figura 10. Diagrama estructural.*
+
 ![Diagrama estructura](./figs/estructurala.png)
 
-*Figura 11. Diagrama estructural*
+*Figura 11. Diagrama datapath.*
 
 ![Diagrama estructura](./figs/estructurale.png)
-*Figura 10. Diagrama estructural ASM*
-![Diagrama datapath](./figs/estructurala.png)
-*Figura 11. Diagrama datapath
-![Diagrama datapath](./figs/estructurale.png)
-*Figura 12. Diagrama 
 
-*Figura 12. Diagrama estructural*
+*Figura 12. Diagrama estructural ASM.*
+
 
 
 Al módulo de la lectura de datos entran las señales de control y de sincronización además de la entrada de datos de la cámara, la entrada  CAM_px_data son los datos que proporciona la cámara, la señal CAM_pclk es la señal correspondiente al reloj de la cámara y la señal reset asigna valores conocidos para inicializar nuestra máquina de estados y como salida solo se entregan la salida que indica la dirección en memoria y los datos que van en dicha posición de memoria y el control de escritura que le dice al modula de la RAM cuando se pueden escribir esos datos en la memoria, para que puedan ser luego leídos por el driver de la pantalla. Y eventual mente la retroalimentación de la maquina de estados, que permite que se haga la captura de los datos de la cámara y se indique donde se almacenara 
@@ -1155,8 +1152,6 @@ Con la modificación que se le hizo al módulo `test_cam_TB.v` y `VGA_Driver.v` 
 
 ![tie_sim](./figs/tie_sim.png)
 
-*Figura 39. Tiempo de simulación.*
-
 ### Imagen 1. Color verde 
 
 Líneas de código usadas para simular en el Módulo `test_cam_TB.v`:
@@ -1182,7 +1177,7 @@ Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeast
 
 ![colorVerde](./figs/simulacion%20verde.jpg)
 
-*Figura 40. Simulación verde.*
+*Figura 39. Simulación verde.*
 
 ### Imagen 2. Color Rojo
 
@@ -1208,6 +1203,8 @@ reg cont=0;
 Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeastwood.com/lab/vga-simulator/).
 
 ![colorRojo](./figs/imagenRoja.png)
+
+*Figura 40. Color Rojo*
 
 
 ### Imagen 3. Verde y Rosado
@@ -1392,7 +1389,7 @@ En el estado `BYTE1` se eligen los 4 bits menos significativos de `CAM_px_data` 
 
 ![exp_cam_read5](./figs/exp_cam_read5.png)
 
-*Figura 48. Cambio a estado BYTE 1.*
+*Figura 49. Cambio a estado BYTE 1.*
 
 |Estado actual| Estado Siguiente|
 |:----|:----|
@@ -1405,6 +1402,8 @@ En el estado `BYTE1` se eligen los 4 bits menos significativos de `CAM_px_data` 
 
 ![exp_cam_read6](./figs/exp_cam_read6.png)
 
+*Figura 50. Durante estado BYTE 1.*
+
 |Estado actual| Estado Siguiente|
 |:----|:----|
 |BYTE2|BYTE1|
@@ -1412,19 +1411,21 @@ En el estado `BYTE1` se eligen los 4 bits menos significativos de `CAM_px_data` 
 
 * Estado **NOTHING**
 
-En la posición del cursor se nota:
+En la posición del cursor de la Figura 51. se nota:
 
 |Estado actual| Estado Siguiente|
 |:----|:----|
 |BYTE1|NOTHING|
 
-Según la Figura que continúa.
-
 ![exp_cam_read7](./figs/exp_cam_read7.png)
 
-El estado `NOTHING` comprende el intervalo que se encuentra comprendido entre los cursores amarillos. Se resalta que la posición `DP_RAM_addr_in` permanece en 159 antes que el estado siguiente sea `BYTE2`, esta es la última posición de la primera fila de la matriz 160X120 (160 columnas y 120 filas). Dado que las direcciones se empiezan a  asignar desde 0, cuando se llega a 159 hay 160 posiciónes (número de posiciónes=final-inicio+1). 
+*Figura 51. Previo al estado NOTHING.*
+
+El estado `NOTHING` comprende el intervalo que se encuentra comprendido entre los cursores amarillos de la Figura 52. Se resalta que la posición `DP_RAM_addr_in` permanece en 159 antes que el estado siguiente sea `BYTE2`, esta es la última posición de la primera fila de la matriz 160X120 (160 columnas y 120 filas). Dado que las direcciones se empiezan a  asignar desde 0, cuando se llega a 159 hay 160 posiciónes (número de posiciónes=final-inicio+1). 
 
 ![exp_cam_read8](./figs/exp_cam_read8.png)
+
+*Figura 52. Durante estado NOTHING.*
 
 Nótese que cuando `pclk` está en el posedge donde `href` vuelve a ser 1, el estado actual es `NOTHING` y el siguiente es `BYTE2`. En este cambio de estado `DP_RAM_regW` es 0, `DP_RAM_addr_in` aumenta pasando a la primera posición de la segunda fila vertical (`DP_RAM_addr_in=160`) y a  `DP_RAM_data_in` se le asignan los cuatro bits menos significativos de CAM_px_data. En el estado `BYTE2`, vuelve al estado `BYTE1` y continua en estos dos estados hasta que `CAM_href=0`. 
 
@@ -1433,6 +1434,9 @@ Nótese que cuando `pclk` está en el posedge donde `href` vuelve a ser 1, el es
 El estado actual que muestra el cursor de la Figura que continua es **NOTHING** y dado que `CAM_vsync` es 1, el estado siguiente es **INIT**. Se nota que `DP_RAM_regW=0`, `DP_RAM_addr_in` llega hasta la posición *19199* que sería la ultíma posición de una matriz de 160*120 si empezamos a asignar direcciones desde la posición cero y `DP_RAM_data_in=8'h00f`, pero no está habilitado para ser escrito en `buffer_ram_dp`.
 
 ![exp_cam_read11](./figs/exp_cam_read11.png)
+
+*Figura 53. Cambio a estado INIT.*
+
 
 
 * Estado **INIT**
@@ -1452,11 +1456,14 @@ Tal como se nota en la siguiente Figura.
 
 ![exp_cam_read13](./figs/exp_cam_read13.png)
 
+*Figura 54. Durante estado INIT.*
+
 
 A continuación, se muestra una Figura de la duración de estado **INIT**. Se verifica en la simulación que `DP_RAM_regW`, `DP_RAM_addr_in` y `DP_RAM_data_in`permanecen en cero.
 
 ![exp_cam_read10](./figs/exp_cam_read10.png)
 
+*Figura 55. Tiempo de duracion del estado INIT.*
 
 
 * De **INIT** a **BYTE2**
@@ -1465,19 +1472,26 @@ El estado actual es **INIT** y el estado siguente es **BYTE2**. En la siguiente 
 
 ![exp_cam_read12](./figs/exp_cam_read12.png)
 
+*Figura 56. Cambio a estado BYTE2.*
+
+
 * Comentarios 
 
 Se verificó en cada estado que el valor que tomaran las señales de salida fueran las indicadas. Además, sirvió para asesorarnos del correcto funcionamiente de la máquina de estados y mejorar el aumento de la dirección `DP_RAM_addr_in` colocándolo en el estado `BYTE1`.
 
 #### Análisis en el módulo VGA_Driver
 
-Al simular 18.4 ms aproximadamente, se puede notar que la imagen azul en el formato VGA más los píxeles negros adicionales, se generan entre los intérvalo amarillos que muestran la Figura. La resta de los tiempos extremos es de 16.8 ms (17.926235-1.126235 [ms]), lo que coincide con los cálculos realizados.  
+Al simular 18.4 ms aproximadamente, se puede notar que la imagen azul en el formato VGA más los píxeles negros adicionales, se generan entre los intérvalo amarillos que muestran la Figura 57. La resta de los tiempos extremos es de 16.8 ms (17.926235-1.126235 [ms]), lo que coincide con los cálculos realizados.  
 
 ![exp_color_azul](./figs/exp_color_azul.png)
+
+*Figura 57. Tiempo de simulacion para imagen azul.*
 
 Con el módulo final *clk24_25_nexys4* la imagen se genera en los mismos 16.8 ms, pero se empieza 750 us después.
 
 ![exp_color_azul](./figs/pll13.png)
+
+*Figura 58. Duracion módulo clk24_25_nexys4.*
 
 Nótese que `CAM_vsync` ha cambiado 11 veces de 0 a 1 y de 1 a 0, lo que indica que `cam_read` ha registrado 10 imágenes en formato QQVGA, pero VGA_Driver solo forma una imagen. 
  
@@ -1485,34 +1499,46 @@ Nótese que `CAM_vsync` ha cambiado 11 veces de 0 a 1 y de 1 a 0, lo que indica 
 
 ![exp_color_azul2](./figs/exp_color_azul2.png)
 
-
+*Figura 59. Trasnsición de 1 a 0 y de 0 a 1 de VGA_Hsync_n.*
 
 Se procece con el  análisis  más detallado de la interacción de `VGA_Driver` con `buffer_ram_dp`. A partir de una dirrección que el módulo `VGA_Driver` envía a `buffer_ram_dp` representada por la señal `DP_RAM_addr_out`, este último módulo debe enviar por medio de `data_mem` el píxel almacenado en dicha dirrección. El módulo `cam_read`, es el encargado de almacenar en el `buffer_ram_dp` los datos capturados por la cámara. Entonces, las señales de salida del módulo `cam_read` de dirrección y de datos ( `DP_RAM_addr_in` y `DP_RAM_data_in`) deben coincidir con las señales de dirección y datos de VGA_Driver (`DP_RAM_addr_out` y `data_mem`) en simulación. Esto se nota en la siguiente Figura.
 
 ![exp_color_azul3](./figs/exp_color_azul3.png)
 
+*Figura 60. Coincidencia direccioón de salida y archivo data_mem.*
+
 En la posición 0 `cam_read` había escrito `00f` en `buffer_ram_dp` y en esa misma posición `VGA_Driver` lee el mismo dato. Además, `VGA_R=4'h0`, `VGA_G=4'h0` y `VGA_B=4'hf` indicando que el color capturado es el azul. 
 
 Dado que la imagen que se guarda tiene un tamaño QQVGA(160x120), se necesita enviar información de tal modo que se complete el tamaño VGA más sus adiciones. Esto se logra haciendo que cada vez que se llega hasta el final de una linea vertical del formato QQVGA se asignen los restantes píxeles con un color predefinido en una dirrección específica. En este caso, se guardó en el módulo `buffer_ram_dp` el color negro en la posición 160x120=19200. La siguiente Figura muestra los casos donde esto se presenta.
 
-  ![exp_color_azul4](./figs/exp_color_azul4.png)
+![exp_color_azul4](./figs/exp_color_azul4.png)
+
+*Figura 61. .*
+
 
 Por ejemplo, en la posición 159 que la última de la primera fila se toma el dato `12'h00f`, en el siguiente posedge de clk25M se pasa a la posición 19200 donde está el dato `12'h000`. Esto se observa en la Figura de simulación: 
 
 ![exp_color_azul5](./figs/exp_color_azul5.png)
 
+*Figura 62. .*
+
 Después de terminar la primera línea vertical del tamaño 800x525, se regresa a la dirección 160. Este valor de `DP_RAM_addr_out` corresponde primera posición de la segunda fila almacenada del formato QQVGA por el módulo `cam_read`. Dicha dirección contiene el dato `12'h00f` que es expresado por medio de `data_mem`, como se nota en la Figura que continua.
 
 ![exp_color_azul6](./figs/exp_color_azul6.png)
+
+*Figura 63. .*
 
 Cuando `DP_RAM_addr_out` llega hasta la posición 19199 que corresponde a última que se ha almacenado en el formato QQVGA, en el siguiente posedge de `clk25M` toma el valor de 19200 que contiene el color negro. Luego, se asigna el color negro a `data_mem` hasta completar el tamaño 800x525.
 
 ![exp_color_azul7](./figs/exp_color_azul7.png)
 
+*Figura 64. .*
+
 Para tomarse una nueva imagen, `DP_RAM_addr_out` toma el valor de 0 y se realiza el mismo proceso que se ha venido describiendo.
 
 ![exp_color_azul8](./figs/exp_color_azul8.png)
 
+*Figura 65. .*
 
 ## Implementación
 Para lograr la implementación en la FPGA (Nexys 4) fue necesario modificar algunos módulos para poder leer los datos enviados por la cámara los cuales son 8 datos enviados en paralelo los cuales representan un Byte.
@@ -2669,6 +2695,9 @@ Al no conectar la cámara se visualizará la imagen con extensión .men con la q
 La imagen azul con verde que se había obtenido en la simulación se logró implementar en un archivo .men. Luego de general el bitstream y de programar la FPGA se obtuvo el siguiente resultado:
 
 ![resultado2](./figs/imp_azul_verde.jpeg)
+
+*Figura 66. .*
+
 
 Si se cuenta detalladamente hay 20 líneas azules y 20 líneas verdes, esto indicaría que por cada 4 píxeles se está generando un color respectivamente. Se verifica en el archivo _./src/sources/images/imagen_azul-verde.men_  que en efecto se está generando tal y como se visualiza.
 
