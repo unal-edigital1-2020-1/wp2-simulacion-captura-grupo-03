@@ -530,6 +530,7 @@ end
 endmodule
 ```
 * Modificaciones
+
 En este modulo se cambio la señal de entrada el 
 ```verilog
 CAM_px_data,
