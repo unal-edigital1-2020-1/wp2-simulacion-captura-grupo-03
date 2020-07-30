@@ -151,6 +151,11 @@ El estado NOTHING se pasa al estado BYTE2 si CAM_href es igual a 1, se hace el p
 *Figura 11. Diagrama estructural*
 
 ![Diagrama estructura](./figs/estructurale.png)
+*Figura 10. Diagrama estructural ASM*
+![Diagrama datapath](./figs/estructurala.png)
+*Figura 11. Diagrama datapath
+![Diagrama datapath](./figs/estructurale.png)
+*Figura 12. Diagrama 
 
 *Figura 12. Diagrama estructural*
 
