@@ -2906,6 +2906,21 @@ El grupo 4 del presenta semestre nos implementó nuestro proyecto en su hardware
 
 Dado que no se implementó un control de fotos, la imagen que se toma de la pantalla VGA puede quedar un poco distorsionada. Finalmente, se tomo un video del funcionamiento de la cámara que se muestra a continuación.
 
+[![ScreenShot](https://raw.github.com/GabLeRoux/WebMole/master/ressources/WebMole_Youtube_Video.png)](https://youtu.be/QwoBd_p1Ghc)
+
+
+El compañero del grupo 4 realizo en primer lugar la conexión entre el arduino y la camara, de manera tal que coincidieran la alimentacion de 3V  y el puerto GRND y que mediante dos pines del arduino se hiciera la conexion con los puertos SIOC y SIOD. Es necesario poner una resistencia de mas de 3kohm entre la alimentacion y la conexion de cada uno de estos pines. Ya por ultimo debe conectarse el Reset de la camara a la alimentacion y el PWDN de la camara al ground de la FPGA.  
+
+Posteriormente se realiza la conexion entre la camara y la FPGA, de modo que coincidan los demas pines restantes con los declarados en el archivo xcd de la FPGA.
+
+El compañero acudio al link: [![ScreenShot](https://raw.github.com/GabLeRoux/WebMole/master/ressources/WebMole_Youtube_Video.png)](https://github.com/unal-edigital1-2020-1/wp2-simulacion-captura-grupo-04/blob/master/src/images/i2c_scan.ino) con el objetivo de verificar que la coneccion realizada este funcionando. Teniendo la Nexys encendida, programada y funcionando, se abre el programa en Arduino y se corre. Lo que hace el programa es darnos la direccion I2C de cualquier dispositivo conectado, la cual debe tenerse en cuenta posteriormente. 
+
+Finalmente, se implementa el codigo modificado por el compañares le link
+[codigo-arduino](https://github.com/unal-edigital1-2020-1/wp2-simulacion-captura-grupo-04/blob/master/src/camera/hdl/OV7670_config/OV7670_config.ino).     
+
+
+
+
 
 3. Configure la cámara en test por medio del bus I2C con ayuda de Arduino. ¿Es correcto el resultado? ¿Cada cuánto se refresca el buffer de memoria ?
 4. ¿Qué falta implementar para tener el control de la toma de fotos ?
