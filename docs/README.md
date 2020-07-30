@@ -2872,7 +2872,7 @@ Si se cuenta detalladamente hay 20 líneas azules y 20 líneas verdes, esto indi
 
 A continuación se presenta la imagen roja obtenida con el mismo procedimiento descrito.
 
-![ImplementacionRoja](./figs/implementacionRoja.jpeg)
+![ImplementacionRoja](./figs/implementacionRoja1.jpeg)
 
 *Figura 76. Implementación imagen roja.*
 
@@ -2906,8 +2906,6 @@ El grupo 4 del presenta semestre nos implementó nuestro proyecto en su hardware
 
 Dado que no se implementó un control de fotos, la imagen que se toma de la pantalla VGA puede quedar un poco distorsionada. Finalmente, se tomo un video del funcionamiento de la cámara que se muestra a continuación.
 
-[![ScreenShot](./figs/imp_tortuga.png)](linkdevideo)
-
 
 3. Configure la cámara en test por medio del bus I2C con ayuda de Arduino. ¿Es correcto el resultado? ¿Cada cuánto se refresca el buffer de memoria ?
 4. ¿Qué falta implementar para tener el control de la toma de fotos ?
@@ -2938,4 +2936,4 @@ sensor de imagen OV7670. Available [Online] https://repositorio.upct.es/bitstrea
 
 [7] Recuperado de https://www.avrfreaks.net/forum/vga-hsync-vsync
 
-[8] https://reference.digilentinc.com/reference/programmable-logic/nexys-4/reference-manual
+[8] Recuperado de https://reference.digilentinc.com/reference/programmable-logic/nexys-4/reference-manual
