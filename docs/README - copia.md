@@ -26,13 +26,13 @@ El sensor de una cámara digital está formado por celdas fotosensibles llamadas
 
 Las celdas solo detectan la intensidad de la luz, es decir, número de fotones a lo largo de un determinado tiempo, mientras que unos filtros tipo Bayer descomponen la luz en tres componentes: rojo, verde y azul de forma que unas celdas reciben solo la luz correspondiente a la componente roja, otras solo la componente azul y otras solo la componente verde. En los sensores Foveon la distribución es diferente, pero el principio de funcionamiento es el mismo.
 
-Cada fotodiodo (elemento fotosensible de la celda) funciona como un panel solar: recibe fotones que, al interactuar con los átomos del material, generan electrones. Es decir, convierten la intensidad de la luz en electricidad.
+Cada fotodiodo (elemento fotosensible de la celda) funciona como un panel solar: recibe fotones que, al interactuar con los átomos del material, generan electrones. Es decir, convierten luz en electricidad.
 
-El módulo de cámara OV7670 está basado en el sensor OV7670 de omnivision[2]. Es un dispositivo CMOS de baja tensión que proporciona imágenes de 8 bits y que cuenta, en primer lugar, con una matriz de imágenes capaz de operar a una velocidad de hasta 30 cuadros por segundo (fps); en segundo lugar, con diferentes circuitos destinados al procesamiento de la imagen capturada. Dentro del procesamiento está el control
-de exposición automática (AEC), control del balance de blancos (AWB), cancelación de ruido, saturación, gamma y entre otros [3]. Existe también, la posibilidad de trabajar a distintas resoluciones (VGA, QVGA,
-CIF, QCIF) y diferentes formatos de color (RGB555, RGB565 y YUV). Todos estos parámetros pueden configurarse a través del bus SCCB (Serial Camera Control Bus) [4].
+El módulo de cámara OV7670 está basado en el sensor OV7670 de omnivision.[2] Es un dispositivo CMOS de baja tensión que proporciona imágenes de 8 bits y que cuenta, en primer lugar, con una matriz de imágenes capaz de operar a una velocidad de hasta 30 cuadros por segundo (fps) y, en segundo lugar, con diferentes circuitos destinados al procesamiento de la imagen capturada, como lo son el de control
+de exposición automática (AEC), control del balance de blancos (AWB), cancelación de ruido, saturación, gamma, etc..[3] Existe también, la posibilidad de trabajar a distintas resoluciones (VGA, QVGA,
+CIF, QCIF) y diferentes formatos de color (RGB555, RGB565 y YUV). Todos estos parámetros pueden configurarse a través del bus SCCB (Serial Camera Control Bus).[4]
 
-Como se logra observar en el esquema general de la Figura 2, el diseño del sistema se aborda mediante la construcción de módulos mas pequeños con funcionalidades concretas, haciendo uso de la programación estructural en que se basa el lenguaje de descripción de hardware (HDL) utilizado, Verilog. Una vez desarrollados estos por completo, se procede con la interconexión de los mismos para finalmente presentar los resultados mediante simulaciones e implementación.
+Como se logra observar en el esquema general de la Figura 2, el diseño del sistema se aborda mediante la construcción de módulos mas pequeños con funcionalidades concretas, haciendo uso, de la programación estructural en que se basa el lenguaje de descripción de hardware (HDL) utilizado, Verilog. Una vez desarrollados estos por completo, se procede con la interconexión de los mismos para finalmente presentar los resultados mediante simulaciones.
 
 
 ![DiagramaFundamental](./figs/testcam.png)
@@ -55,9 +55,9 @@ Se van a describir las entradas y salidas del módulo de la Figura 3.
 
 ![RGB444](./figs/RGB444.png)
 
-*Figura 4. Sincronización de PCLK, HREF, D[7:0] y distribución de píxeles [5,pág 10].*
+*Figura 4. Sincronización de PCLK, HREF, D[7:0] y distribución de píxeles.*
 
-* Datos [7:0]: En la Figura 4 se muestra que cuando HREF está en HIGH se generan los datos de una fila de la matriz según el tamaño predefinido para la imagen. En el caso del formato RGB 444, cada píxel tiene 2 bytes donde cada uno está compuesto por un vector de D[7:0] y son estables es cada posedge del PCLK. Los cuatro bits menos significativos del primer byte pertenecen al color rojo, en el segundo byte los cuatro bits más significativos son del color verde y los restantes al color azul. Finalmente, se infiere de la Figura 5 que los datos D[i] ingresan de manera paralela y por tanto se deben declarar ocho entradas en la implementación. 
+* Datos [7:0]: En la Figura 4 se muestra que cuando HREF está en HIGH se generan los datos de una fila de la matriz según el tamaño predefinido para la imagen. En el caso del formato RGB 444, cada píxel tiene 2 bytes donde cada uno está compuesto por un vector de D[7:0] y son estables es cada posedge del PCLK. Los cuatro bits menos significativos del primer byte pertenecen al color rojo, en el segundo byte los cuatro bits más significativos son del color verde y los restantes del color azul. Finalmente, se infiere de la Figura 5 que los datos D[i] ingresan de manera paralela y por tanto se deben declarar ocho entradas en la implementación. 
 
 ![RGB444](./figs/diagrama_de_pines.png)
 
@@ -93,19 +93,19 @@ Finalmente, se presentan las señales de salida hacia el Buffer de Memoria.
 
 #### Diagrama Funcional
 
-En la Figura 8 se describe la funcionalidad principal del módulo cam_read.v. Inicialmente se listan las diferentes entradas y salidas del módulo y posteriormente se le asigna el valor de 0 tanto a las salidas ya descritas Addr, datos y Write como al contador (cont).
+En la Figura 8. se describe la funcionalidad principal del módulo cam_read.v. Inicialmente se listan las diferentes entradas y salidas del módulo y posteriormente se le asigna el valor de 0 tanto a las salidas ya descritas Addr, datos y Write como al contador (cont).
 
 ![DiagramaFuncional](./figs/diagramaFuncional.png)
 
 *Figura 8. Diagrama funcional.*
 
-Sucesivamente, cada vez que exista un flanco de subida del reloj pclk ,correspondiente al reloj de la cámara, es decir, un posedge, se revisa si el reset (rst) se encuentra activado o no. En el caso de que el reset se encuentre activo, se le asigna el valor de 0 a las salidas y al contador, indicando entonces, que se empieza de nuevo el proceso de enviar la captura de una nueva imagen. Este procedimiento no se podra llevar acabo hasta que exista un posedge como puede observarse en el diagrama.
+Sucesivamente, cada vez que exista un flanco de subidad del reloj pclk ,correspondiente a la cámara, es decir, un posedge, se revisa si el reset (rst) se encuentra activado o no. En el caso de que el reset se encuentre activo, se le asigna el valor de 0 a las salidas y al contador, indicando entonces, que se empieza de nuevo el proceso de enviar la captura de una nueva imagen. Este procedimiento no se podra llevar acabo hasta que exista un posedge como puede observarse en el diagrama.
 
-En el caso de que el reset no se encuentre activo, se verifica que la entrada href sea igual a 1 y que la entrada vsync sea igual a 0. Si una de estas dos condiciones no se cumple, se vuelve a esperar la ocurrencia de un flanco de subida con el objetivo de realizar el mismo procedimiento descrito anteriormente. La sincronización de estas dos condiciones es vital a la hora de enviar los datos que corresponden a cada una de las filas de píxeles captadas por la cámara.
+En el caso de que el reset no se encuentre activo, se verifica que la entrada href sea igual a 1 y que la entrada vsync sea igual a 0. Si una de estas dos condiciones no se cumple, se vuelve a esperar la ocurrencia de un flanco de subida con el objetivo de realizar el mismo procedimiento descrito anteriormente. La sincronizacion de estas dos condiciones es vital a la hora de enviar los datos que corresponden a cada una de las filas de píxeles captadas por la cámara.
 
-En el caso de que ambas condiciones hallan sido satisfechas, se prosigue a evaluar si el contador es igual a 0. De ser asi, se verifica que la dirección de memoria Addr sea igual a ImaSize, la dirección del ultimo píxel de la imagen capturada. Una nueva imagen debe empezar a capturarse una vez se capture toda la matriz de píxeles enviada por la cámara tal y como se aprecia en la Figura 8. Si aun no se ha llegado a la dirección del último píxel de la cámara, se debe cargar el dato correspondiente al byte 1, es decir, entre el bit(9) y el bit(12) de la salida data_in, se deben cargar los primeros 4 bit menos significativos enviados por la cámara a través de px_data, los cuales corresponden al color rojo del píxel como tal y como se aprecia en la Figura 4. Debe también aumentar el contador, la dirección de memoria Addr en 1 e inhabilitar la escritura (regW=0). 
+En el caso de que ambas condiciones hallan sido satisfechas, se prosigue a evaluar si el contador es igual a 0. De ser asi, se verifica que la direccion de memoria Addr sea igual a ImaSize, la direccion del ultimo píxel de la imagen capturada. Una nueva imagen debe empezar a capturarse una vez se capture toda la matriz de píxeles enviada por la cámara tal y como se aprecia en la Figura 8. Si aun no se ha llegado a la direccion del ultimo píxel de la cámara, se debe cargar el dato correspondiente al byte 1, es decir, entre el bit(9) y el bit(12) de la salida data_in, se deben cargar los primeros 4 bit enviados por la cámara a traves de px_data, los cuales corresponden al color rojo del píxel como tal y como se aprecia en la Figura 4. Debe tambien aumentar el contador y la direccion de memoria Addr en 1. 
 
-Si el contador no era 0, se debe cargar en la variable de salida datos, la información del color verde y azul del píxel, es decir, entre el bit(1) y el bit(8) de la salida data_in, se cargan todos los bits de px_data. Es necesario también, aumentar tanto el contador como la dirección de salida en 1. 
+Si el contador no era 0, se debe cargar en la variable de salida datos, la informacion del color verde y azul del píxel, es decir, entre el bit(1) y el bit(8) de la salida data_in, se cargan todos los bits de px_data. Es necesario tambien, aumentar tanto el contador como la direccion de salida en 1. 
 
 En el caso de que href y vsync no se encuentren sincronizadas, se debe volver a verificar la existencia de un nuevo posedge. 
 
@@ -117,11 +117,11 @@ En el caso de que href y vsync no se encuentren sincronizadas, se debe volver a 
 *Figura 9. Máquina de estados finitos.*
 
 
-La máquina de estados finitos consta de 4 estados INIT, BYTE2, BYTE1 y NOTHING; cuyas señales de control son en esencia CAM_href y CAM_vsync.
+La máquina de estados finitos consta de 4 estados INIT, BYTE2, BYTE1 y NOTHING. cuyas señales de control son en esencia CAM_href y CAM_vsync.
 
-Primero se inicializan las salidas que van a la memoria RAM, es decir, la dirección en memoria DP_RAM_addr_in, los datos a que van a la RAM (DP_RAM_data_in)  y la señal de control de escritura (DP_RAM_regW).
+Primero se inicializan las salidas que van a la memoria RAM la dirección en memoria DP_RAM_data_in, los datos a que van a la RAM (buffer_ram_dp), DP_RAM_addr_in y la señal de control de escritura (DP_RAM_regW).
 
-El estado INIT que es el estado por defecto. Si las señales de control CAM_vsync y CAM_href son 0 y 1 respectivamente, pasara del estado INIT al estado BYTE2 y asignara 4 bits menos significativos de CAM_px_data al espacio de los 4 bits más significativos que se escribirán en memoria, este es DP_RAM_data_in.
+En el estado INIT que es el estado por defecto. Si las señales de control CAM_vsync y CAM_href son 0 y 1 respectivamente, pasara del estado INIT al estado BYTE2 y asignara 4 bits menos significativos de CAM_px_data al espacio de los 4 bits más significativos que se escribirán en memoria, este es DP_RAM_data_in.
 En caso de que las señales de control no sean 0 y 1, asignara/iniciara las salidas a la RAM con valores conocidos 0.
 
 
@@ -129,21 +129,20 @@ Para el estado BYTE1, primero desactiva la escritura en memoria, luego si CAM_hr
 
 En el estado BYTE2 se asignan los bytes faltantes de la cámara a la otra parte de los datos que entra a la RAM, recordando que para el primer byte solo la mitad en posiciones menos significativas tiene la información de la cámara del color rojo siendo la otra mitad ceros y que el segundo byte va la información completa de la cámara del color verde y azul.
 
-En el estado NOTHING se pasa al estado BYTE2 si CAM_href es igual a 1, se hace el paso a la siguiente posición de memoria y se asigna la información que va al primer byte de los datos que entran a la RAM. Si la señal CAM_href es 0 y si la señal CAM_vsync es 1, cambia al estado INIT. Si no se cumple ninguno de los casos mencionados para las señales de control, se permanece en el estado NOTHING sin hacer nada (de ahí el nombre). 
+El estado NOTHING se pasa al estado BYTE2 si CAM_href es igual a 1, se hace el paso a la siguiente posición de memoria y se asigna la información que va al primer byte de los datos que entran a la RAM. Si la señal CAM_href es 0 y si la señal CAM_vsync es 1, cambia al estado INIT. Si no se cumple ninguno de los casos mencionados para las señales de control, se permanece en el estado NOTHING sin hacer nada (de ahí el nombre). 
 
 
-Se puede notar que en la máquinas de estados no se reinicializan las señales de salida en la última posición porque en dicha posición se pasa al estado INIT y allí si se realiza. Esto se puede observar detalladamente más adelante en la simulación de la imagen azul donde se analiza estado por estado. Finalmente, el contador se quitó debido a que en la máquina estados se asegura de tomar adecuadamente el primer byte y luego de tomar el segundo byte, realizando el procesamiento correspondiente. 
+
 
 
 
 
 #### Diagrama estructural
 
-Los diagramas relativos a la Máquina de estados algorítmicos se presentan el las Figuras 10,11 y 12.
 
 ![Diagrama estructura](./figs/DiagramaEstructural.png)
 
-*Figura 10. Estructura de la Máquina de Estados Algorítmicos (ASM) .*
+*Figura 10. Diagrama estructural.*
 
 ![Diagrama estructura](./figs/estructurala.png)
 
@@ -155,7 +154,7 @@ Los diagramas relativos a la Máquina de estados algorítmicos se presentan el l
 
 
 
-Al módulo de la lectura de datos entran las señales de control y de sincronización además de la entrada de datos de la cámara, la entrada  CAM_px_data son los datos que proporciona la cámara, la señal CAM_pclk es la señal correspondiente al reloj de la cámara y la señal reset asigna valores conocidos para inicializar nuestra máquina de estados. Como salida se entregan la dirección en memoria, los datos que van en dicha posición de memoria y el control de escritura que le dice al módulo de la RAM cuando se pueden escribir esos datos en la memoria, para que puedan ser luego leídos por el driver de la pantalla. Eventualmente la retroalimentación de la maquina de estados, que permite que se haga la captura de los datos de la cámara y se indique donde se almacenara. 
+Al módulo de la lectura de datos entran las señales de control y de sincronización además de la entrada de datos de la cámara, la entrada  CAM_px_data son los datos que proporciona la cámara, la señal CAM_pclk es la señal correspondiente al reloj de la cámara y la señal reset asigna valores conocidos para inicializar nuestra máquina de estados y como salida solo se entregan la salida que indica la dirección en memoria y los datos que van en dicha posición de memoria y el control de escritura que le dice al modula de la RAM cuando se pueden escribir esos datos en la memoria, para que puedan ser luego leídos por el driver de la pantalla. Y eventual mente la retroalimentación de la maquina de estados, que permite que se haga la captura de los datos de la cámara y se indique donde se almacenara 
 
 
 
@@ -165,85 +164,84 @@ Al módulo de la lectura de datos entran las señales de control y de sincroniza
 
 En principio se estaba utilizando el módulo `clk24_25_nexys4_0` proporcionado de manera generosa por el profesor Nestor de Laboratorio. Luego, se genero el módulo clk24_25_nexys4.v con ayuda de la ip clock wizard v6 disponible para vivado teniendo en cuenta los parámetros del proyecto, como apoyo se consulto la documentación del fabricante del Clock Wizard v6 [6] y el trabajo del grupo 5 del semestre anterior que está en este [link](https://github.com/unal-edigital1-2019-2/work04-proyectofinal-grupo-05-1/blob/master/docs/README.md).
 
- En la parte izquierda del flujo de navegación se elige *IP Catalog* como se indica en la Figura 13.
+ En la parte izquierda del flujo de navegación se elige *IP Catalog*
 
 ![clockw1](./figs/clockw1.PNG)
 
 *Figura 13. Project Manager.*
 
  
- Posteriormente, se busca *FPGA Features and Design>Clocking>Clocking Wizard* tal como se ilustra en la Figura 14.
+ Posteriormente, se busca *FPGA Features and Design>Clocking>Clocking Wizard*
 
 ![clockw2](./figs/clockw2.PNG)
 
 *Figura 14. FPGA Features and Design.*
 
 
-Se asigna el valor del reloj primario de acuerdo a la FPGA que trabajaremos, en este caso 100 MHz y por preferencia se le pone el nombre de *clk100M* como se evidencia en la Figura 15.
+Se asigna el valor del reloj primario de acuerdo a la FPGA que trabajaremos, en este caso 100 MHz y por preferencia se le pone el nombre de *clk100M* 
 
 ![pll2](./figs/pll2.png)
 
 *Figura 15. Input clock information.*
 
-Se cambia en Source a *Global buffer* como se indica en la Figura 16.
+Se cambia en Source a *Global buffer*.
 
 ![pll3](./figs/pll3.png)
 
 *Figura 16. Global buffer.*
 
 
-En la siguiente pestaña **Output Clocks**, se elige que una de las salidas tenga una frecuencia de 24 MHz con el nombre de *clk24M* y la otra tenga una frecuencia de 25 MHz con el nombre de *clk25M* como está dado en la Figura 17.
+En la siguiente pestaña **Output Clocks**, se elige que una de las salidas tenga una frecuencia de 24 MHz con el nombre de *clk24M* y la otra tenga una frecuencia de 25 MHz con el nombre de *clk25M*
 
 ![pll4](./figs/pll4.png)
 
 *Figura 17. Output Clocks.*
 
-En port **Port Renaming** no se hace nada, como se representa en la Figura 18.
+En port **Port Renaming** no se hace nada.
 
 ![pll5](./figs/pll5.png)
 
 *Figura 18. Port Renaming.*
 
-En *MMCM (mixed-mode clock
-manager) Setting* tampoco se modifica según la Figura 19.
+En *MMCM Setting* tampoco se modifica.
 
 ![pll6](./figs/pll6.png)
 
 *Figura 19. MMCM.*
 
-En Summary se deja igual, como se indica en la Figura 20. 
+En Summary se deja Igual. 
 
 ![pll7](./figs/pll7.png)
 
 *Figura 20. Summary.*
 
 
-Se guarda en la dirección que aparece en el recuadro, como se muestra en la Figura 21.
+Se guarda en la dirección que aparece en el recuadro.
 
 ![pll8](./figs/pll8.png)
 
 *Figura 21. Directory.*
 
 
-Se genera al final el PLL especificado con anterioridad tal como se ilustra en la Figura 22.
+Se genera.
 
 ![pll9](./figs/pll9.png)
 
 *Figura 22. Generate output products.*
 
-Luego nos dirigimos a la dirección a donde se a ha guardado y los archivos *clk24_25_nexys4* junto con *clk24_25_nexys4_clk_wiz.v* son el PLL. El procedimiento en nuestro caso está en la Figura 23. 
+Luego nos dirigimos a la dirección a donde se a ha guardado y los archivos *clk24_25_nexys4* y *clk24_25_nexys4_clk_wiz.v* son el PLL.
 
 ![pll101](./figs/pll101.png)
 
 *Figura 23. PLL sources.*
 
-Finalmente, se borra la carpeta donde se generaron esos archivos y se remueve del proyecto, como se visualiza en la Figura 24.
+Se borra la carpeta donde se generaron esos archivos y se remueve del proyecto.
 
 ![pll10](./figs/pll10.png)
 
 *Figura 24. Remove file from project.*
 
-* La caja negra de `clk24_25_nexys4.v` queda como se aprecia en la Figura 25.
+* La caja negra de `clk24_25_nexys4.v` queda como:
 
 ![clk24_25_nexys4](./figs/clk24_25_nexys4.png)
 
@@ -265,13 +263,13 @@ module clk24_25_nexys4
  );
  ```
 
-Un aspecto interesante es el comportamiento que muestra clk25M en clk24_25_nexys4_0, este se ilustra en la Figura 26.
+Un aspecto interesante es el comportamiento que muestra clk25M en clk24_25_nexys4_0, este se ilustra en la siguiente Figura 26.
 
 ![DIAGRAMA](./figs/pll11.png)
 
 *Figura 26. Comportamiento clk25M.*
 
-El reloj clk25M dura en 0 por un tiempo de 475 ns, mientras que con el módulo clk24_25_nexys4 dura 1225 ns con esa misma característica según la simulación de la Figura 27.
+clk25M dura en 0 por un tiempo de 475 ns, mientras que con el módulo clk24_25_nexys4 dura 1225 ns con esa misma característica.
 
 ![DIAGRAMA](./figs/pll12.png)
 
@@ -279,7 +277,7 @@ El reloj clk25M dura en 0 por un tiempo de 475 ns, mientras que con el módulo c
 
 Se cree que esto se puede dar porque ambos módulos presentan 'Jitters' y errores de fase distintos tal como lo indican las tablas que se proporcionan al generarlos con *Clocking Wizard* 
 
-En el módulo  clk24_25_nexys4_0 se genera:
+En el módulo  clk24_25_nexys4_0
 
 ```verilog
 
@@ -296,7 +294,7 @@ En el módulo  clk24_25_nexys4_0 se genera:
 // __primary_________100.000____________0.010
 
 ```
-En el módulo clk24_25_nexys4 (El final del proyecto) se tiene:
+En el módulo clk24_25_nexys4 (El final del proyecto)
 
 ```verilog
 //----------------------------------------------------------------------------
@@ -321,8 +319,6 @@ Las señales de control son:
 * CAM_pwdn: Power down mode.
 * CAM_reset: Retorno a un punto conocido por la cámara.
 
-Se representan en la Figura 28. 
-
 ![control](./figs/control.png)
 
 *Figura 28. Señales de control módulo xclk/reset/PWDN.*
@@ -338,7 +334,7 @@ En el módulo TOP `test_cam.v` se instancia como:
 
 ### Módulo Buffer RAM (Tomado de **wp01-ram-grupo-03**)
 
-Para poder almacenar la información adquirida por la cámara y teniendo en cuanta que la cámara usada no tiene memoria FIFO, se debe diseñar e implementar una memoria RAM  de doble puerto tal y como se observa en la Figura 29.
+Para poder almacenar la información adquirida por la cámara , y teniendo en cuanta que la cámara usada no tiene memoria FIFO, se debe diseñar e implementar una memoria RAM  de doble puerto tal y como se observa en la figura 29.
 
 ![Buffer](./figs/cajaramdp.png)
 
@@ -348,7 +344,7 @@ El tamaño máximo de buffer de memoria que se puede crear esta limitado por la 
 
 ![features](./figs/Features.png)
 
-*Figura 30. Espacio Nexys 4 DDR.*
+*Figura 30. Espacio Nexys 4[1].*
 
 Tal y como se puede apreciar, la FPGA Nexys 4 DDR tiene la capacidad de almacenamiento de 4 860 Kb lo que equivale a 607,5 KB. 
 
@@ -435,19 +431,19 @@ En primer lugar se debe aclarar que el archivo **imagen.men** se encarga de sumi
 
 Se agregan 32 768 lineas de datos, donde cada dato se representa por tres números hexadecimales consecutivos, cada uno de estos representando 4 bits. Por ejemplo, la primer linea del archivo contiene el siguiente dato: **f00** donde f representa que los cuatro bits del color "Red" estan en 1, es decir el número hexadecimal f en binario (1111); de la misma manera el 0 indica que los cuatro bits del color "Green" se encuentran en 0 y de manera similar con el color "Blue". Despues, se activa el Green (0f0) y todos los demás se desabilitan; finalmente se activa el Blue (00f). Se continua esta frecuencia por nueve filas y el resto se deja en _f00_.
 
-El archivo **TB_ram** es modificado en primer lugar para que el flanco de subida del reloj (ckl) coincida con el flanco de subida del registro de escritura, de lectura y de asignación de direcciones lo que permite una sincronizacion adecuada para cada una de las operaciones a ejecutar. Esto se implemeta en el código de la Figura 32 y se puede evidenciar en la simulación.
+El archivo **TB_ram** es modificado en primer lugar para que el flanco de subida del reloj (ckl) coincida con el flanco de subida del registro de escritura, de lectura y de asignación de direcciones lo que permite una sincronizacion adecuada para cada una de las operaciones a ejecutar. Esto se implemeta en el código de la Figura 16 y se puede evidenciar en la simulación.
 
 ![DIAGRAMA3](./figs/codigo.PNG)
 
 *Figura 32. Parte 1 de la prueba del módulo Buffer.*
 
-El registro de escritura **regwrite** es puesto en 1 luego de un delay de 10 ns, con esto se inicializan los registros y permite que se comience a escribir en el registro ram del archivo **buffer_ram_dp.v**. Lo sucede en paralelo  es que existe un delay de 2 seguntos para cada uno de los incrementos del ciclo for, en este además mediante el registro **cont** se están generando las direcciones de memoria de escritura, lo que corresponde a un delay de 20 ns que sumados a los 10 ns iniciales da como resultado 30 ns. Luego, el registro **regread** tarda 40 ns en cambiar su estado de 0 a 1 incluyendo el delay de la linea 78 de 10 ns razón por la cual _data_out_ se inicializa hasta ese valor. Esto se puede notar en la Figura 33. 
+El registro de escritura **regwrite** es puesto en 1 luego de un delay de 10 ns, con esto se inicializan los registros y permite que se comience a escribir en el registro ram del archivo **buffer_ram_dp.v**. Lo sucede en paralelo  es que existe un delay de 2 seguntos para cada uno de los incrementos del ciclo for, en este además mediante el registro **cont** se están generando las direcciones de memoria de escritura, lo que corresponde a un delay de 20 ns que sumados a los 10 ns iniciales da como resultado 30 ns. Luego, el registro **regread** tarda 40 ns en cambiar su estado de 0 a 1 incluyendo el delay de la linea 78 de 10 ns razón por la cual _data_out_ se inicializa hasta ese valor. Esto se puede notar en la Figura 5. 
 
 ![DIAGRAMA4](./figs/simulacion.PNG)
 
 *Figura 33. Simulación del Buffer.*
 
-En la simulacion de la Figura 33, una vez **regwrite** esta en 1 en **data_in** se van guardando los datos del archivo imagen.men,  en este caso solo se están escribiendo 10 datos comenzando por la dirreción 0 y se están cargador mediante la instrucción **$readmemh(file,inputData)**. Pasados 20 ns, **regwrite** pasa a ser 0 y **regread** cambia su estado a 1 después de 10 ns, lo que da lugar a que se cargen las dirreciones de los datos de salida mediante representada por **addr_out** mediante el registro **cont** ubicado en el for de la linea 80 según el código de la Figura 32 y por consiguiente, se cargan los datos **data_out** ubicados en el módulo **buffer_ram_dp.v**. La instrucción **always #1 clk=~clk** genera el reloj como se evidencia en la Figura 34.
+En la simulacion de la Figura 33, una vez **regwrite** esta en 1 en **data_in** se van guardando los datos del archivo imagen.men,  en este caso solo se están escribiendo 10 datos comenzando por la dirreción 0 y se están cargador mediante la instrucción **$readmemh(file,inputData)**. Pasados 20 ns, **regwrite** pasa a ser 0 y **regread** cambia su estado a 1 después de 10 ns, lo que da lugar a que se cargen las dirreciones de los datos de salida mediante representada por **addr_out** mediante el registro **cont** ubicado en el for de la linea 80 según el código de la Figura 4 y por consiguiente, se cargan los datos **data_out** ubicados en el módulo **buffer_ram_dp.v**. La instrucción **always #1 clk=~clk** genera el reloj.
  
 ![DIAGRAMA5](./figs/lastPart.png)
 
@@ -565,7 +561,7 @@ Sin embargo, se hubiera podido optimizar aun más la simulación si `contX` inic
 
 *Figura 35. Tiempo de cambio de 1 a 0 y de 0 a 1 por parte de Vsync.*
 
-En la Figura 36 se sobresalta `VGA_Vsync_n` para observar los efectos explicados:
+En la siguiente Figura se sobresalta `VGA_Vsync_n` para observar los efectos explicados:
 
 ![exp_VGA2](./figs/exp_VGA2.png)
 
@@ -925,9 +921,9 @@ La declaración de estas señales no fue modificada en el código, sin embargo, 
     output wire [3:0] VGA_B,  // 4-bit VGA blue output.
 ```
 Estas son las señales que salen del Módulo, las señales VGA_R,VGA_G,VGA_B
-se pueden apreciar en la Figura 38. como las señales que salen del bloque RGB_444
+se pueden apreciar en la Figura 19. como las señales que salen del bloque RGB_444
 el cual es un bloque interno del módulo `test_cam.v`.
-Aunque las señales VGA_Hsync_n,VGA_Vsync_n son salidas del módulo `Driver_VAGA.v` (Figura 38.) a su vez salen del módulo `test_cam.v` por lo tanto se definen como señales de salida de este módulo.
+Aunque las señales VGA_Hsync_n,VGA_Vsync_n son salidas del módulo `Driver_VAGA.v` (Figura 19.) a su vez salen del módulo `test_cam.v` por lo tanto se definen como señales de salida de este módulo.
 
 #### Conexiones internas, señales de control y registros
 
@@ -942,7 +938,7 @@ Las siguientes salidas sirven para comprobar el funcionamiento del módulo `Driv
     output wire [11:0] data_mem,           //Cable de DP_RAM a VGA 640X480
     output reg  [14:0] DP_RAM_addr_out,	//Registro Captura de datos a DP_RAM Direccion en memoria 
 ``` 
-Como se puede apreciar en la Figura 38, el módulo `Driver_VGA.v` intercambia dos señales con el módulo `buffer_ram_dp.v` las cuales son data_mem el cual es una señal que lleva el registro de color de los píxeles en la memoria y DP_RAM_addr_out, que como se puede apreciar en la Figura 38, esta señal sale del bloque `convert addr` (es un segmento de código interno en el módulo `test_cam.v`) y esta señal lleva el dato de la posición del píxel donde se encuentra guardado en buffer_ram_dp.
+Como se puede apreciar en la Figura 19, el módulo `Driver_VGA.v` intercambia dos señales con el módulo `buffer_ram_dp.v` las cuales son data_mem el cual es una señal que lleva el registro de color de los píxeles en la memoria y DP_RAM_addr_out, que como se puede apreciar en la Figura 19, esta señal sale del bloque `convert addr` (es un segmento de código interno en el módulo `test_cam.v`) y esta señal lleva el dato de la posición del píxel donde se encuentra guardado en buffer_ram_dp.
 
 * Conexiones del módulo `cam_read.v`
 
@@ -967,7 +963,7 @@ Estas señales son las que llevan los datos originales del píxel de la imagen (
 Estos datos son proporcionados por la cámara e informan los valores originales generados por la cámara para cada píxel como lo es su referencia horizontal (posición horizontal representado por `CAM_href`) su sincronización vertical (informa del cambio en la posición vertical de una linea de píxeles representada por `CAM_vsync`) su dato de píxel (bus de datos que representa un color para un píxel y es la señal `CAM_px_data` ).
 
 
-Posee tres señales que entran en la cámara y salen del módulo `test_cam.v` y se pueden apreciar en la Figura 38, como el bloque interno `xclk/pwdn/reset`
+Posee tres señales que entran en la cámara y salen del módulo `test_cam.v` y se pueden apreciar en la Figura 19, como el bloque interno `xclk/pwdn/reset`
 los cuales se encargan de suministrar una señal para la cámara. 
 
 Power down mode : es una señal la cual al acivarse hace que la cámara disminuya las tensiones internas exceptuando el reloj interno, gracias a esto la cámara no puede refrescar su memoria interna. Este modo es un modo de ahorro de energía bloqueo en el refresh de la memoria.
@@ -979,7 +975,7 @@ XCLK: reloj de la cámara de 24Mhz.
 
 ##### Registros, parámetros y señales internas del Módulo `test_cam.v`
 
-En esta sección del código se hace el tratamiento a las señales de entrada al módulo para transformarlas en las señales de salida, con ayuda de unos parámetros locales los cuales son definidos según las características de la imagen.
+En esta segccion del codigo se hace el tratamiento a las señales de entrada al módulo para transformarlas en las señales de salida, con ayuda de unos parameros locales los cuales son definidos segun las caracteristicas de la imagen.
 
 * parámetrosy parámetros locales
 
@@ -998,7 +994,7 @@ El parámetro AW representa la cantidad de bits necesarios para representar las 
 
 El parámetro DW representa el tamaño del color del píxel como el color es RGB444; es decir, 4bits en rojo,4 en verde y cuatro en azul se necesitan 12 bits para representar este espectro de color.
 
-El parámetro imaSiz representa el final de el arreglo de dos dimensiones de 160x120 el cual va del 0 al 19.199 para un total de 19.200 posiciones, imaSiz es la posición 19.200 del arreglo usada para almacenar aquellas posiciónes encontradas despues de que todo el arreglo de bits este completo.
+El parámetro imaSiz representa el final de el arreglo de dos dimensiones de 160x120 el cual va del 0 al 19.199 para un total de 19.200 posiciónes, imaSiz es la posición 19.200 del arreglo usada para almacenar aquellas posiciónes encontradas despues de que todo el arreglo de bits este completo.
 * Parametros eliminados
 ```verilog
 // El color es RGB 332
@@ -1016,7 +1012,7 @@ wire clk100M;           // Reloj de un puerto de la Nexys 4 DDR entrada.
 wire clk25M;	// Para guardar el dato del reloj de la Pantalla (VGA 680X240 y DP_RAM).
 wire clk24M;		// Para guardar el dato del reloj de la cámara.
 ```
-Aquí se modificó el nombre del reloj de la FPGA el cual era diferente a la usada en este proyecto
+Aqui se modifico el nombre del reloj de la FPGA el cual era diferente a la usada en este proyecto
 ```verilog
 wire clk32M;           // Reloj de un puerto de la FPGA saprtan entrada.
 ```
@@ -1034,7 +1030,7 @@ wire [DW-1:0] data_RGB444;  		// salida del driver VGA a la pantalla
 wire [9:0] VGA_posX;			// Determinar la posiciÃ³n en X del píxel en la pantalla 
 wire [9:0] VGA_posY;			// Determinar la posiciÃ³n de Y del píxel en la pantalla
 ```
-Estos valores se encargan de enviar la información a la pantalla VGA  
+Estos valores se encargan de enviar la informacion a la pantalla VGA  
 
 El data_mem es el valor de color del píxel
 
@@ -1042,7 +1038,7 @@ El data_RGB444 es el valor de color que se va a transferir a la pantalla
 
 Los valores posX y posY son la posición del píxel en la pantalla VGA
 
-Aquí se modificó la señal VGA_posY, se le aumento el tamaño en un bit `[8:0] a [9:0]` para que concuerde el tamaño de la posicion en la pantalla.
+Aqui se modifico la señal VGA_posY, se le aumento el tamaño en un bit `[8:0] a [9:0]` para que concuerde el tamaño de la posicion en la pantalla.
 
 * assignaciones : son asignaciones de valores que se ejecutan constantemente.
 
@@ -1057,7 +1053,7 @@ assign CAM_reset = 0;			// Reset cÃƒÂ¡mara.
 
 Data_RGB444 es asignado a los colores de la pantalla VGA
 
-Al colocar cambiar la configuración del color a RGB444 se cambio el nombre del registro de color de `data_RGB332 a data_RGB444` sin embargo esta tiene el mismo tamaño dado a que la pantalla recibe siempre en dimension RGB444.
+Al colocar cambiar la configuracion del color a RGB444 se cambio el nombre del registro de color de `data_RGB332 a data_RGB444` sin embargo esta tiene el mismo tamaño dado a que la pantalla recibe siempre en dimension RGB444.
 
 CAM_xclk es el reloj de 24MHZ del módulo `clk25_24`
 
@@ -1074,16 +1070,16 @@ always @ (VGA_posX, VGA_posY) begin
 end
 endmodule
 ```
-Aqui se modificó el valor de la dirección de salida  
+Aqui se modifico el valor de la direccion de salida  
 ```verilog
 DP_RAM_addr_out = 15b'111111111111111;
 ```
 ```verilog
 DP_RAM_addr_out = imaSiz;
 ```
-La razón de modificarlo es que el valor de posición de 15 bits (32.768) a la posición n+1 del tamaño del arreglo (160x120=19.200) dado a que en 15bits se salta de la posicion 19.199 (última posición del arreglo) a la posición (32.768) se llenan vacios los espacios de memoria entre estos valores de posición.
+la razon de modificarlo es que el valor de posicion de 15 bits (32.768) a la posicion n+1 del tamaño del arreglo (160x120=19.200) dado a que en 15bits se salta de la posicion 19.199(ultima posicion del arreglo) a la posicion (32.768) se llenan vacios los espacios de memoria entre estos valores de posicion.
 
-La actualización del píxel es el segmento de código que se encarga de calcular la posición de salida del píxel.
+La actualizacion del píxel es el segmento de codigo que se encarga de calcular la posición de salida del píxel.
 
 #### Instanceamiento de módulos 
 
@@ -1174,7 +1170,7 @@ Líneas de código usadas para simular en el Módulo `test_cam_TB.v`:
     end
     end
 ```
-Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeastwood.com/lab/vga-simulator/) se muestra en la Figura 39.
+Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeastwood.com/lab/vga-simulator/):
 
 ![colorVerde](./figs/simulacion%20verde.jpg)
 
@@ -1201,7 +1197,7 @@ reg cont=0;
 	end
 ```
 
-Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeastwood.com/lab/vga-simulator/). Se muestra en la Figura 40.
+Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeastwood.com/lab/vga-simulator/).
 
 ![colorRojo](./figs/imagenRoja.png)
 
@@ -1253,14 +1249,14 @@ Líneas de código usadas para simular en el Módulo `test_cam_TB.v`:
     end
 ```
 
-Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeastwood.com/lab/vga-simulator/) se obtiene la Figura 41.
+Duración de la simulación 17ms y resultado en [vga-simulator](https://ericeastwood.com/lab/vga-simulator/).
 
 ![colorVerdeyros](./figs/lineasverdesyrosas.jpg)
 
 *Figura 41. Simulación lineas horizontales verdes y rosadas.*
 
 
-Para verificar que la combinación de `R=4'hf` y `B=4'hf` fuera una especie de rosado se recurre a este [link](https://htmlcolorcodes.com/es/) y se comprueba con la Figura 42 que en efecto coincide.
+Para verificar que la combinación de `R=4'hf` y `B=4'hf` fuera una especie de rosado se recurre a este [link](https://htmlcolorcodes.com/es/).
 
 ![expRojoYVerde](./figs/expRojoYVerde.png)
 
@@ -1297,7 +1293,7 @@ En el módulo test_cam_TB se programa de la siguiente manera:
 	end
 ```
 
-El resultado en la en el [simulador](https://ericeastwood.com/lab/vga-simulator/) se muestra en la Figura 43.
+El resultado en la en el [simulador](https://ericeastwood.com/lab/vga-simulator/) es:
 
 ![colorAzul](./figs/azulYVerde.png)
 
@@ -1321,7 +1317,7 @@ Las líneas de código que se utilizan en el`test_cam_TB.v` son:
         end
     end
 ```
-Al simular 17 ms y usar [vga-simulator](https://ericeastwood.com/lab/vga-simulator/) se tiene la Figura 44.
+Al simular 17 ms y usar [vga-simulator](https://ericeastwood.com/lab/vga-simulator/) se tiene:
 
 ![colorAzul](./figs/colorAzul.png)
 
