@@ -2844,7 +2844,14 @@ Al no conectar la cámara se visualizará la imagen con extensión .men con la q
 
 
 #####  Pasos a seguir para generar el bitstream
-
+![Paso 1](./figs/bitstream1.png)
+![Paso 2](./figs/bitstream2.png)
+![Paso 3](./figs/bitstream3.png)
+![Paso 4](./figs/bitstream4.png)
+![Paso 5](./figs/bitstream5.png)
+![Paso 6](./figs/bitstream6.png)
+![Paso 7](./figs/bitstream7.png)
+![Paso 8](./figs/bitstream23.png)
 
 ##### Imágenes obtenidas.
 
