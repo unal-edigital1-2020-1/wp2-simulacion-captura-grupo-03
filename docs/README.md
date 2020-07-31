@@ -2943,9 +2943,9 @@ El compañero del grupo 4 realizo en primer lugar la conexión entre el arduino 
 
 Posteriormente se realiza la conexion entre la camara y la FPGA, de modo que coincidan los demas pines restantes con los declarados en el archivo xcd de la FPGA.
 
-El compañero acudio al link de  [dirección-I2C](https://github.com/unal-edigital1-2020-1/wp2-simulacion-captura-grupo-04/blob/master/src/images/i2c_scan.inocon) con  el objetivo de verificar que la conexión realizada este funcionando. Teniendo la Nexys encendida, programada y funcionando, se abre el programa en Arduino y se corre. Lo que hace el programa es darnos la direccion I2C de cualquier dispositivo conectado, la cual debe tenerse en cuenta posteriormente. 
+El compañero acudio al link de  [dirección-I2C](https://github.com/unal-edigital1-2020-1/wp2-simulacion-captura-grupo-04/blob/master/src/images/i2c_scan.ino) con  el objetivo de verificar que la conexión realizada este funcionando. Teniendo la Nexys encendida, programada y funcionando, se abre el programa en Arduino y se corre. Lo que hace el programa es darnos la direccion I2C de cualquier dispositivo conectado, la cual debe tenerse en cuenta posteriormente. 
 
-Finalmente, se implementa el codigo modificado por el compañares del link
+Finalmente, se implementa el codigo modificado por el compañaro del link
 [codigo-arduino](https://github.com/unal-edigital1-2020-1/wp2-simulacion-captura-grupo-04/blob/master/src/camera/hdl/OV7670_config/OV7670_config.ino) para finalmente obtener la imagen de la camara en la pantalla VGA.     
 
 ## Referencias
