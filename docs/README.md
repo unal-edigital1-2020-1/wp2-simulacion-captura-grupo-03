@@ -2848,11 +2848,17 @@ Primero hicimos el reemplazo del archivo en el directorio .men para la generaci�
 ![Paso 1](./figs/bitstream1.PNG)
 Luego realizanos la implementación del proyecto en Vivado
 ![Paso 2](./figs/bitstream2.png)
+
 ![Paso 3](./figs/bitstream3.PNG)
+
 ![Paso 4](./figs/bitstream4.PNG)
+
 ![Paso 5](./figs/bitstream5.PNG)
+
 ![Paso 6](./figs/bitstream6.PNG)
+
 ![Paso 7](./figs/bitstream7.PNG)
+
 ![Paso 8](./figs/bitstream23.png)
 
 ##### Imágenes obtenidas.
