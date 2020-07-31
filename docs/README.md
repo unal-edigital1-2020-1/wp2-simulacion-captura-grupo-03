@@ -2929,7 +2929,7 @@ FAB // Rosado hasta la posición 16597 de la memoria.
 
 ![Implementacion0F-AA](./figs/0f-AA.png)
 
-*Figura 78. Implementación imagen roja.*
+*Figura 79. Implementación imagen roja.*
 
 Esta imagen prsenta secciones de azul y celeste horizontales en el archivo `.men` se presenta un cambio cada 3200 pixeles, cada 3200 pixeles cambia de color entre azul y celeste:
 
@@ -2939,14 +2939,14 @@ AA // celeste
 ```
 ![zoom1](./figs/0F-AAzoom.png)
 
-*Figura 79. Zoom imagen roja.*
+*Figura 80. Zoom imagen roja.*
 ##### Implementación del proyecto con la cámara OV7670
 
 El grupo 4 del presenta semestre nos implementó nuestro proyecto en su hardware. Se modificó el archivo de .xdc ya que ellos tenían la Nexys A7 100T y para sorpresa de todos funcionó. La soguiente Figura muestra una foto que se tomó:
 
 ![resultado2](./figs/imp_tortuga.png)
 
-*Figura 80. Implementación del sistema en su totalidad.*
+*Figura 81. Implementación del sistema en su totalidad.*
 
 
 Dado que no se implementó un control de fotos, la imagen que se toma de la pantalla VGA puede quedar un poco distorsionada. Finalmente, se tomo un video del funcionamiento de la cámara que se muestra a continuación.
