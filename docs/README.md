@@ -2927,7 +2927,7 @@ Para esta siguiente imagen se visualizan los colores rosado y verde, en esta se 
 FAB // Rosado hasta la posición 16597 de la memoria. 
 783 // Amarillo desde la posicion 16598 hasta la ultima posición en memoria.
 
-![Implementacion0F-AA](./figs/0f-AA.png)
+![Implementacion0F-AA](./figs/0F-AA.png)
 
 *Figura 79. Implementación imagen roja.*
 
