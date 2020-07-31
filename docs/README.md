@@ -2860,15 +2860,15 @@ Esperamos a que el programa termine de correr la implementación
 
 ![Paso 4](./figs/bitstream4.PNG)
 
-Y luego generamos automaticamente el bitstream que luego vamos a cargar a la tarjeta de desarrollo
-
 ![Paso 5](./figs/bitstream5.PNG)
+
+Y luego generamos automaticamente el bitstream que luego vamos a cargar a la tarjeta de desarrollo
 
 ![Paso 6](./figs/bitstream6.PNG)
 
 ![Paso 7](./figs/bitstream7.PNG)
 
-![Paso 8](./figs/bitstream23.png)
+
 
 ##### Imágenes obtenidas.
 
