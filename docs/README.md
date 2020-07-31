@@ -2844,13 +2844,15 @@ Al no conectar la cámara se visualizará la imagen con extensión .men con la q
 
 
 #####  Pasos a seguir para generar el bitstream
-![Paso 1](./figs/bitstream1.png)
+Primero hicimos el reemplazo del archivo en el directorio .men para la generación de la imagen. 
+![Paso 1](./figs/bitstream1.PNG)
+Luego realizanos la implementación del proyecto en Vivado
 ![Paso 2](./figs/bitstream2.png)
-![Paso 3](./figs/bitstream3.png)
-![Paso 4](./figs/bitstream4.png)
-![Paso 5](./figs/bitstream5.png)
-![Paso 6](./figs/bitstream6.png)
-![Paso 7](./figs/bitstream7.png)
+![Paso 3](./figs/bitstream3.PNG)
+![Paso 4](./figs/bitstream4.PNG)
+![Paso 5](./figs/bitstream5.PNG)
+![Paso 6](./figs/bitstream6.PNG)
+![Paso 7](./figs/bitstream7.PNG)
 ![Paso 8](./figs/bitstream23.png)
 
 ##### Imágenes obtenidas.
